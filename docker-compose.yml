@@ -6,7 +6,6 @@ services:
       - "8080:8080"
       - "8443:8443"
     volumes:
-      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
       - ./modsecurity:/etc/modsecurity
       - ./logs:/var/log/modsecurity
     environment:
