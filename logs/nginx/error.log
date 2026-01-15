@@ -1,0 +1,115 @@
+2026/01/15 11:29:22 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:29:22 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:29:22 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 11:29:48 [error] 505#505: *1 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/15 11:30:15 [warn] 553#553: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:30:15 [notice] 553#553: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:30:15 [notice] 553#553: libmodsecurity3 version 3.0.14
+2026/01/15 11:30:20 [warn] 561#561: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:30:20 [notice] 561#561: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:30:20 [notice] 561#561: libmodsecurity3 version 3.0.14
+2026/01/15 11:30:20 [notice] 561#561: signal process started
+2026/01/15 11:30:34 [warn] 576#576: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:30:34 [notice] 576#576: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:30:34 [notice] 576#576: libmodsecurity3 version 3.0.14
+2026/01/15 11:30:34 [notice] 576#576: signal process started
+2026/01/15 11:31:41 [error] 578#578: *6 open() "/usr/share/nginx/html/testattcak" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /testattcak HTTP/1.1", host: "localhost:8080"
+2026/01/15 11:31:47 [error] 578#578: *6 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "17684767077.513456"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/15 11:34:22 [warn] 691#691: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:34:22 [notice] 691#691: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:34:22 [notice] 691#691: libmodsecurity3 version 3.0.14
+2026/01/15 11:34:22 [notice] 691#691: signal process started
+2026/01/15 11:34:45 [error] 694#694: *15 [client 127.0.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176847688579.209660"] [ref "o1,10v4,11"], client: 127.0.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/15 11:47:27 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:47:27 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:47:27 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 11:48:13 [warn] 557#557: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:48:13 [notice] 557#557: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:48:13 [notice] 557#557: libmodsecurity3 version 3.0.14
+2026/01/15 11:48:19 [warn] 558#558: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:48:19 [notice] 558#558: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:48:19 [notice] 558#558: libmodsecurity3 version 3.0.14
+2026/01/15 11:48:19 [notice] 558#558: signal process started
+2026/01/15 11:49:13 [warn] 611#611: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:49:13 [notice] 611#611: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:49:13 [notice] 611#611: libmodsecurity3 version 3.0.14
+2026/01/15 11:49:42 [error] 560#560: *6 open() "/usr/share/nginx/html/1" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /1 HTTP/1.1", host: "localhost:8080"
+2026/01/15 11:49:58 [error] 560#560: *6 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176847779858.017622"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/15 11:52:46 [warn] 704#704: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:52:46 [notice] 704#704: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:52:46 [notice] 704#704: libmodsecurity3 version 3.0.14
+2026/01/15 11:52:50 [warn] 716#716: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 11:52:50 [notice] 716#716: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 11:52:50 [notice] 716#716: libmodsecurity3 version 3.0.14
+2026/01/15 11:52:50 [notice] 716#716: signal process started
+2026/01/15 11:53:04 [error] 717#717: *14 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/15 11:53:11 [error] 717#717: *14 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176847799161.776621"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/15 12:00:41 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:00:41 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:00:41 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:06:55 [warn] 675#675: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:06:55 [notice] 675#675: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:06:55 [notice] 675#675: libmodsecurity3 version 3.0.14
+2026/01/15 12:06:55 [emerg] 675#675: open() "/tmp/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:11:47 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:11:47 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:11:47 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:51 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:21:51 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:21:51 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:51 [emerg] 1#1: open() "/var/run/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:21:52 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:21:52 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:21:52 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:52 [emerg] 1#1: open() "/var/run/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:21:53 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:21:53 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:21:53 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:53 [emerg] 1#1: open() "/var/run/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:21:54 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:21:54 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:21:54 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:54 [emerg] 1#1: open() "/var/run/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:21:55 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:21:55 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:21:55 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:55 [emerg] 1#1: open() "/var/run/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:21:58 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:21:58 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:21:58 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:21:58 [emerg] 1#1: open() "/var/run/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:24:53 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:24:53 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:24:53 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:25:07 [warn] 542#542: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:25:07 [notice] 542#542: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:25:07 [notice] 542#542: libmodsecurity3 version 3.0.14
+2026/01/15 12:25:07 [emerg] 542#542: open() "/run/nginx/nginx.pid" failed (13: Permission denied)
+2026/01/15 12:32:42 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:32:42 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:32:42 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:32:56 [warn] 541#541: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:32:56 [notice] 541#541: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:32:56 [notice] 541#541: libmodsecurity3 version 3.0.14
+2026/01/15 12:33:09 [warn] 542#542: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:33:09 [notice] 542#542: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:33:09 [notice] 542#542: libmodsecurity3 version 3.0.14
+2026/01/15 12:33:09 [notice] 542#542: signal process started
+2026/01/15 12:33:23 [error] 543#543: *2 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/15 12:33:28 [error] 545#545: *3 open() "/usr/share/nginx/html/a" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /a HTTP/1.1", host: "localhost:8080"
+2026/01/15 12:35:14 [error] 544#544: *8 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176848051497.239838"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/15 12:35:22 [error] 544#544: *8 open() "/usr/share/nginx/html/test" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /test HTTP/1.1", host: "localhost:8080"
+2026/01/15 12:43:44 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:43:44 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:43:44 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/15 12:44:00 [warn] 542#542: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:44:00 [notice] 542#542: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:44:00 [notice] 542#542: libmodsecurity3 version 3.0.14
+2026/01/15 12:44:34 [warn] 555#555: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/15 12:44:34 [notice] 555#555: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/15 12:44:34 [notice] 555#555: libmodsecurity3 version 3.0.14
+2026/01/15 12:44:34 [notice] 555#555: signal process started
+2026/01/15 12:44:43 [error] 556#556: *3 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/15 12:44:48 [error] 556#556: *3 open() "/usr/share/nginx/html/hi" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /hi HTTP/1.1", host: "localhost:8080"
+2026/01/15 12:44:55 [error] 556#556: *3 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176848109569.841155"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/15 12:45:30 [error] 556#556: *3 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `10' against variable `TX:ANOMALY_SCORE' (Value: `15' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "81"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 15)"] [data ""] [severity "2"] [ver "OWASP_CRS/3.3.8"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-generic"] [hostname "localhost"] [uri "/"] [unique_id "176848113083.097917"] [ref ""], client: 172.18.0.1, server: localhost, request: "GET /?test=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E HTTP/1.1", host: "localhost:8080"
