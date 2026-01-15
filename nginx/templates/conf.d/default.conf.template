@@ -57,10 +57,10 @@ server {
 
 
     location / {
-        client_max_body_size 0;
+       # client_max_body_size 0;
 
-        include includes/cors.conf;
-        include includes/proxy_backend.conf;
+       # include includes/cors.conf;
+       # include includes/proxy_backend.conf;
 
         index index.html index.htm;
         root /usr/share/nginx/html;
