@@ -113,3 +113,53 @@
 2026/01/15 12:44:48 [error] 556#556: *3 open() "/usr/share/nginx/html/hi" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /hi HTTP/1.1", host: "localhost:8080"
 2026/01/15 12:44:55 [error] 556#556: *3 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176848109569.841155"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
 2026/01/15 12:45:30 [error] 556#556: *3 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `10' against variable `TX:ANOMALY_SCORE' (Value: `15' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "81"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 15)"] [data ""] [severity "2"] [ver "OWASP_CRS/3.3.8"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-generic"] [hostname "localhost"] [uri "/"] [unique_id "176848113083.097917"] [ref ""], client: 172.18.0.1, server: localhost, request: "GET /?test=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E HTTP/1.1", host: "localhost:8080"
+2026/01/17 07:02:21 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:02:21 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:02:21 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/17 07:02:54 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:02:54 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:02:54 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/17 07:04:50 [warn] 568#568: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:04:50 [notice] 568#568: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:04:50 [notice] 568#568: libmodsecurity3 version 3.0.14
+2026/01/17 07:07:24 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:07:24 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:07:24 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/17 07:08:23 [warn] 558#558: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:08:23 [notice] 558#558: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:08:23 [notice] 558#558: libmodsecurity3 version 3.0.14
+2026/01/17 07:41:56 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:41:56 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:41:56 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/17 07:43:35 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:43:35 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:43:35 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/17 07:45:13 [error] 506#506: *131 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/17 07:45:15 [error] 506#506: *131 open() "/usr/share/nginx/html/a" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /a HTTP/1.1", host: "localhost:8080"
+2026/01/17 07:45:20 [error] 506#506: *131 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176863592035.644649"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/17 07:45:24 [error] 506#506: *131 open() "/usr/share/nginx/html/.well-known/appspecific/com.chrome.devtools.json" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1", host: "localhost:8080"
+2026/01/17 07:52:58 [warn] 751#751: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:52:58 [notice] 751#751: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:52:58 [notice] 751#751: libmodsecurity3 version 3.0.14
+2026/01/17 07:52:58 [notice] 751#751: signal process started
+2026/01/17 07:53:16 [error] 500#500: *148 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/17 07:53:21 [error] 500#500: *148 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176863640121.974852"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/17 07:54:25 [warn] 794#794: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:54:25 [notice] 794#794: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:54:25 [notice] 794#794: libmodsecurity3 version 3.0.14
+2026/01/17 07:54:32 [warn] 795#795: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 07:54:32 [notice] 795#795: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 07:54:32 [notice] 795#795: libmodsecurity3 version 3.0.14
+2026/01/17 07:54:32 [notice] 795#795: signal process started
+2026/01/17 07:54:45 [error] 500#500: *152 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/17 07:54:53 [error] 500#500: *152 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176863649316.620788"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/17 08:03:38 [warn] 1036#1036: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 08:03:38 [notice] 1036#1036: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 08:03:38 [notice] 1036#1036: libmodsecurity3 version 3.0.14
+2026/01/17 08:03:43 [warn] 1037#1037: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/17 08:03:43 [notice] 1037#1037: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/17 08:03:43 [notice] 1037#1037: libmodsecurity3 version 3.0.14
+2026/01/17 08:03:43 [notice] 1037#1037: signal process started
+2026/01/17 08:03:52 [error] 500#500: *171 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8080", referrer: "http://localhost:8080/"
+2026/01/17 08:03:58 [error] 500#500: *171 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176863703878.678012"] [ref "o1,10v4,11"], client: 172.18.0.1, server: localhost, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/17 08:06:10 [error] 500#500: *176 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `10' against variable `TX:ANOMALY_SCORE' (Value: `15' ) [file "/etc/modsecurity.d/owasp-crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "81"] [id "949110"] [rev ""] [msg "Inbound Anomaly Score Exceeded (Total Score: 15)"] [data ""] [severity "2"] [ver "OWASP_CRS/3.3.8"] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [tag "application-multi"] [tag "language-multi"] [tag "platform-multi"] [tag "attack-generic"] [hostname "localhost"] [uri "/"] [unique_id "176863717039.257127"] [ref ""], client: 172.18.0.1, server: localhost, request: "GET /?test=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E HTTP/1.1", host: "localhost:8080"
