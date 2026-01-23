@@ -1,0 +1,12 @@
+{ "time_local":"23/Jan/2026:20:57:49 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:57:50 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:57:50 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:59:36 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:59:36 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:59:36 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:59:36 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:59:37 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:20:59:37 +0700", "remote_addr":"192.168.65.1", "request":"GET / HTTP/1.1", "status":"200" }
+{ "time_local":"23/Jan/2026:21:00:08 +0700", "remote_addr":"192.168.65.1", "remote_user":"", "request":"GET / HTTP/1.1", "status":"200", "body_bytes_sent":"615", "http_referer":"", "http_user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15", "request_time":"0.000", "ssl_protocol":"", "ssl_cipher":"" }
+{ "time_local":"23/Jan/2026:21:00:08 +0700", "remote_addr":"192.168.65.1", "remote_user":"", "request":"GET / HTTP/1.1", "status":"200", "body_bytes_sent":"615", "http_referer":"", "http_user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15", "request_time":"0.000", "ssl_protocol":"", "ssl_cipher":"" }
+{ "time_local":"23/Jan/2026:21:00:08 +0700", "remote_addr":"192.168.65.1", "remote_user":"", "request":"GET / HTTP/1.1", "status":"200", "body_bytes_sent":"615", "http_referer":"", "http_user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15", "request_time":"0.000", "ssl_protocol":"", "ssl_cipher":"" }
