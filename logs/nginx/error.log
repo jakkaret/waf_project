@@ -236,3 +236,47 @@
 2026/01/23 20:59:59 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
 2026/01/23 20:59:59 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
 2026/01/23 20:59:59 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/24 12:19:04 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:19:04 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:19:04 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/24 12:22:12 [warn] 586#586: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:22:12 [notice] 586#586: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:22:12 [notice] 586#586: libmodsecurity3 version 3.0.14
+2026/01/24 12:22:12 [notice] 586#586: signal process started
+2026/01/24 12:22:15 [warn] 595#595: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:22:15 [notice] 595#595: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:22:15 [notice] 595#595: libmodsecurity3 version 3.0.14
+2026/01/24 12:23:07 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:08 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:09 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:09 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:11 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:13 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:16 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:23 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:23:36 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:24:02 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:24:54 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:25:56 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:41 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:42 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:42 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:43 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:44 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:46 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/01/24 12:26:50 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:26:50 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:26:50 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/24 12:28:17 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:28:17 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:28:17 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/24 12:29:10 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:29:10 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:29:10 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/24 12:30:27 [warn] 541#541: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:30:27 [notice] 541#541: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:30:27 [notice] 541#541: libmodsecurity3 version 3.0.14
+2026/01/24 12:30:27 [notice] 541#541: signal process started
+2026/01/24 12:30:29 [warn] 550#550: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/24 12:30:29 [notice] 550#550: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/24 12:30:29 [notice] 550#550: libmodsecurity3 version 3.0.14
