@@ -373,3 +373,34 @@
 2026/01/24 13:37:28 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
 2026/01/24 13:37:28 [notice] 1#1: libmodsecurity3 version 3.0.14
 2026/01/24 13:37:36 [error] 497#497: *1 [client 172.20.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/testattack"] [unique_id "176923665661.050159"] [ref "o1,10v4,11"], client: 172.20.0.1, server: _, request: "GET /testattack HTTP/1.1", host: "localhost:8080"
+2026/01/25 16:31:08 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 16:31:08 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 16:31:08 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/25 16:34:07 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 16:34:07 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 16:34:07 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/25 16:37:55 [warn] 597#597: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 16:37:55 [notice] 597#597: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 16:37:55 [notice] 597#597: libmodsecurity3 version 3.0.14
+2026/01/25 16:38:01 [warn] 598#598: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 16:38:01 [notice] 598#598: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 16:38:01 [notice] 598#598: libmodsecurity3 version 3.0.14
+2026/01/25 16:38:01 [notice] 598#598: signal process started
+2026/01/25 16:48:52 [emerg] 860#860: unexpected ";" in /etc/nginx/conf.d/default.conf:82
+2026/01/25 16:49:17 [warn] 873#873: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 16:49:17 [notice] 873#873: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 16:49:17 [notice] 873#873: libmodsecurity3 version 3.0.14
+2026/01/25 16:49:22 [warn] 874#874: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 16:49:22 [notice] 874#874: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 16:49:22 [notice] 874#874: libmodsecurity3 version 3.0.14
+2026/01/25 16:49:22 [notice] 874#874: signal process started
+2026/01/25 17:08:47 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 17:08:47 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 17:08:47 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/25 17:35:05 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 17:35:05 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 17:35:05 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/25 17:51:07 [warn] 1#1: "ssl_stapling" ignored, issuer certificate not found for certificate "/etc/nginx/conf/server.crt"
+2026/01/25 17:51:07 [notice] 1#1: ModSecurity-nginx v1.0.4 (rules loaded inline/local/remote: 0/928/0)
+2026/01/25 17:51:07 [notice] 1#1: libmodsecurity3 version 3.0.14
+2026/01/25 17:51:29 [error] 501#501: *5 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 1). Matched "Operator `Contains' with parameter `testattack' against variable `REQUEST_URI' (Value: `/login.php/testattack' ) [file "/opt/custom-rules/customrule_1.conf"] [line "1"] [id "1000001"] [rev ""] [msg "Custom Rule: Block testattack keyword"] [data ""] [severity "0"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/login.php/testattack"] [unique_id "176933828926.290390"] [ref "o11,10v4,21"], client: 172.18.0.1, server: _, request: "GET /login.php/testattack HTTP/1.1", host: "localhost:8080"
