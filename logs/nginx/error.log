@@ -433,3 +433,7 @@
 2026/02/10 20:29:01 [notice] 4039#4039: signal process started
 2026/02/10 20:29:19 [error] 4047#4047: *358 [client 172.18.0.1] ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Rx' with parameter `admin1' against variable `REQUEST_URI' (Value: `/login.php/admin1' ) [file "/opt/custom-rules/custom-100003.conf"] [line "2"] [id "100003"] [rev ""] [msg "Test"] [data ""] [severity "2"] [ver ""] [maturity "0"] [accuracy "0"] [tag "modsecurity"] [hostname "localhost"] [uri "/login.php/admin1"] [unique_id "177073015927.965353"] [ref "o11,6v4,17"], client: 172.18.0.1, server: _, request: "GET /login.php/admin1 HTTP/1.1", host: "localhost:8080"
 2026/02/10 20:29:26 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/02/11 16:47:56 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/02/11 16:48:56 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/02/11 16:50:05 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
+2026/02/11 16:51:14 [emerg] 1#1: host not found in upstream "dvwa:80" in /etc/nginx/conf.d/default.conf:8
