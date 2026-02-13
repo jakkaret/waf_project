@@ -1,0 +1,2 @@
+192.168.65.1 - - [12/Feb/2026:21:45:55 +0700] "GET / HTTP/1.1" 400 248 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
+192.168.65.1 - - [12/Feb/2026:21:45:57 +0700] "GET /favicon.ico HTTP/1.1" 400 248 "http://localhost:8443/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.2 Safari/605.1.15"
