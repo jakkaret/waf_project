@@ -43,6 +43,7 @@ class DynamoDBService:
     # -----------------------------
     # LOGS
     # -----------------------------
+    
     def save_log(self, event):
         try:
             event = self.convert_floats(event)
@@ -50,7 +51,6 @@ class DynamoDBService:
             # ✅ เติม primary key ถ้าไม่มี
             event["user_id"] = event.get("user_id", "default-user")
             event["log_id"] = event.get("log_id", str(uuid.uuid4()))
-
             event["timestamp"] = event.get("timestamp", int(time.time()))
             event["alert"] = event.get("alert", False)
             self.logs_table.put_item(Item=event)
