@@ -1,0 +1,29 @@
+# Environment
+.env
+AWSCLIV2.pkg
+logs/
+*.log
+*.session
+waf_alert_bot.session
+
+# Virtual Environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# AWS Installer
+AWSCLIV2.pkg
+
+# OS
+.DS_Store
+
+# Telethon session files
+*.session
+*.session-journal
+
+# React files
+.node_modules/ 
+node_modules/ 
+dist/ 
