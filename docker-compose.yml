@@ -85,10 +85,25 @@ services:
     networks:
       - waf-net
 
+  control-api:
+    build: ./cdn/control-api
+    container_name: waf-control-api
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./modsecurity/custom-rules:/src/custom-rules:ro
+      - control_data:/data
+    environment:
+      CONTROL_TOKEN: "be81d6959e901a0e04a8cf077a450a0ae736a85a9eca91d6cdddab1a331f19f9"
+    restart: unless-stopped
+    networks:
+      - waf-net
+
 volumes:
   caddy_data:
   caddy_config:
   clickhouse_data:
+  control_data:
 
 networks:
   waf-net:
