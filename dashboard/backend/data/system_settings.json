@@ -1,0 +1,12 @@
+{
+  "waf_mode": "blocking",
+  "paranoia_level": 1,
+  "inbound_anomaly_threshold": 5,
+  "outbound_anomaly_threshold": 10,
+  "auto_purge_edge_cache": true,
+  "real_ip_header": "X-Forwarded-For",
+  "telegram_notifications": true,
+  "telegram_bot_token": "8592550705:AAFKJqwha9C-JME8W_-OfEMWV5wugCewRMI",
+  "telegram_chat_id": "",
+  "edge_sync_interval_seconds": 5
+}
