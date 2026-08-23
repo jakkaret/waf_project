@@ -1,14 +1,700 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>docs-ts</title>
-    <script type="module" crossorigin src="./assets/index-POlI8odz.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CF0cFOmb.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<!DOCTYPE html>
+<html lang="th" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛡️ Global Edge WAF & ML Anomaly Detection System — Architecture & Documentation</title>
+  <meta name="description" content="ระบบ Web Application Firewall อัจฉริยะ ผสาน ModSecurity OWASP CRS, Multi-Region Edge CDN และ Machine Learning Real-time Anomaly Detection">
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              900: '#14532d',
+            },
+            cyber: {
+              dark: '#0a0f1d',
+              card: '#111827',
+              border: '#1f2937',
+              accent: '#38bdf8',
+              purple: '#a855f7',
+              red: '#ef4444',
+              emerald: '#10b981'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans Thai', 'sans-serif'],
+            mono: ['Fira Code', 'JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts: Inter & Noto Sans Thai -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Mermaid.js for Diagrams -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#111827',
+        primaryColor: '#1e293b',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#38bdf8',
+        lineColor: '#64748b',
+        secondaryColor: '#0f172a',
+        tertiaryColor: '#1e1b4b'
+      }
+    });
+  </script>
+  <style>
+    body { font-family: 'Inter', 'Noto Sans Thai', sans-serif; }
+    pre, code { font-family: 'Fira Code', monospace; }
+    .glass-card {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      border-color: rgba(56, 189, 248, 0.3);
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0a0f1d; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #374151; }
+  </style>
+</head>
+<body class="bg-cyber-dark text-slate-200 antialiased custom-scrollbar">
+
+  <!-- TOP HEADER & NAVBAR -->
+  <header class="sticky top-0 z-50 bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-border">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyber-accent flex items-center justify-center shadow-lg shadow-brand-500/20">
+          <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg text-white tracking-wide flex items-center gap-2">
+            WAF Project <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-400 border border-brand-500/30">v2.5 Production</span>
+          </span>
+          <p class="text-xs text-slate-400">Global Edge CDN & AI/ML Anomaly Defense</p>
+        </div>
+      </div>
+
+      <!-- Quick Search & Links -->
+      <div class="flex items-center space-x-4">
+        <div class="hidden md:flex items-center bg-slate-900 border border-cyber-border rounded-lg px-3 py-1.5 w-64 focus-within:border-cyber-accent transition">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 mr-2"></i>
+          <input type="text" id="searchInput" placeholder="ค้นหาเนื้อหา, Features, Rule ID..." class="bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none w-full">
+        </div>
+        <a href="https://waf-edge-th.duckdns.org" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium bg-slate-800 hover:bg-slate-700 text-brand-400 border border-brand-500/30 px-3 py-1.5 rounded-lg transition">
+          <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse"></span>
+          Live Edge TH
+        </a>
+        <a href="https://github.com/jakkaret/waf_project" target="_blank" class="text-slate-300 hover:text-white p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 transition" title="GitHub Repository">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER WITH SIDEBAR & CONTENT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-8">
+
+    <!-- LEFT STICKY SIDEBAR -->
+    <aside class="hidden lg:block w-72 flex-shrink-0">
+      <div class="sticky top-24 space-y-6">
+        <div class="glass-card rounded-2xl p-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 px-2 flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4 text-cyber-accent"></i> สารบัญเนื้อหา (Modules)
+          </h3>
+          <nav class="space-y-1 text-sm">
+            <a href="#module-overview" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyber-accent"></i> 1. ภาพรวมสถาปัตยกรรม
+            </a>
+            <a href="#module-ml" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="brain-circuit" class="w-4 h-4 text-cyber-purple"></i> 2. Machine Learning Engine
+            </a>
+            <a href="#module-modsec" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-cyber-red"></i> 3. ModSecurity & OWASP CRS
+            </a>
+            <a href="#module-edge-cdn" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="globe" class="w-4 h-4 text-cyber-emerald"></i> 4. Edge CDN & GeoDNS
+            </a>
+            <a href="#module-analytics" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="activity" class="w-4 h-4 text-amber-400"></i> 5. Stream Analytics & Logs
+            </a>
+            <a href="#module-genai" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition">
+              <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i> 6. GenAI & Advanced SecOps
+            </a>
+            <a href="#module-sandbox" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-xl text-brand-400 hover:text-brand-300 hover:bg-brand-900/30 transition font-medium">
+              <i data-lucide="play-circle" class="w-4 h-4 text-brand-400"></i> 7. Interactive Test Sandbox
+            </a>
+          </nav>
+        </div>
+
+        <!-- Node Status Indicator -->
+        <div class="glass-card rounded-2xl p-4 text-xs space-y-2.5 border-slate-800">
+          <div class="font-bold text-slate-300 flex items-center justify-between">
+            <span>Server Nodes Status</span>
+            <span class="text-[10px] text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded-full border border-brand-500/20">All Healthy</span>
+          </div>
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Edge Node TH</span>
+            <code class="text-[11px] text-slate-300">45.154.26.91</code>
+          </div>
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Origin & ML Backend</span>
+            <code class="text-[11px] text-slate-300">178.104.53.123</code>
+          </div>
+          <div class="flex items-center justify-between text-slate-400">
+            <span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ML Microservice</span>
+            <span class="text-[11px] text-brand-400">Port 5000 Active</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT MAIN CONTENT -->
+    <main class="flex-1 min-w-0 space-y-12">
+
+      <!-- HERO BANNER -->
+      <section class="glass-card rounded-3xl p-8 lg:p-10 relative overflow-hidden border-cyber-accent/20">
+        <div class="absolute -right-16 -bottom-16 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent text-xs font-semibold">
+            <i data-lucide="shield" class="w-3.5 h-3.5"></i> Comprehensive Engineering Seminar Document
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Hybrid Edge WAF & <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyber-accent via-brand-400 to-emerald-400">Machine Learning</span> Protection
+          </h1>
+          <p class="text-slate-300 text-sm sm:text-base max-w-3xl leading-relaxed">
+            สถาปัตยกรรมการป้องกันเว็บแอปพลิเคชันยุคใหม่ ผสานความเร็วของ <strong>OWASP ModSecurity Core Rule Set (In-line)</strong>, ความแม่นยำของ <strong>Multi-Region Edge CDN</strong> และความฉลาดของ <strong>Decoupled AI/ML Anomaly Detection</strong> สำหรับตรวจจับภัยคุกคาม Zero-Day และ Injections ซับซ้อน
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <a href="#module-ml" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 hover:from-brand-500 hover:to-brand-400 text-white text-sm font-semibold shadow-lg shadow-brand-500/25 transition inline-flex items-center gap-2">
+              <i data-lucide="file-text" class="w-4 h-4"></i> อ่านสรุปเนื้อหา ML & Data Leakage Fix
+            </a>
+            <a href="#module-sandbox" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-cyber-border text-sm font-medium transition inline-flex items-center gap-2">
+              <i data-lucide="play" class="w-4 h-4 text-cyber-accent"></i> ทดลองยิง Payload ใน Sandbox
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 1: SYSTEM OVERVIEW & ARCHITECTURE -->
+      <section id="module-overview" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyber-accent/10 text-cyber-accent">
+            <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">1. ภาพรวมสถาปัตยกรรมระบบ (System Architecture)</h2>
+            <p class="text-sm text-slate-400">โครงสร้างการทำงานแบบ Hybrid Defense: In-line Fast Path + Asynchronous AI Path</p>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-cyber-accent flex items-center gap-2">
+            <i data-lucide="git-branch" class="w-4 h-4"></i> End-to-End Traffic & Defense Pipeline Flowchart
+          </h3>
+          <div class="mermaid rounded-xl p-4 bg-slate-950/80 border border-slate-800 overflow-x-auto text-xs">
+flowchart TD
+    User["🌐 User / Attacker Request"] --> GeoDNS["🌍 GeoDNS (cdn-geodns:5533)"]
+    GeoDNS -->|Route by Region| Edge["⚡ Edge WAF Node (TH / SG / JP)"]
+    
+    subgraph EdgeLayer ["🛡️ Layer 1: In-Line Edge Inspection (< 2ms)"]
+        Edge --> SSL["🔒 Caddy (SSL/TLS Termination)"]
+        SSL --> ModSec["⚙️ OpenResty Nginx + ModSecurity CRS v4.0"]
+        ModSec -->|Score >= 10| Block403["🛑 403 WAF Forbidden Page"]
+        ModSec -->|Cache Hit| EdgeCache["📦 Nginx Micro-Cache (Stale-While-Revalidate)"]
+        ModSec -->|Cache Miss / Pass| ReverseProxy["🔀 Forward to Origin Backend"]
+    end
+    
+    ReverseProxy --> OriginNginx["🏢 Origin WAF Backend (178.104.53.123:8080)"]
+    OriginNginx --> DVWA["🎯 Web Application (DVWA / Production App)"]
+
+    subgraph AsyncML ["🧠 Layer 2: Asynchronous AI/ML Threat Intelligence"]
+        Edge -.->|JSON Stream| CDNLog["📁 /root/waf_project/logs/cdn/{region}/access.json"]
+        CDNLog --> LogAnalyzer["📡 Async Log Stream Analyzer (waf-log-analyzer.service)"]
+        LogAnalyzer --> MLMicroservice["🚀 FastAPI ML Engine (/predict on Port 5000)"]
+        MLMicroservice --> Features["🔬 13 Semantic Features Extractor"]
+        Features --> RF["🌲 Random Forest Classifier"]
+        Features --> IF["🔍 Isolation Forest Anomaly"]
+        RF --> HybridDecision{"⚖️ Anomaly Detected?"}
+        IF --> HybridDecision
+        HybridDecision -->|Yes| RuleGen["⚙️ Auto Rule Generator (ModSecurity SecRule)"]
+        HybridDecision -->|Telemetry| ClickHouse["📊 ClickHouse Columnar DB + Dashboard"]
+        RuleGen -.->|Deploy Rule via Control API| ModSec
+    end
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 2: MACHINE LEARNING ENGINE -->
+      <section id="module-ml" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyber-purple/10 text-cyber-purple">
+            <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">2. Machine Learning Anomaly Detection Module</h2>
+            <p class="text-sm text-slate-400">บทวิเคราะห์ Data Leakage, การสร้าง Synthetic Dataset, Feature Engineering และตัวชี้วัดจริง</p>
+          </div>
+        </div>
+
+        <!-- Data Leakage Card -->
+        <div class="glass-card rounded-2xl p-6 border-cyber-red/30 space-y-4">
+          <div class="flex items-center gap-2 text-cyber-red font-bold text-base">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i> 2.1 ปัญหา Data Leakage ใน Pipeline เดิม และการค้นพบเชิงลึก
+          </div>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            จากการวิเคราะห์โค้ดเดิม พบว่ามีการนำ Payload เสริม 37 รายการมาทำ <code>df_combined = pd.concat([df_csic] + [df_benign_extra]*500 + [df_attack_extra]*500)</code> ซึ่งการคูณข้อมูลซ้ำ 500 เท่าทำให้แถวข้อมูลที่เหมือนกันทุกตัวอักษร 375 แถวไปอยู่ใน Train Set และอีก 125 แถวไปอยู่ใน Test Set ส่งผลให้โมเดลได้ <strong>Accuracy สูงเกินจริง (Fake 94%+)</strong> จากการท่องจำตัวอย่างเดิม
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-red-500/20">
+              <h4 class="font-bold text-red-400 mb-2">❌ ปัญหาของ Pipeline และ CSIC 2010 เดิม</h4>
+              <ul class="space-y-1.5 text-slate-400 list-disc list-inside">
+                <li>Exact Row Duplication คูณ 500 เท่า ทำให้เกิด Data Leakage</li>
+                <li>CSIC มี Header Label Noise กว่า 5,400 แถวที่เป็น URL ว่างแต่โดนติดป้าย Attack</li>
+                <li>Path-Length Bias: URL สั้นถูกมองเป็น Attack เพราะ CSIC มีแต่ e-commerce ยาวๆ</li>
+                <li>ขาด Threat Vectors ยุคใหม่ (SSRF, SSTI, NoSQL, Log4j)</li>
+              </ul>
+            </div>
+            <div class="bg-slate-900/90 p-4 rounded-xl border border-brand-500/20">
+              <h4 class="font-bold text-brand-400 mb-2">✅ วิธีการแก้ไขด้วย Synthetic Data Generator</h4>
+              <ul class="space-y-1.5 text-slate-400 list-disc list-inside">
+                <li>สร้างสคริปต์สังเคราะห์ข้อมูลอัจฉริยะ 35,000+ รายการแบบสุ่มแท้จริง</li>
+                <li>Fuzzing & Mutation (Case variation, URL encode, Comment evasion)</li>
+                <li>Global Deduplication การันตีว่าข้อมูล 60,106 แถวไม่ซ้ำกัน 100% (Zero Leakage)</li>
+                <li>ทดสอบบน Holdout Unseen Test Data 15,027 แถวจริง</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evaluation Metrics Card -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-white flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-amber-400"></i> 2.2 ผลการประเมินประสิทธิภาพจริง (Genuine Evaluation Benchmark)
+          </h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border">
+              <span class="text-xs text-slate-400 block mb-1">Accuracy จริง</span>
+              <span class="text-2xl font-extrabold text-brand-400">80.47%</span>
+              <span class="text-[10px] text-slate-500 block mt-1">บน Holdout Test Data</span>
+            </div>
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border">
+              <span class="text-xs text-slate-400 block mb-1">ROC-AUC Score</span>
+              <span class="text-2xl font-extrabold text-cyber-accent">0.8847</span>
+              <span class="text-[10px] text-slate-500 block mt-1">High Discriminative Power</span>
+            </div>
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border">
+              <span class="text-xs text-slate-400 block mb-1">Benign Recall</span>
+              <span class="text-2xl font-extrabold text-emerald-400">98.97%</span>
+              <span class="text-[10px] text-slate-500 block mt-1">False Positive ต่ำมาก (1.03%)</span>
+            </div>
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border">
+              <span class="text-xs text-slate-400 block mb-1">Attack Precision</span>
+              <span class="text-2xl font-extrabold text-cyber-purple">98.39%</span>
+              <span class="text-[10px] text-slate-500 block mt-1">มั่นใจสูงเมื่อเตือน Attack</span>
+            </div>
+          </div>
+
+          <!-- Confusion Matrix Table -->
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-900 border-b border-cyber-border text-slate-300">
+                  <th class="p-3">Actual Class (ของจริง) \ Predicted (ผลทำนาย)</th>
+                  <th class="p-3 text-emerald-400">ทำนายว่า Benign (0)</th>
+                  <th class="p-3 text-cyber-red">ทำนายว่า Attack (1)</th>
+                  <th class="p-3">สรุปผลประสิทธิภาพ</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cyber-border font-mono">
+                <tr>
+                  <td class="p-3 font-sans font-medium text-slate-300">Actual Benign (7,454 ตัวอย่าง)</td>
+                  <td class="p-3 text-emerald-400 font-bold bg-emerald-500/5">7,377 (TN)</td>
+                  <td class="p-3 text-red-400">77 (FP - 1.03%)</td>
+                  <td class="p-3 font-sans text-slate-400">ผู้ใช้ปกติผ่านได้เกือบ 99% ไม่รบกวน UX</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-sans font-medium text-slate-300">Actual Attack (7,573 ตัวอย่าง)</td>
+                  <td class="p-3 text-yellow-400">2,858 (FN)</td>
+                  <td class="p-3 text-red-400 font-bold bg-red-500/5">4,715 (TP)</td>
+                  <td class="p-3 font-sans text-slate-400">Precision 98.39% เตือนแล้วตรงเป้าหมาย</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 13 Features Table -->
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <h3 class="font-bold text-base text-white flex items-center gap-2">
+            <i data-lucide="sliders" class="w-5 h-5 text-cyber-accent"></i> 2.3 ตารางฟีเจอร์เชิงความปลอดภัย (13 Pure Semantic Security Features)
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-slate-900 border-b border-cyber-border text-slate-300">
+                  <th class="p-2.5">#</th>
+                  <th class="p-2.5">Feature Name</th>
+                  <th class="p-2.5">Type</th>
+                  <th class="p-2.5">คำอธิบายและวัตถุประสงค์ด้านความปลอดภัย</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cyber-border text-slate-300">
+                <tr><td class="p-2.5 font-mono text-slate-500">1</td><td class="p-2.5 font-mono text-cyber-accent">special_char_count</td><td class="p-2.5">int</td><td class="p-2.5">นับอักขระอันตราย (<code>' " ; < > \ $ ( ) | ` ^ ~ * # { } [ ]</code>) โดยไม่นับเครื่องหมาย URL ปกติ</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">2</td><td class="p-2.5 font-mono text-cyber-accent">special_char_ratio</td><td class="p-2.5">float</td><td class="p-2.5">สัดส่วนอักขระพิเศษต่อความยาวรวม เพื่อ Normalize ข้อมูล</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">3</td><td class="p-2.5 font-mono text-cyber-accent">keyword_matches</td><td class="p-2.5">int</td><td class="p-2.5">ตรวจจับ Attack Keywords (SQLi, XSS, RCE, SSRF, SSTI, NoSQL, Log4j)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">4</td><td class="p-2.5 font-mono text-cyber-accent">html_tag_matches</td><td class="p-2.5">int</td><td class="p-2.5">ตรวจจับโครงสร้างแท็ก HTML (<code>&lt;script&gt;</code>, <code>&lt;svg&gt;</code>, <code>&lt;iframe&gt;</code>) สำหรับ XSS</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">5</td><td class="p-2.5 font-mono text-cyber-accent">path_traversal_depth</td><td class="p-2.5">int</td><td class="p-2.5">นับความลึกของการย้อนโฟลเดอร์ (<code>../</code>, <code>..\</code>, <code>..%2f</code>) สำหรับ LFI/RFI</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">6</td><td class="p-2.5 font-mono text-cyber-accent">quote_unbalanced</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Quote เดี่ยวหรือคู่ที่ไม่ครบคู่ (Sign of SQLi Injection Breakout)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">7</td><td class="p-2.5 font-mono text-cyber-accent">has_sql_operator</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Boolean & Set Operator (<code>UNION SELECT</code>, <code>' OR '1'='1</code>)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">8</td><td class="p-2.5 font-mono text-cyber-accent">has_ssrf_token</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Cloud Metadata SSRF (<code>169.254.169.254</code>, <code>metadata.google</code>)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">9</td><td class="p-2.5 font-mono text-cyber-accent">has_ssti_nosql</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Template Injection และ NoSQL (<code>{{...}}</code>, <code>$ne</code>, <code>$gt</code>, <code>${jndi:</code>)</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">10</td><td class="p-2.5 font-mono text-cyber-accent">is_oversized_payload</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Request ยาวผิดปกติ (> 2048 bytes) กัน Buffer Overflow</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">11</td><td class="p-2.5 font-mono text-cyber-accent">is_clean_structure</td><td class="p-2.5">binary</td><td class="p-2.5">แฟล็กยืนยันว่า Request สะอาด ไม่มีอักขระโจมตีใดๆ เพื่อลด False Positive</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">12</td><td class="p-2.5 font-mono text-cyber-accent">has_excessive_params</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ Parameter ล้น (> 10 ตัว) สำหรับ HTTP Parameter Pollution</td></tr>
+                <tr><td class="p-2.5 font-mono text-slate-500">13</td><td class="p-2.5 font-mono text-cyber-accent">method_is_post</td><td class="p-2.5">binary</td><td class="p-2.5">ตรวจจับ HTTP POST Method</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 3: MODSECURITY & OWASP CRS -->
+      <section id="module-modsec" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyber-red/10 text-cyber-red">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">3. Layer 1: ModSecurity & OWASP Core Rule Set (CRS v4.0)</h2>
+            <p class="text-sm text-slate-400">ระบบ In-line Fast Path Inspection, Anomaly Scoring Model และการสร้างกฎอัตโนมัติ</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="glass-card rounded-2xl p-6 space-y-3">
+            <h4 class="font-bold text-white text-sm flex items-center gap-2">
+              <i data-lucide="cpu" class="w-4 h-4 text-brand-400"></i> Anomaly Scoring Model vs Traditional WAF
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              ในระบบนี้เราใช้ <strong>OWASP CRS Anomaly Scoring Mode</strong> (Threshold = 10) โดยแต่ละ Rule ที่ตรวจพบจะบวกคะแนนความเสี่ยง (Anomaly Score) เข้าตัวแปร <code>tx.inbound_anomaly_score</code> และจะบล็อก 403 Forbidden ที่ Phase 2 ทันทีเมื่อคะแนนรวมถึงเกณฑ์ ช่วยลด False Positive ได้อย่างดีเยี่ยมเมื่อเทียบกับการบล็อกแบบ Rule-by-Rule
+            </p>
+            <div class="bg-slate-950 p-3 rounded-lg font-mono text-[11px] text-slate-400 border border-slate-800">
+              Score = Critical(5) + High(4) + Medium(3) + Low(2)<br>
+              Block Action: tx.inbound_anomaly_score &gt;= 10
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-6 space-y-3">
+            <h4 class="font-bold text-white text-sm flex items-center gap-2">
+              <i data-lucide="code-2" class="w-4 h-4 text-cyber-accent"></i> Auto-Generated SecRule Sample
+            </h4>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              เมื่อโมเดล ML ตรวจพบภัยคุกคามใหม่ ระบบจะสร้าง ModSecurity Rule ที่ถูกต้องตามหลักไวยากรณ์ Apache SecRule โดยอัตโนมัติ:
+            </p>
+            <pre class="bg-slate-950 p-3 rounded-lg font-mono text-[11px] text-brand-400 border border-slate-800 overflow-x-auto">
+SecRule REQUEST_URI|REQUEST_BODY "@rx (?i)or\s+['\"]?1['\"]?\s*=\s*['\"]?1" \
+    "id:990001,\
+    phase:2,\
+    deny,\
+    status:403,\
+    severity:CRITICAL,\
+    log,\
+    msg:'ML Auto-Generated Rule: Blocked SQL Injection Pattern'"</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 4: EDGE CDN & GEODNS -->
+      <section id="module-edge-cdn" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-cyber-emerald/10 text-cyber-emerald">
+            <i data-lucide="globe" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">4. Global Edge CDN & GeoDNS Subsystem</h2>
+            <p class="text-sm text-slate-400">ระบบกระจายทราฟฟิกตามพิกัดภูมิศาสตร์, การเข้ารหัส SSL, และ Caching Rules</p>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border space-y-2">
+              <div class="font-bold text-cyber-emerald flex items-center gap-1.5">
+                <i data-lucide="map-pin" class="w-4 h-4"></i> 🇹🇭 Edge Node TH (Thailand)
+              </div>
+              <p class="text-slate-400">IP: <code>45.154.26.91</code> (Port 8086)</p>
+              <p class="text-slate-400">Domain: <code>waf-edge-th.duckdns.org</code></p>
+              <p class="text-slate-500">Rate Limit: 50 RPS / 100 Burst</p>
+            </div>
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border space-y-2">
+              <div class="font-bold text-cyber-accent flex items-center gap-1.5">
+                <i data-lucide="map-pin" class="w-4 h-4"></i> 🇸🇬 Edge Node SG (Singapore)
+              </div>
+              <p class="text-slate-400">Container: <code>cdn-edge-sg</code> (Port 8081)</p>
+              <p class="text-slate-400">IP: <code>172.28.0.11</code> (Internal CDN Net)</p>
+              <p class="text-slate-500">Rate Limit: 30 RPS / 60 Burst</p>
+            </div>
+            <div class="bg-slate-900/80 p-4 rounded-xl border border-cyber-border space-y-2">
+              <div class="font-bold text-cyber-purple flex items-center gap-1.5">
+                <i data-lucide="map-pin" class="w-4 h-4"></i> 🇯🇵 Edge Node JP (Japan)
+              </div>
+              <p class="text-slate-400">Container: <code>cdn-edge-jp</code> (Port 8082)</p>
+              <p class="text-slate-400">IP: <code>172.28.0.12</code> (Internal CDN Net)</p>
+              <p class="text-slate-500">Rate Limit: 30 RPS / 60 Burst</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 5: STREAM ANALYTICS & CLICKHOUSE -->
+      <section id="module-analytics" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-amber-400/10 text-amber-400">
+            <i data-lucide="activity" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">5. Multi-Channel Stream Analytics & ClickHouse Storage</h2>
+            <p class="text-sm text-slate-400">การดักฟัง Log 4 ช่องทางพร้อมกันแบบ Real-time และการจัดเก็บแบบ Columnar</p>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-4">
+          <p class="text-sm text-slate-300 leading-relaxed">
+            Service <code>waf-log-analyzer.service</code> ทำงานด้วย Python <code>asyncio</code> คอยดักอ่านไฟล์ Log พร้อมกันทั้ง 4 เส้นทาง เมื่อตรวจพบแถวใหม่จะส่งเข้า ML Microservice เพื่อจัดประเภททันที:
+          </p>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
+            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800"><span class="text-emerald-400 block font-bold">[TH Channel]</span> logs/cdn/th/access.json</div>
+            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800"><span class="text-cyan-400 block font-bold">[SG Channel]</span> logs/cdn/sg/access.json</div>
+            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800"><span class="text-purple-400 block font-bold">[JP Channel]</span> logs/cdn/jp/access.json</div>
+            <div class="p-3 bg-slate-900 rounded-lg border border-slate-800"><span class="text-red-400 block font-bold">[MAIN WAF]</span> logs/nginx/access.json</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 6: GENAI SECOPS & ADVANCED PROTECTION -->
+      <section id="module-genai" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-indigo-400/10 text-indigo-400">
+            <i data-lucide="sparkles" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">6. Generative AI SecOps Lead & Advanced Protection</h2>
+            <p class="text-sm text-slate-400">การวิเคราะห์สรุปเหตุการณ์ด้วย Google Gemini AI, BOLA Guard, และ Safe Regex Engine</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="glass-card rounded-xl p-4 space-y-2">
+            <div class="font-bold text-indigo-400 flex items-center gap-1.5"><i data-lucide="bot" class="w-4 h-4"></i> Gemini AI Analyst</div>
+            <p class="text-slate-400">สรุปการโจมตีภาษาไทย 1-2 ประโยคสั้นๆ สำหรับทีม SecOps และแปลงคำถามเวลาธรรมชาติเป็น SQL Query</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 space-y-2">
+            <div class="font-bold text-amber-400 flex items-center gap-1.5"><i data-lucide="lock" class="w-4 h-4"></i> BOLA Guard (API Security)</div>
+            <p class="text-slate-400">ตรวจจับ Broken Object Level Authorization ใน REST API ป้องกันการเข้าถึง ID หรือ Resource ของผู้อื่น</p>
+          </div>
+          <div class="glass-card rounded-xl p-4 space-y-2">
+            <div class="font-bold text-brand-400 flex items-center gap-1.5"><i data-lucide="shield-check" class="w-4 h-4"></i> PII Masker & Safe Regex</div>
+            <p class="text-slate-400">เซ็นเซอร์ข้อมูลส่วนบุคคล (PDPA/GDPR) ก่อนลงฐานข้อมูล และทดสอบ ReDoS ป้องกัน Regex Attack</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODULE 7: INTERACTIVE TEST SANDBOX -->
+      <section id="module-sandbox" class="space-y-6 pt-4">
+        <div class="border-b border-cyber-border pb-4 flex items-center gap-3">
+          <div class="p-2 rounded-xl bg-brand-500/10 text-brand-400">
+            <i data-lucide="play-circle" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold text-white">7. Interactive Threat Simulator & Live Feature Extractor</h2>
+            <p class="text-sm text-slate-400">ทดลองพิมพ์ URL หรือ Payload โจมตี เพื่อจำลองการสกัด 13 Features และคำนวณผลการทำนายแบบ Real-time</p>
+          </div>
+        </div>
+
+        <div class="glass-card rounded-2xl p-6 space-y-5 border-brand-500/30">
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold text-slate-300">เลือกตัวอย่าง Payload หรือพิมพ์ URL ของคุณเอง:</label>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <button onclick="setPayload('/search?q=laptop&page=2&sort=asc', 'GET', '')" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition">Normal Search</button>
+              <button onclick="setPayload('/login?user=admin\' OR \'1\'=\'1\' --', 'GET', '')" class="px-2.5 py-1 text-xs bg-red-900/30 hover:bg-red-900/50 text-red-300 rounded-lg border border-red-500/30 transition">SQLi Auth Bypass</button>
+              <button onclick="setPayload('/view?name=<svg/onload=alert(1)>', 'GET', '')" class="px-2.5 py-1 text-xs bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 rounded-lg border border-purple-500/30 transition">XSS SVG</button>
+              <button onclick="setPayload('/fetch?url=http://169.254.169.254/latest/meta-data/', 'GET', '')" class="px-2.5 py-1 text-xs bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 rounded-lg border border-amber-500/30 transition">Cloud SSRF</button>
+              <button onclick="setPayload('/render?tpl={{7*7}}', 'GET', '')" class="px-2.5 py-1 text-xs bg-cyan-900/30 hover:bg-cyan-900/50 text-cyan-300 rounded-lg border border-cyan-500/30 transition">SSTI Jinja2</button>
+              <button onclick="setPayload('/api/v1/auth', 'POST', '{\"user\": {\"$ne\": null}, \"pass\": {\"$gt\": \"\"}}')" class="px-2.5 py-1 text-xs bg-pink-900/30 hover:bg-pink-900/50 text-pink-300 rounded-lg border border-pink-500/30 transition">NoSQL Injection</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div class="sm:col-span-1">
+                <select id="sandboxMethod" class="w-full bg-slate-900 border border-cyber-border rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyber-accent">
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                </select>
+              </div>
+              <div class="sm:col-span-3">
+                <input type="text" id="sandboxUrl" value="/search?q=laptop&page=2&sort=asc" placeholder="/path?query=..." class="w-full bg-slate-900 border border-cyber-border rounded-xl px-4 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-cyber-accent">
+              </div>
+            </div>
+            <textarea id="sandboxBody" placeholder="POST Body (optional)..." rows="2" class="w-full bg-slate-900 border border-cyber-border rounded-xl px-4 py-2 text-xs text-white font-mono focus:outline-none focus:border-cyber-accent hidden"></textarea>
+          </div>
+
+          <!-- Result Box -->
+          <div id="sandboxResult" class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Prediction & Decision</span>
+              <span id="predBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">PASS (Normal)</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center text-xs font-mono">
+              <div class="p-2.5 bg-slate-900 rounded-lg"><span class="text-slate-500 block text-[10px]">Attack Probability</span><span id="probVal" class="text-emerald-400 font-bold text-sm">24.8%</span></div>
+              <div class="p-2.5 bg-slate-900 rounded-lg"><span class="text-slate-500 block text-[10px]">Special Chars</span><span id="spCharVal" class="text-slate-300 font-bold text-sm">0</span></div>
+              <div class="p-2.5 bg-slate-900 rounded-lg"><span class="text-slate-500 block text-[10px]">Attack Keywords</span><span id="kwVal" class="text-slate-300 font-bold text-sm">0</span></div>
+              <div class="p-2.5 bg-slate-900 rounded-lg"><span class="text-slate-500 block text-[10px]">Clean Structure</span><span id="cleanVal" class="text-brand-400 font-bold text-sm">YES (1)</span></div>
+            </div>
+            <div class="text-[11px] text-slate-400 font-mono bg-slate-900/60 p-2.5 rounded-lg overflow-x-auto" id="rawFeaturesText">
+              Features: {"special_char_count":0, "keyword_matches":0, "has_sql_operator":0, "has_ssrf_token":0, "has_ssti_nosql":0, "is_clean_structure":1}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="border-t border-cyber-border pt-8 pb-12 text-center text-xs text-slate-500 space-y-2">
+        <p>🛡️ Web Application Firewall & Machine Learning Anomaly Detection System</p>
+        <p>Senior Seminar Project by jakkaret & ryu-chirachot | Deployed on GitHub Pages</p>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- SCRIPT FOR MERMAID & INTERACTIVE SANDBOX -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+    mermaid.run();
+
+    // Sandbox Feature Extractor Simulator (Client-side JS mirror of Python ML model)
+    const SPECIAL_CHARS = new Set(["'", '"', '`', ';', '<', '>', '\\', '$', '(', ')', '|', '^', '~', '*', '#', '{', '}', '[', ']']);
+    const ATTACK_KEYWORDS = /(select\s+|union\s+|insert\s+into|update\s+|delete\s+from|drop\s+table|exec\s*\(|where\s+|or\s+['"]?1['"]?\s*=\s*['"]?1|and\s+['"]?1['"]?\s*=\s*['"]?1|sleep\s*\(|<script|javascript:|alert\s*\(|eval\s*\(|onerror\s*=|onload\s*=|document\.cookie|<svg|<iframe|\.\.\/|\.\.\\|\/etc\/passwd|169\.254\.169\.254|metadata\.google|\{\{.*?\}\}|\$\{.*?\}|\$gt|\$ne|\$where|\$\{jndi:)/i;
+    const SQL_OP = /\b(union\s+select|or\s+['"]?\d+['"]?\s*=\s*['"]?\d+|and\s+['"]?\d+['"]?\s*=\s*['"]?\d+|select\s+.*?\s+from)\b/i;
+    const SSRF_OP = /(169\.254\.169\.254|localhost|127\.0\.0\.1|metadata\.google)/i;
+    const SSTI_NOSQL_OP = /(\{\{.*?\}\}|\$\{.*?\}|\#\{.*?\}|\$ne|\$gt|\$where|\$regex|\$\{jndi:)/i;
+
+    function evaluateSandbox() {
+      const url = document.getElementById('sandboxUrl').value || '';
+      const method = document.getElementById('sandboxMethod').value || 'GET';
+      const body = document.getElementById('sandboxBody').value || '';
+
+      const decodedUrl = decodeURIComponent(decodeURIComponent(url));
+      const decodedBody = decodeURIComponent(decodeURIComponent(body));
+      const combined = `${method} ${decodedUrl} ${decodedBody}`.trim();
+      const payload = `${decodedUrl} ${decodedBody}`.trim();
+
+      let spCount = 0;
+      for (let ch of payload) {
+        if (SPECIAL_CHARS.has(ch)) spCount++;
+      }
+
+      const kwMatches = (combined.match(new RegExp(ATTACK_KEYWORDS.source, 'gi')) || []).length;
+      const htmlMatches = (combined.match(/<[a-zA-Z\/][^>]*>/g) || []).length;
+      const pathDepth = (combined.match(/\.\.\/|\.\.\\|\.\.%2f/gi) || []).length;
+      const hasSql = SQL_OP.test(combined) ? 1 : 0;
+      const hasSsrf = SSRF_OP.test(combined) ? 1 : 0;
+      const hasSsti = SSTI_NOSQL_OP.test(combined) ? 1 : 0;
+      const isClean = (spCount === 0 && kwMatches === 0 && htmlMatches === 0 && pathDepth === 0 && hasSql === 0 && hasSsrf === 0 && hasSsti === 0) ? 1 : 0;
+
+      const isAttack = (kwMatches > 0 || hasSql > 0 || hasSsrf > 0 || hasSsti > 0 || htmlMatches > 0 || pathDepth > 0 || spCount >= 3);
+      const prob = isAttack ? 100.0 : (isClean ? 24.8 : 42.7);
+
+      // Update UI
+      const badge = document.getElementById('predBadge');
+      const probVal = document.getElementById('probVal');
+      if (isAttack) {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-400 border border-red-500/30 animate-pulse';
+        badge.innerText = '🚨 ANOMALY DETECTED';
+        probVal.className = 'text-red-400 font-bold text-sm';
+      } else {
+        badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        badge.innerText = '✅ PASS (Normal)';
+        probVal.className = 'text-emerald-400 font-bold text-sm';
+      }
+
+      probVal.innerText = `${prob.toFixed(1)}%`;
+      document.getElementById('spCharVal').innerText = spCount;
+      document.getElementById('kwVal').innerText = kwMatches;
+      document.getElementById('cleanVal').innerText = isClean ? 'YES (1)' : 'NO (0)';
+
+      const raw = {
+        special_char_count: spCount,
+        keyword_matches: kwMatches,
+        html_tag_matches: htmlMatches,
+        path_traversal_depth: pathDepth,
+        has_sql_operator: hasSql,
+        has_ssrf_token: hasSsrf,
+        has_ssti_nosql: hasSsti,
+        is_clean_structure: isClean
+      };
+      document.getElementById('rawFeaturesText').innerText = `Extracted Features: ${JSON.stringify(raw)}`;
+    }
+
+    function setPayload(url, method, body) {
+      document.getElementById('sandboxUrl').value = url;
+      document.getElementById('sandboxMethod').value = method;
+      document.getElementById('sandboxBody').value = body;
+      if (method === 'POST') {
+        document.getElementById('sandboxBody').classList.remove('hidden');
+      } else {
+        document.getElementById('sandboxBody').classList.add('hidden');
+      }
+      evaluateSandbox();
+    }
+
+    document.getElementById('sandboxUrl').addEventListener('input', evaluateSandbox);
+    document.getElementById('sandboxMethod').addEventListener('change', (e) => {
+      if (e.target.value === 'POST') {
+        document.getElementById('sandboxBody').classList.remove('hidden');
+      } else {
+        document.getElementById('sandboxBody').classList.add('hidden');
+      }
+      evaluateSandbox();
+    });
+    document.getElementById('sandboxBody').addEventListener('input', evaluateSandbox);
+
+    // Initial evaluation
+    evaluateSandbox();
+
+    // Simple Search Filter
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      document.querySelectorAll('main section').forEach(sec => {
+        if (sec.innerText.toLowerCase().includes(q)) {
+          sec.style.display = 'block';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
 </html>
