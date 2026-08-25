@@ -4,21 +4,25 @@
 <title>วิเคราะห์ระบบเชิงลึก & UI Mockup — WAF & CDN Guide</title>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#080d14;--bg2:#0d1520;--bg3:#101a28;
-  --card:#131d2e;--card2:#172133;--card-hover:#1c293d;
-  --border:#1a2840;--border2:#203350;--border-active:#3b82f6;
-  --blue:#3b82f6;--blue2:#60a5fa;--blue-glow:rgba(59,130,246,0.15);
+  --card:#111927;--card2:#162234;--card-hover:#1c293d;
+  --border:#1a2840;--border2:#223652;--border-active:#3b82f6;
+  --blue:#3b82f6;--blue2:#60a5fa;--blue-glow:rgba(59,130,246,0.18);
   --green:#22c55e;--green2:#4ade80;
   --yellow:#f59e0b;--orange:#f97316;
   --red:#ef4444;--red2:#f87171;
   --purple:#a855f7;--cyan:#06b6d4;--teal:#14b8a6;
-  --text:#dce6f0;--text2:#8fa4be;--text3:#4d6480;
-  --r:14px;--rs:9px;
+  --text:#dce6f0;--text2:#8fa4be;--text3:#526985;
+  --r:14px;--rs:8px;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Thai',sans-serif;line-height:1.75;overflow-x:hidden;min-height:100vh}
@@ -27,14 +31,15 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Thai',san
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 a{color:var(--blue2);text-decoration:none}
 a:hover{text-decoration:underline}
-code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);padding:1px 6px;border-radius:4px;color:var(--blue2)}
+code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);padding:2px 6px;border-radius:4px;color:var(--blue2)}
 
-/* ---- NAV ---- */
+/* ---- NAV / SIDEBAR ---- */
 .sidenav{
-  position:fixed;top:0;left:0;bottom:0;width:260px;
+  position:fixed;top:0;left:0;bottom:0;width:264px;
   background:var(--bg2);border-right:1px solid var(--border);
   overflow-y:auto;z-index:50;padding:0 0 2rem;
   display:flex;flex-direction:column;
+  transition:transform .3s ease;
 }
 .nav-brand{
   display:flex;align-items:center;gap:10px;
@@ -42,13 +47,13 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
   font-weight:700;font-size:.95rem;color:var(--text);
   text-decoration:none;flex-shrink:0;
 }
-.nav-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.nav-section{padding:.6rem 1rem .25rem;font-size:.67rem;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem}
+.nav-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.nav-section{padding:.6rem 1rem .25rem;font-size:.65rem;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem}
 .nav-link{
   display:flex;align-items:center;gap:9px;
   padding:.42rem 1rem .42rem 1.1rem;
-  font-size:.83rem;font-weight:500;color:var(--text2);
-  text-decoration:none;border-radius:0;transition:all .15s;
+  font-size:.82rem;font-weight:500;color:var(--text2);
+  text-decoration:none;transition:all .15s;
   border-left:3px solid transparent;
 }
 .nav-link:hover{background:var(--card);color:var(--text);text-decoration:none}
@@ -56,30 +61,30 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 .nav-link .ni{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
 .nav-badge{margin-left:auto;font-size:.62rem;padding:2px 7px;border-radius:99px;font-weight:600}
 .nb-new{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
-.nb-warn{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.25)}
 .nb-pro{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
 
 /* ---- MAIN ---- */
-.main{margin-left:260px;min-height:100vh}
+.main{margin-left:264px;min-height:100vh;display:flex;flex-direction:column}
 .topbar{
   position:sticky;top:0;z-index:40;
-  background:rgba(8,13,20,.92);backdrop-filter:blur(20px);
+  background:rgba(8,13,20,.94);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
   padding:.7rem 2rem;display:flex;align-items:center;gap:1rem;
 }
+.mobile-toggle{display:none;background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;padding:4px}
 .tb-breadcrumb{font-size:.8rem;color:var(--text3);display:flex;align-items:center;gap:.4rem}
 .tb-breadcrumb span{color:var(--text2)}
 .machine-pill{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem}
-.mp{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-weight:600}
+.mp{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-weight:600}
 .mp.main{background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
 .mp.edge{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25)}
 
 /* ---- CONTENT ---- */
-.content{padding:2rem 2.5rem 5rem;max-width:1100px;margin:0 auto}
-.page-hero{margin-bottom:2.5rem}
-.page-tag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:.9rem}
-.page-hero h1{font-size:clamp(1.7rem,3.2vw,2.3rem);font-weight:700;line-height:1.25;margin-bottom:.8rem}
-.page-hero p{font-size:1rem;color:var(--text2);max-width:850px}
+.content{padding:2rem 2.5rem 5rem;max-width:1120px;margin:0 auto;width:100%}
+.page-hero{margin-bottom:2.2rem}
+.page-tag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:.8rem}
+.page-hero h1{font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem;color:var(--text)}
+.page-hero p{font-size:.95rem;color:var(--text2);max-width:860px;line-height:1.7}
 
 /* ---- CARDS & LAYOUTS ---- */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin:1.2rem 0;position:relative}
@@ -90,45 +95,45 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1rem 0}
 .grid-3{display:grid;grid-template-columns:repeat(3, 1fr);gap:1.2rem;margin:1rem 0}
 .grid-4{display:grid;grid-template-columns:repeat(4, 1fr);gap:1rem;margin:1rem 0}
-@media(max-width:900px){.grid-3,.grid-4{grid-template-columns:1fr 1fr}}
+@media(max-width:960px){.grid-3,.grid-4{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
 
-/* ---- STAT CARD ---- */
-.stat-box{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.1rem;display:flex;flex-direction:column;gap:6px;transition:all .2s}
-.stat-box:hover{transform:translateY(-2px);border-color:var(--border-active)}
+/* ---- STAT BOX ---- */
+.stat-box{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.1rem;display:flex;flex-direction:column;gap:5px;transition:all .2s}
+.stat-box:hover{transform:translateY(-2px);border-color:var(--border-active);box-shadow:0 8px 20px rgba(0,0,0,0.3)}
 .stat-label{font-size:.75rem;color:var(--text2);display:flex;align-items:center;justify-content:space-between}
-.stat-val{font-size:1.6rem;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text)}
+.stat-val{font-size:1.65rem;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text);line-height:1.2}
 .stat-sub{font-size:.72rem;color:var(--text3);display:flex;align-items:center;gap:4px}
 
 /* ---- MOCKUP CONTAINER ---- */
 .mockup-window{
-  background:#0e1626;border:1px solid var(--border2);border-radius:var(--r);
-  overflow:hidden;margin:1.8rem 0;box-shadow:0 15px 40px rgba(0,0,0,0.5);
+  background:#0b111d;border:1px solid var(--border2);border-radius:var(--r);
+  overflow:hidden;margin:1.8rem 0;box-shadow:0 20px 50px rgba(0,0,0,0.6);
 }
 .mockup-bar{
-  background:#090e18;border-bottom:1px solid var(--border);
+  background:#070b13;border-bottom:1px solid var(--border);
   padding:10px 16px;display:flex;align-items:center;gap:12px;
 }
 .window-dots{display:flex;gap:6px}
-.w-dot{width:10px;height:10px;border-radius:50%}
+.w-dot{width:11px;height:11px;border-radius:50%}
 .w-red{background:#ef4444}.w-yel{background:#f59e0b}.w-grn{background:#22c55e}
 .mockup-url{
-  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  border-radius:6px;padding:3px 12px;font-size:.72rem;font-family:'IBM Plex Mono',monospace;
-  color:var(--text2);flex:1;max-width:550px;text-align:center;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:6px;padding:3px 14px;font-size:.73rem;font-family:'IBM Plex Mono',monospace;
+  color:var(--text2);flex:1;max-width:560px;text-align:center;
 }
 .mockup-tabs{
   display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
-  overflow-x:auto;padding:0 8px;gap:4px;
+  overflow-x:auto;padding:0 6px;gap:2px;
 }
 .m-tab{
-  padding:10px 18px;font-size:.82rem;font-weight:600;color:var(--text2);
+  padding:11px 18px;font-size:.83rem;font-weight:600;color:var(--text2);
   cursor:pointer;border:none;background:none;display:flex;align-items:center;gap:8px;
   border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
 }
-.m-tab:hover{color:var(--text);background:rgba(255,255,255,0.03)}
-.m-tab.active{color:var(--blue2);border-bottom-color:var(--blue);background:rgba(59,130,246,0.06)}
-.mockup-content{padding:1.5rem;min-height:380px}
+.m-tab:hover{color:var(--text);background:rgba(255,255,255,0.02)}
+.m-tab.active{color:var(--blue2);border-bottom-color:var(--blue);background:rgba(59,130,246,0.07)}
+.mockup-content{padding:1.5rem;min-height:400px}
 
 /* ---- TAB PANELS ---- */
 .tab-panel{display:none}
@@ -137,9 +142,9 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 
 /* ---- TABLE MOCKUP ---- */
 .m-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:.8rem}
-.m-table th{background:rgba(255,255,255,0.03);padding:9px 12px;text-align:left;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600}
+.m-table th{background:rgba(255,255,255,0.025);padding:10px 12px;text-align:left;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600}
 .m-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
-.m-table tr:hover td{background:rgba(255,255,255,0.02)}
+.m-table tr:hover td{background:rgba(59,130,246,0.03);cursor:pointer}
 
 /* ---- BADGES ---- */
 .tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:.68rem;font-weight:600}
@@ -149,7 +154,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 .tb{background:rgba(59,130,246,.12);color:var(--blue2);border:1px solid rgba(59,130,246,.25)}
 .tp{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.25)}
 
-/* ---- CALLOUTS & ARCH DIAGRAM ---- */
+/* ---- CALLOUTS & PIPELINE ---- */
 .deep-card{background:linear-gradient(180deg, var(--card) 0%, var(--bg2) 100%);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem;margin:1.8rem 0}
 .deep-card h3{font-size:1.15rem;font-weight:700;margin-bottom:.8rem;color:var(--blue2);display:flex;align-items:center;gap:10px}
 .pipeline{display:flex;align-items:stretch;gap:8px;margin:1.2rem 0;overflow-x:auto;padding-bottom:.5rem}
@@ -161,17 +166,26 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 /* ---- ROLEPLAY WALKTHROUGH BOX ---- */
 .scenario-box{background:rgba(16,26,40,0.8);border-left:4px solid var(--purple);border-radius:0 var(--rs) var(--rs) 0;padding:1.2rem;margin:1rem 0}
 .scenario-step{display:flex;gap:12px;margin:.8rem 0;font-size:.84rem}
-.sc-dot{width:22px;height:22px;border-radius:50%;background:rgba(168,85,247,0.2);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.sc-dot{width:24px;height:24px;border-radius:50%;background:rgba(168,85,247,0.2);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
 
-/* ---- CODE PREVIEW ---- */
-.cb{background:#060a10;border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;margin:.8rem 0}
-.cb-hdr{padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--border);font-size:.7rem;color:var(--text3);font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:space-between}
-.cb pre{padding:.9rem;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.65;overflow-x:auto}
-.cm{color:var(--text3)}.cs{color:#86efac}.ck{color:#93c5fd}.cv{color:#fde68a}
+/* ---- MODAL POPUP ---- */
+.modal-backdrop{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center}
+.modal-backdrop.show{display:flex}
+.modal-box{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);width:90%;max-width:550px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.8);animation:modalIn .2s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+.modal-hdr{padding:12px 18px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:.92rem}
+.modal-body{padding:1.4rem;font-size:.82rem;color:var(--text2);display:flex;flex-direction:column;gap:12px}
+.modal-ftr{padding:10px 18px;background:var(--bg2);border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+
+/* ---- TOAST NOTIFICATION ---- */
+#toast{position:fixed;bottom:24px;right:24px;background:#1e293b;border:1px solid var(--border-active);color:#fff;padding:10px 18px;border-radius:8px;font-size:.82rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,0.5);transform:translateY(100px);opacity:0;transition:all .3s ease;z-index:1000;display:flex;align-items:center;gap:8px}
+#toast.show{transform:translateY(0);opacity:1}
 
 @media(max-width:900px){
-  .sidenav{display:none}
+  .sidenav{transform:translateX(-100%)}
+  .sidenav.open{transform:translateX(0)}
   .main{margin-left:0}
+  .mobile-toggle{display:block}
   .content{padding:1.25rem 1rem 3rem}
 }
 </style>
@@ -179,7 +193,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 <body>
 
 <!-- SIDEBAR NAVIGATION -->
-<nav class="sidenav">
+<nav class="sidenav" id="sidenav">
   <a class="nav-brand" href="index.html">
     <div class="nav-logo">🛡️</div>
     <div><div style="font-size:.9rem">WAF & CDN</div><div style="font-size:.67rem;font-weight:400;color:var(--text3)">คู่มือการตั้งค่า</div></div>
@@ -190,8 +204,8 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
   <a class="nav-link" href="prerequisites.html"><span class="ni">📋</span>ข้อกำหนดเบื้องต้น</a>
   <div class="nav-section">คู่มือ & วิเคราะห์เชิงลึก</div>
   <a class="nav-link active" href="system-walkthrough.html"><span class="ni">⚡</span>วิเคราะห์ระบบ & UI Mockup<span class="nav-badge nb-pro">Deep-Dive</span></a>
-  <a class="nav-link" href="main-server.html"><span class="ni">🧠</span>Main Server<span class="nav-badge nb-warn">Step 1-3</span></a>
-  <a class="nav-link" href="edge-node.html"><span class="ni">🌐</span>Edge Node<span class="nav-badge nb-warn">Step 4-6</span></a>
+  <a class="nav-link" href="main-server.html"><span class="ni">🧠</span>Main Server</a>
+  <a class="nav-link" href="edge-node.html"><span class="ni">🌐</span>Edge Node</a>
   <a class="nav-link" href="control-api.html"><span class="ni">📦</span>Control API</a>
   <a class="nav-link" href="firewall.html"><span class="ni">🔥</span>Firewall (UFW)</a>
   <a class="nav-link" href="dashboard.html"><span class="ni">📊</span>Dashboard & Analytics</a>
@@ -205,6 +219,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 <div class="main">
   <!-- TOPBAR -->
   <div class="topbar">
+    <button class="mobile-toggle" onclick="toggleNav()"><i class="fa-solid fa-bars"></i></button>
     <div class="tb-breadcrumb">🛡️ WAF & CDN <span>›</span> <span>วิเคราะห์ระบบเชิงลึก & UI Mockup</span></div>
     <div class="machine-pill">
       <span class="mp main"><i class="fa-solid fa-server"></i> Main: 178.104.53.123</span>
@@ -237,7 +252,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
           <div class="pipe-num">1. ต้นน้ำ (Client / Attacker)</div>
           <div class="pipe-title">DNS & Inbound Traffic</div>
           <div class="pipe-desc">
-            Client เรียกโดเมน ➔ GeoDNS หรือ CNAME ชี้มาที่ Edge IP <code>45.154.26.91</code> (พอร์ต 80/443)
+            Client เรียกโดเมน ➔ CNAME หรือ A Record ชี้มาที่ Edge IP <code>45.154.26.91</code> (พอร์ต 80/443)
           </div>
         </div>
 
@@ -276,14 +291,19 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
     </div>
 
     <!-- 🖥️ INTERACTIVE UI MOCKUP SECTION -->
-    <div style="margin:2.5rem 0 1rem">
-      <h2 style="font-size:1.35rem;font-weight:700;margin-bottom:.4rem;display:flex;align-items:center;gap:10px">
-        <i class="fa-solid fa-laptop-code" style="color:var(--blue2)"></i> 
-        Interactive UI Mockup & Forensic Breakdown
-      </h2>
-      <p style="font-size:.88rem;color:var(--text2)">
-        คลิกเลือกแต่ละแท็บเพื่อสลับดูหน้าจอ UI ของจริง พร้อมอ่านคำอธิบายหน้าที่ ความหมายของตัวเลข และกลไกการทำงานเบื้องหลัง
-      </p>
+    <div style="margin:2.5rem 0 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <h2 style="font-size:1.35rem;font-weight:700;display:flex;align-items:center;gap:10px">
+          <i class="fa-solid fa-laptop-code" style="color:var(--blue2)"></i> 
+          Interactive UI Mockup & Forensic Breakdown
+        </h2>
+        <p style="font-size:.86rem;color:var(--text2)">
+          กดสลับแท็บเพื่อดูหน้าจอ UI ของจริง ทดลองค้นหา ล้างแคช หรือจำลองการยิงโจมตีแบบ Real-time
+        </p>
+      </div>
+      <button onclick="simulateAttack()" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(239,68,68,0.3)">
+        <i class="fa-solid fa-bolt"></i> จำลองการยิงโจมตี (Simulate Attack)
+      </button>
     </div>
 
     <div class="mockup-window">
@@ -317,17 +337,17 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
           <div class="grid-4">
             <div class="stat-box">
               <div class="stat-label">Total Events (24h) <i class="fa-solid fa-chart-line" style="color:var(--blue)"></i></div>
-              <div class="stat-val">128,490</div>
+              <div class="stat-val" id="kpi-total">128,490</div>
               <div class="stat-sub" style="color:var(--green)"><i class="fa-solid fa-arrow-up"></i> +14.2% from yesterday</div>
             </div>
             <div class="stat-box" style="border-color:rgba(239,68,68,0.3)">
               <div class="stat-label">Blocked Threats (403/429) <i class="fa-solid fa-ban" style="color:var(--red)"></i></div>
-              <div class="stat-val" style="color:var(--red2)">3,842</div>
-              <div class="stat-sub"><span class="tag tr">2.98% Block Rate</span></div>
+              <div class="stat-val" style="color:var(--red2)" id="kpi-blocked">3,842</div>
+              <div class="stat-sub"><span class="tag tr" id="kpi-rate">2.98% Block Rate</span></div>
             </div>
             <div class="stat-box">
               <div class="stat-label">Unique Attacker IPs <i class="fa-solid fa-user-ninja" style="color:var(--yellow)"></i></div>
-              <div class="stat-val">412</div>
+              <div class="stat-val" style="color:var(--yellow)" id="kpi-ips">412</div>
               <div class="stat-sub" style="color:var(--text3)">Top: 185.220.101.4</div>
             </div>
             <div class="stat-box">
@@ -343,9 +363,9 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
                 <span><i class="fa-solid fa-shield-virus" style="color:var(--purple)"></i> Attack Vector Distribution</span>
                 <span class="tag tp">Real-time CRS</span>
               </div>
-              <div style="display:flex;flex-direction:column;gap:8px;font-size:.78rem">
+              <div style="display:flex;flex-direction:column;gap:9px;font-size:.78rem">
                 <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
                     <span>SQL Injection (SQLi) - Rule 942100</span>
                     <span style="font-weight:600;color:var(--red2)">54% (2,074)</span>
                   </div>
@@ -354,7 +374,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
                   </div>
                 </div>
                 <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
                     <span>Cross-Site Scripting (XSS) - Rule 941100</span>
                     <span style="font-weight:600;color:var(--yellow)">26% (998)</span>
                   </div>
@@ -363,7 +383,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
                   </div>
                 </div>
                 <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
                     <span>Rate Limit Exceeded (HTTP 429)</span>
                     <span style="font-weight:600;color:var(--blue2)">15% (576)</span>
                   </div>
@@ -372,7 +392,7 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
                   </div>
                 </div>
                 <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
                     <span>Remote Code Execution (RCE) - Rule 932100</span>
                     <span style="font-weight:600;color:var(--purple)">5% (194)</span>
                   </div>
@@ -387,11 +407,11 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
               <div style="font-size:.85rem;font-weight:600;margin-bottom:8px">
                 <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--yellow)"></i> AI Incident Summary & Recommendation
               </div>
-              <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:6px;padding:10px;font-size:.76rem;color:var(--text2);line-height:1.6">
+              <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:6px;padding:12px;font-size:.76rem;color:var(--text2);line-height:1.6">
                 <strong>ตรวจพบพฤติกรรมผิดปกติ:</strong> ตรวจพบการพยายามสแกน SQL Injection ต่อเนื่องจาก Subnet <code>185.220.101.0/24</code> พุ่งเป้าไปที่ Endpoint <code>/dvwa/vulnerabilities/sqli/</code><br/>
                 <span style="color:var(--green2)">🛡️ <strong>ผลลัพธ์:</strong> WAF Blocked 100% ที่ Edge Node SG (Anomaly Score 15/10) Origin Server ปลอดภัย 100%</span>
               </div>
-              <div style="margin-top:10px;font-size:.75rem;color:var(--text3);display:flex;align-items:center;gap:6px">
+              <div style="margin-top:12px;font-size:.74rem;color:var(--text3);display:flex;align-items:center;gap:6px">
                 <i class="fa-solid fa-clock"></i> อัปเดตล่าสุด: ทุกๆ 10 วินาที ผ่าน ClickHouse Materialized Aggregation
               </div>
             </div>
@@ -403,86 +423,92 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap">
             <div style="display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;width:320px">
               <i class="fa-solid fa-search" style="color:var(--text3);font-size:.8rem"></i>
-              <input type="text" value="UNION SELECT" style="background:none;border:none;outline:none;color:var(--text);font-size:.78rem;width:100%" placeholder="ค้นหา IP, URL, Rule ID..."/>
+              <input type="text" id="log-search-input" onkeyup="filterLogs()" style="background:none;border:none;outline:none;color:var(--text);font-size:.78rem;width:100%" placeholder="ค้นหา IP, URL, Rule ID..."/>
             </div>
             <div style="display:flex;gap:6px">
-              <span class="tag tr">Filter: 403 Forbidden</span>
-              <span class="tag tb"><i class="fa-solid fa-download"></i> Export CSV</span>
+              <button onclick="setLogFilter('ALL')" class="tag tb" style="cursor:pointer;border:none">Show All</button>
+              <button onclick="setLogFilter('403')" class="tag tr" style="cursor:pointer;border:none">Only 403 Blocked</button>
+              <button onclick="downloadCSV()" class="tag tg" style="cursor:pointer;border:none"><i class="fa-solid fa-download"></i> Export CSV</button>
             </div>
           </div>
 
-          <table class="m-table">
-            <thead>
-              <tr>
-                <th>Timestamp (UTC+7)</th>
-                <th>Client IP / Geo</th>
-                <th>Method & URI</th>
-                <th>Status</th>
-                <th>Matched Rule</th>
-                <th>Severity</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>21:30:14</td>
-                <td><code>185.220.101.4</code> <span class="tag tb">DE</span></td>
-                <td><span class="tag tr">GET</span> <code>/dvwa/vulnerabilities/sqli/?id=1'+UNION+SELECT+1,2--</code></td>
-                <td><span class="tag tr">403 Blocked</span></td>
-                <td><code>942100 (SQLi Detection)</code></td>
-                <td><span class="tag tr">CRITICAL</span></td>
-              </tr>
-              <tr>
-                <td>21:29:45</td>
-                <td><code>45.154.26.88</code> <span class="tag tb">TH</span></td>
-                <td><span class="tag tr">POST</span> <code>/login.php</code> (Payload: &lt;script&gt;alert(1)&lt;/script&gt;)</td>
-                <td><span class="tag tr">403 Blocked</span></td>
-                <td><code>941100 (XSS LibInjection)</code></td>
-                <td><span class="tag tr">CRITICAL</span></td>
-              </tr>
-              <tr>
-                <td>21:28:10</td>
-                <td><code>171.96.12.190</code> <span class="tag tb">TH</span></td>
-                <td><span class="tag tg">GET</span> <code>/static/css/main.css</code></td>
-                <td><span class="tag tg">200 OK (HIT)</span></td>
-                <td><code>- (Cache Hit)</code></td>
-                <td><span class="tag tg">CLEAN</span></td>
-              </tr>
-              <tr>
-                <td>21:27:02</td>
-                <td><code>194.26.29.112</code> <span class="tag tb">RU</span></td>
-                <td><span class="tag ty">GET</span> <code>/api/v1/auth/flood</code> (50 req/sec)</td>
-                <td><span class="tag ty">429 RateLimit</span></td>
-                <td><code>RateLimit: RPS Exceeded</code></td>
-                <td><span class="tag ty">HIGH</span></td>
-              </tr>
-            </tbody>
-          </table>
+          <div style="overflow-x:auto">
+            <table class="m-table" id="logs-table">
+              <thead>
+                <tr>
+                  <th>Timestamp (UTC+7)</th>
+                  <th>Client IP / Geo</th>
+                  <th>Method & URI</th>
+                  <th>Status</th>
+                  <th>Matched Rule</th>
+                  <th>Severity</th>
+                </tr>
+              </thead>
+              <tbody id="logs-tbody">
+                <tr onclick="openForensicModal('185.220.101.4', 'GET', '/dvwa/vulnerabilities/sqli/?id=1\'+UNION+SELECT+1,2--', '403 Blocked', '942100', 'CRITICAL', 'Matched Data: UNION SELECT detected in ARGS:id (Score 15/10)')">
+                  <td>21:30:14</td>
+                  <td><code>185.220.101.4</code> <span class="tag tb">DE</span></td>
+                  <td><span class="tag tr">GET</span> <code>/dvwa/vulnerabilities/sqli/?id=1'+UNION+SELECT+1,2--</code></td>
+                  <td><span class="tag tr">403 Blocked</span></td>
+                  <td><code>942100 (SQLi Detection)</code></td>
+                  <td><span class="tag tr">CRITICAL</span></td>
+                </tr>
+                <tr onclick="openForensicModal('45.154.26.88', 'POST', '/login.php', '403 Blocked', '941100', 'CRITICAL', 'XSS detected via LibInjection in BODY:password')">
+                  <td>21:29:45</td>
+                  <td><code>45.154.26.88</code> <span class="tag tb">TH</span></td>
+                  <td><span class="tag tr">POST</span> <code>/login.php</code> (Payload: &lt;script&gt;alert(1)&lt;/script&gt;)</td>
+                  <td><span class="tag tr">403 Blocked</span></td>
+                  <td><code>941100 (XSS LibInjection)</code></td>
+                  <td><span class="tag tr">CRITICAL</span></td>
+                </tr>
+                <tr onclick="openForensicModal('171.96.12.190', 'GET', '/static/css/main.css', '200 OK (HIT)', '-', 'CLEAN', 'Served from Nginx Cache (/var/cache/nginx) in 2ms')">
+                  <td>21:28:10</td>
+                  <td><code>171.96.12.190</code> <span class="tag tb">TH</span></td>
+                  <td><span class="tag tg">GET</span> <code>/static/css/main.css</code></td>
+                  <td><span class="tag tg">200 OK (HIT)</span></td>
+                  <td><code>- (Cache Hit)</code></td>
+                  <td><span class="tag tg">CLEAN</span></td>
+                </tr>
+                <tr onclick="openForensicModal('194.26.29.112', 'GET', '/api/v1/auth/flood', '429 RateLimit', 'RPS-Zone', 'HIGH', 'Client exceeded limit_req_zone rate=30r/s burst=60')">
+                  <td>21:27:02</td>
+                  <td><code>194.26.29.112</code> <span class="tag tb">RU</span></td>
+                  <td><span class="tag ty">GET</span> <code>/api/v1/auth/flood</code> (50 req/sec)</td>
+                  <td><span class="tag ty">429 RateLimit</span></td>
+                  <td><code>RateLimit: RPS Exceeded</code></td>
+                  <td><span class="tag ty">HIGH</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:10px;font-size:.72rem;color:var(--text3);text-align:right">
+            💡 คลิกที่แต่ละแถวเพื่อเปิดดูรายงานการตรวจจับ Forensic Breakdown
+          </div>
         </div>
 
         <!-- ================= TAB 3: WEB ORIGIN & TUNNEL ================= -->
         <div id="tab-origins" class="tab-panel">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
             <div>
               <div style="font-size:1rem;font-weight:700">Origin Servers & Domain Routing</div>
               <div style="font-size:.76rem;color:var(--text2)">กำหนดเซิร์ฟเวอร์ปลายทางและตั้งค่า CNAME เพื่อคุ้มครอง WAF</div>
             </div>
-            <button style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.78rem;font-weight:600;cursor:pointer">
+            <button onclick="openAddOriginModal()" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.78rem;font-weight:600;cursor:pointer">
               <i class="fa-solid fa-plus"></i> Add New Origin
             </button>
           </div>
 
           <div class="grid-2">
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem">
+            <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem" id="origin-card-1">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
                 <div style="display:flex;align-items:center;gap:8px">
                   <div style="width:10px;height:10px;border-radius:50%;background:var(--green)"></div>
-                  <strong style="font-size:.9rem">DVWA Production App</strong>
+                  <strong style="font-size:.9rem" id="orig-name">DVWA Production App</strong>
                 </div>
                 <span class="tag tg">Active</span>
               </div>
               <div style="font-size:.78rem;color:var(--text2);display:flex;flex-direction:column;gap:6px">
-                <div><strong>Origin Target:</strong> <code>178.104.53.123:8080</code> (Main Server)</div>
-                <div><strong>Protected Domain:</strong> <code>app.mysecuresite.com</code></div>
+                <div><strong>Origin Target:</strong> <code id="orig-target">178.104.53.123:8080</code> (Main Server)</div>
+                <div><strong>Protected Domain:</strong> <code id="orig-domain">app.mysecuresite.com</code></div>
                 <div><strong>DNS Status:</strong> <span class="tag tg"><i class="fa-solid fa-check"></i> CNAME Verified</span></div>
                 <div><strong>SSL/TLS:</strong> <span class="tag tb"><i class="fa-solid fa-lock"></i> Auto Let's Encrypt (Caddy)</span></div>
               </div>
@@ -495,11 +521,13 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
               <p style="font-size:.75rem;color:var(--text2);margin-bottom:8px">
                 เพื่อให้ทราฟฟิกวิ่งผ่าน Edge WAF ให้ลูกค้าเพิ่มค่า CNAME หรือ A Record ใน DNS Provider (เช่น Cloudflare / GoDaddy):
               </p>
-              <div class="cb">
-                <div class="cb-hdr"><span>DNS Record Spec</span><span>TTL: Auto</span></div>
-                <pre><span class="ck">Type:</span>  CNAME  <span class="cm">|</span>  <span class="ck">Name:</span> @ / app  <span class="cm">|</span>  <span class="ck">Target:</span> edge-sg.waf-cloud.com
-<span class="ck">Type:</span>  A      <span class="cm">|</span>  <span class="ck">Name:</span> app         <span class="cm">|</span>  <span class="ck">Value:</span>  45.154.26.91</pre>
+              <div style="background:#060a10;border:1px solid var(--border);border-radius:6px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:.74rem;display:flex;flex-direction:column;gap:4px">
+                <div>Type: <span style="color:var(--blue2)">CNAME</span> | Name: <code>@ / app</code> | Target: <code>edge-sg.waf-cloud.com</code></div>
+                <div>Type: <span style="color:var(--green2)">A</span>     | Name: <code>app</code>       | Value:  <code>45.154.26.91</code></div>
               </div>
+              <button onclick="copyDNS()" style="margin-top:8px;background:none;border:1px solid var(--border);color:var(--text2);border-radius:4px;padding:4px 10px;font-size:.72rem;cursor:pointer">
+                <i class="fa-regular fa-copy"></i> คัดลอกค่า DNS Record
+              </button>
             </div>
           </div>
         </div>
@@ -524,45 +552,49 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
             </div>
           </div>
 
-          <table class="m-table">
-            <thead>
-              <tr>
-                <th>Region / Node Name</th>
-                <th>Public Edge IP</th>
-                <th>Status</th>
-                <th>Requests (1h)</th>
-                <th>Cache HIT / MISS</th>
-                <th>Rule Sync State</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>🇸🇬 Singapore (SG-01)</strong></td>
-                <td><code>45.154.26.91</code></td>
-                <td><span class="tag tg"><i class="fa-solid fa-circle-dot"></i> Healthy</span></td>
-                <td>84,120</td>
-                <td><span class="tag tg">71k HIT</span> / <span class="tag ty">13k MISS</span></td>
-                <td><span class="tag tb"><i class="fa-solid fa-rotate"></i> Synced (SHA-256 Valid)</span></td>
-              </tr>
-              <tr>
-                <td><strong>🇹🇭 Thailand (TH-Main)</strong></td>
-                <td><code>178.104.53.123</code></td>
-                <td><span class="tag tg"><i class="fa-solid fa-circle-dot"></i> Healthy</span></td>
-                <td>44,370</td>
-                <td><span class="tag tg">36k HIT</span> / <span class="tag ty">8k MISS</span></td>
-                <td><span class="tag tg">Master Control Node</span></td>
-              </tr>
-            </tbody>
-          </table>
+          <div style="overflow-x:auto">
+            <table class="m-table">
+              <thead>
+                <tr>
+                  <th>Region / Node Name</th>
+                  <th>Public Edge IP</th>
+                  <th>Status</th>
+                  <th>Requests (1h)</th>
+                  <th>Cache HIT / MISS</th>
+                  <th>Rule Sync State</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>🇸🇬 Singapore (SG-01)</strong></td>
+                  <td><code>45.154.26.91</code></td>
+                  <td><span class="tag tg"><i class="fa-solid fa-circle-dot"></i> Healthy</span></td>
+                  <td>84,120</td>
+                  <td><span class="tag tg">71k HIT</span> / <span class="tag ty">13k MISS</span></td>
+                  <td><span class="tag tb"><i class="fa-solid fa-rotate"></i> Synced (SHA-256 Valid)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>🇹🇭 Thailand (TH-Main)</strong></td>
+                  <td><code>178.104.53.123</code></td>
+                  <td><span class="tag tg"><i class="fa-solid fa-circle-dot"></i> Healthy</span></td>
+                  <td>44,370</td>
+                  <td><span class="tag tg">36k HIT</span> / <span class="tag ty">8k MISS</span></td>
+                  <td><span class="tag tg">Master Control Node</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
           <div style="margin-top:1.2rem;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
             <div>
               <div style="font-size:.85rem;font-weight:600"><i class="fa-solid fa-trash-can" style="color:var(--red)"></i> Instant Cache Purge Tool</div>
-              <div style="font-size:.75rem;color:var(--text2)">สั่งลบแคชบน Edge Nodes ทุกตัวทันทีเมื่อมีการอัปเดตไฟล์หน้าเว็บ</div>
+              <div style="font-size:.74rem;color:var(--text2)">สั่งลบแคชบน Edge Nodes ทุกตัวทันทีเมื่อมีการอัปเดตไฟล์หน้าเว็บ</div>
             </div>
             <div style="display:flex;gap:6px">
-              <input type="text" value="/*" style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:.78rem;color:var(--text);width:150px"/>
-              <button style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:5px 12px;font-size:.76rem;font-weight:600;cursor:pointer">Purge All Edge Cache</button>
+              <input type="text" value="/*" id="purge-input" style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:.78rem;color:var(--text);width:150px"/>
+              <button onclick="triggerPurge()" style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:5px 14px;font-size:.76rem;font-weight:600;cursor:pointer">
+                Purge All Edge Cache
+              </button>
             </div>
           </div>
         </div>
@@ -757,20 +789,194 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
   </div>
 </div>
 
+<!-- FORENSIC MODAL -->
+<div class="modal-backdrop" id="forensic-modal" onclick="closeForensicModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <span><i class="fa-solid fa-magnifying-glass" style="color:var(--blue2)"></i> Forensic Event Breakdown</span>
+      <button onclick="closeForensicModal()" style="background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div><strong>Client IP:</strong> <code id="modal-ip">185.220.101.4</code></div>
+      <div><strong>Request URI:</strong> <code id="modal-uri" style="word-break:break-all">/dvwa/...</code></div>
+      <div><strong>Detection Rule ID:</strong> <span class="tag tr" id="modal-rule">942100</span></div>
+      <div><strong>Severity:</strong> <span class="tag tr" id="modal-sev">CRITICAL</span></div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px">
+        <div style="font-weight:700;margin-bottom:4px;color:var(--text)">Match Data & Engine Diagnostics:</div>
+        <div id="modal-desc" style="font-size:.76rem;color:var(--text2);line-height:1.6">...</div>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button onclick="closeForensicModal()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:.78rem;cursor:pointer">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ORIGIN MODAL -->
+<div class="modal-backdrop" id="add-origin-modal" onclick="closeAddOriginModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <span><i class="fa-solid fa-plus" style="color:var(--green2)"></i> เพิ่ม Origin Server ใหม่</span>
+      <button onclick="closeAddOriginModal()" style="background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label style="display:block;margin-bottom:4px;font-weight:600">ชื่อ Server / Label:</label>
+        <input type="text" id="new-origin-label" value="My Production API" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;color:#fff;font-size:.8rem"/>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px;font-weight:600">Origin IP Address:</label>
+        <input type="text" id="new-origin-ip" value="178.104.53.123" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;color:#fff;font-size:.8rem"/>
+      </div>
+      <div>
+        <label style="display:block;margin-bottom:4px;font-weight:600">Port (เช่น 80, 443, 8080):</label>
+        <input type="number" id="new-origin-port" value="8080" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;color:#fff;font-size:.8rem"/>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button onclick="closeAddOriginModal()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:.78rem;cursor:pointer">ยกเลิก</button>
+      <button onclick="saveNewOrigin()" style="background:var(--blue);border:none;color:#fff;border-radius:6px;padding:6px 16px;font-size:.78rem;font-weight:600;cursor:pointer">บันทึก Origin</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast">
+  <i class="fa-solid fa-circle-check" style="color:var(--green2)"></i>
+  <span id="toast-msg">Notification</span>
+</div>
+
 <script>
+// Mobile navigation
+function toggleNav() {
+  const sidenav = document.getElementById('sidenav');
+  sidenav.classList.toggle('open');
+}
+
+// Tab switcher
 function switchMockTab(tabId, urlText, btnElement) {
-  // Update tabs
   document.querySelectorAll('.m-tab').forEach(el => el.classList.remove('active'));
   btnElement.classList.add('active');
 
-  // Update panels
   document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
   const targetPanel = document.getElementById(tabId);
   if (targetPanel) targetPanel.classList.add('active');
 
-  // Update URL bar
   const urlBar = document.getElementById('mockup-url-bar');
   if (urlBar) urlBar.innerText = urlText;
+}
+
+// Toast helper
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-msg');
+  toastMsg.innerText = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+// Search & Filter in Traffic Log
+function filterLogs() {
+  const query = document.getElementById('log-search-input').value.toLowerCase();
+  const rows = document.querySelectorAll('#logs-tbody tr');
+  rows.forEach(r => {
+    const text = r.innerText.toLowerCase();
+    r.style.display = text.includes(query) ? '' : 'none';
+  });
+}
+
+function setLogFilter(status) {
+  const rows = document.querySelectorAll('#logs-tbody tr');
+  rows.forEach(r => {
+    if (status === 'ALL') {
+      r.style.display = '';
+    } else {
+      r.style.display = r.innerText.includes(status) ? '' : 'none';
+    }
+  });
+}
+
+function downloadCSV() {
+  const csv = "timestamp,ip,method,uri,status,rule,severity\n21:30:14,185.220.101.4,GET,/dvwa/sqli,403,942100,CRITICAL\n21:29:45,45.154.26.88,POST,/login.php,403,941100,CRITICAL\n21:28:10,171.96.12.190,GET,/static/css/main.css,200,-,CLEAN\n21:27:02,194.26.29.112,GET,/api/v1/auth/flood,429,RPS-Zone,HIGH";
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = "waf_attack_logs.csv";
+  a.click();
+  showToast("ดาวน์โหลดไฟล์ CSV เรียบร้อยแล้ว!");
+}
+
+// Forensic Modal
+function openForensicModal(ip, method, uri, status, rule, sev, desc) {
+  document.getElementById('modal-ip').innerText = ip;
+  document.getElementById('modal-uri').innerText = method + ' ' + uri;
+  document.getElementById('modal-rule').innerText = rule;
+  document.getElementById('modal-sev').innerText = sev;
+  document.getElementById('modal-desc').innerText = desc;
+  document.getElementById('forensic-modal').classList.add('show');
+}
+function closeForensicModal() {
+  document.getElementById('forensic-modal').classList.remove('show');
+}
+
+// Add Origin Modal
+function openAddOriginModal() {
+  document.getElementById('add-origin-modal').classList.add('show');
+}
+function closeAddOriginModal() {
+  document.getElementById('add-origin-modal').classList.remove('show');
+}
+function saveNewOrigin() {
+  const label = document.getElementById('new-origin-label').value;
+  const ip = document.getElementById('new-origin-ip').value;
+  const port = document.getElementById('new-origin-port').value;
+  document.getElementById('orig-name').innerText = label;
+  document.getElementById('orig-target').innerText = ip + ':' + port;
+  closeAddOriginModal();
+  showToast("บันทึก Origin Server: " + label + " สำเร็จ!");
+}
+
+// Copy DNS
+function copyDNS() {
+  navigator.clipboard.writeText("Type: CNAME | Name: @ | Target: edge-sg.waf-cloud.com\nType: A | Name: app | Value: 45.154.26.91");
+  showToast("คัดลอกค่า DNS Record ลง Clipboard สำเร็จ!");
+}
+
+// Purge Cache
+function triggerPurge() {
+  const path = document.getElementById('purge-input').value;
+  showToast("กำลังสั่งล้างแคช Path: " + path + " บน Edge SG & TH...");
+  setTimeout(() => {
+    showToast("✓ ล้างแคชสำเร็จ 100% บน Edge ทุกตัว (Zero-Downtime)");
+  }, 1000);
+}
+
+// Attack Simulation
+let blockedCounter = 3842;
+let totalCounter = 128490;
+function simulateAttack() {
+  totalCounter += 1;
+  blockedCounter += 1;
+  document.getElementById('kpi-total').innerText = totalCounter.toLocaleString();
+  document.getElementById('kpi-blocked').innerText = blockedCounter.toLocaleString();
+
+  // Add row to table
+  const tbody = document.getElementById('logs-tbody');
+  const tr = document.createElement('tr');
+  const now = new Date().toLocaleTimeString('en-GB');
+  tr.innerHTML = `
+    <td>${now}</td>
+    <td><code>203.0.113.88</code> <span class="tag tr">ATTACK</span></td>
+    <td><span class="tag tr">GET</span> <code>/dvwa/sqli/?id=99'+OR+1=1--</code></td>
+    <td><span class="tag tr">403 Blocked</span></td>
+    <td><code>942100 (SQLi)</code></td>
+    <td><span class="tag tr">CRITICAL</span></td>
+  `;
+  tr.onclick = () => openForensicModal('203.0.113.88', 'GET', '/dvwa/sqli/?id=99\'+OR+1=1--', '403 Blocked', '942100', 'CRITICAL', 'Simulated live attack blocked by Edge CRS');
+  tbody.insertBefore(tr, tbody.firstChild);
+
+  showToast("⚡ ตรวจพบการโจมตี SQL Injection! Edge Node SG สกัดกั้น 403 สำเร็จ!");
 }
 </script>
 
