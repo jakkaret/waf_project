@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<title>Project Review — WAF & CDN คู่มือ</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080d14;--bg2:#0d1520;--bg3:#101a28;
+  --card:#131d2e;--card2:#172133;
+  --border:#1a2840;--border2:#203350;
+  --blue:#3b82f6;--blue2:#60a5fa;
+  --green:#22c55e;--yellow:#f59e0b;
+  --red:#ef4444;--orange:#f97316;
+  --purple:#a855f7;--cyan:#06b6d4;--teal:#14b8a6;
+  --text:#dce6f0;--text2:#8fa4be;--text3:#4d6480;
+  --r:14px;--rs:9px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Thai',sans-serif;line-height:1.75;overflow-x:hidden;min-height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+a{color:var(--blue2);text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);padding:1px 6px;border-radius:4px;color:var(--blue2)}
+
+/* ---- NAV ---- */
+.sidenav{
+  position:fixed;top:0;left:0;bottom:0;width:260px;
+  background:var(--bg2);border-right:1px solid var(--border);
+  overflow-y:auto;z-index:50;padding:0 0 2rem;
+  display:flex;flex-direction:column;
+}
+.nav-brand{
+  display:flex;align-items:center;gap:10px;
+  padding:1.1rem 1.2rem;border-bottom:1px solid var(--border);
+  font-weight:700;font-size:.95rem;color:var(--text);
+  text-decoration:none;flex-shrink:0;
+}
+.nav-logo{width:32px;height:32px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.nav-section{padding:.6rem 1rem .25rem;font-size:.67rem;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem}
+.nav-link{
+  display:flex;align-items:center;gap:9px;
+  padding:.42rem 1rem .42rem 1.1rem;
+  font-size:.83rem;font-weight:500;color:var(--text2);
+  text-decoration:none;border-radius:0;transition:all .15s;
+  border-left:3px solid transparent;
+}
+.nav-link:hover{background:var(--card);color:var(--text);text-decoration:none}
+.nav-link.active{background:rgba(59,130,246,.08);color:var(--blue2);border-left-color:var(--blue)}
+.nav-link .ni{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;font-size:.62rem;padding:2px 7px;border-radius:99px;font-weight:600}
+.nb-new{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+.nb-warn{background:rgba(239,68,68,.12);color:var(--red);border:1px solid rgba(239,68,68,.25)}
+
+/* ---- MAIN ---- */
+.main{margin-left:260px;min-height:100vh}
+.topbar{
+  position:sticky;top:0;z-index:40;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  padding:.7rem 2rem;display:flex;align-items:center;gap:1rem;
+}
+.tb-breadcrumb{font-size:.8rem;color:var(--text3);display:flex;align-items:center;gap:.4rem}
+.tb-breadcrumb span{color:var(--text2)}
+
+/* ---- CONTENT ---- */
+.content{padding:2rem 2.5rem 4rem;max-width:860px}
+.page-hero{margin-bottom:2rem}
+.page-tag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:.9rem}
+.page-hero h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem;color:var(--text)}
+.page-hero p{font-size:.95rem;color:var(--text2);max-width:620px}
+
+/* ---- COMPONENTS ---- */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin:1rem 0;transition:border-color 0.2s}
+.card:hover{border-color:var(--border2)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:.5rem;display:flex;align-items:center;gap:8px;color:var(--text)}
+
+/* NOTICE */
+.notice{display:flex;gap:10px;padding:10px 14px;border-radius:var(--rs);margin:.65rem 0;font-size:.83rem}
+.ni-icon{flex-shrink:0;font-size:.95rem;margin-top:2px}
+.notice p{margin:0;color:var(--text2);line-height:1.6}
+.notice strong{color:var(--text)}
+.n-info{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2)}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:99px;font-size:.68rem;font-weight:600}
+.tg{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.ty{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.2)}
+.tr{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.tb{background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.2)}
+.tp{background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.2)}
+.tc{background:rgba(6,182,212,.1);color:var(--cyan);border:1px solid rgba(6,182,212,.2)}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem;margin:1rem 0}
+.tbl th{background:var(--bg2);padding:8px 12px;text-align:left;font-weight:600;border:1px solid var(--border);color:var(--text2);font-size:.75rem}
+.tbl td{padding:8px 12px;border:1px solid var(--border);vertical-align:top;color:var(--text2)}
+.tbl tr:hover td{background:rgba(255,255,255,.015)}
+.tbl .p0{color:var(--red);font-weight:600}
+.tbl .p1{color:var(--orange);font-weight:600}
+.tbl .p2{color:var(--yellow);font-weight:600}
+.tbl .p3{color:var(--blue);font-weight:600}
+.tbl .p4{color:var(--text3);font-weight:600}
+
+/* PROGRESS */
+.pbar-wrap{display:flex;flex-direction:column;gap:.45rem;margin:.75rem 0}
+.pbar-row{display:flex;align-items:center;gap:10px;font-size:.79rem}
+.pbar-lbl{width:150px;flex-shrink:0;color:var(--text2);font-weight:500}
+.pbar{flex:1;height:6px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.pfill{height:100%;border-radius:99px;transition:width .7s ease;background:var(--blue)}
+.ppct{width:40px;text-align:right;font-weight:700;font-family:'IBM Plex Mono',monospace;font-size:.72rem}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:1.8rem;margin:1rem 0}
+.timeline::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:2px;background:var(--border2)}
+.tl-item{position:relative;margin-bottom:1.5rem}
+.tl-dot{position:absolute;left:-1.8rem;top:4px;width:12px;height:12px;border-radius:50%;transform:translateX(-50%);border:2px solid var(--bg);background:var(--blue)}
+.tl-title{font-weight:600;font-size:.88rem;margin-bottom:.25rem;color:var(--text)}
+.tl-desc{font-size:.8rem;color:var(--text2);line-height:1.5}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr}}
+
+/* RESP */
+@media(max-width:900px){
+  .sidenav{display:none}
+  .main{margin-left:0}
+  .content{padding:1.25rem 1rem 3rem}
+}
+.h2{font-size:1.1rem;font-weight:700;margin:2rem 0 .75rem;padding-bottom:.4rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;color:var(--text)}
+.h3{font-size:.95rem;font-weight:600;margin:1.5rem 0 .5rem;color:var(--text)}
+p{font-size:.87rem;color:var(--text2);margin-bottom:.6rem;line-height:1.7}
+ul,ol{padding-left:1.4rem;margin:.5rem 0}
+li{font-size:.85rem;color:var(--text2);margin-bottom:.25rem;line-height:1.6}
+li strong{color:var(--text)}
+
+/* FOOTER & MISC */
+.footer-notice{margin-top:4rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--text3);text-align:center}
+pre.report{border:none;background:transparent;padding:0;margin:0;font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--text2);overflow-x:auto;line-height:1.6}
+pre.report strong{color:var(--text)}
+</style>
+</head>
+<body>
+
+<nav class="sidenav">
+  <a class="nav-brand" href="index.html">
+    <div class="nav-logo">🛡️</div>
+    <div><div style="font-size:.9rem">WAF & CDN</div><div style="font-size:.67rem;font-weight:400;color:var(--text3)">คู่มือการตั้งค่า</div></div>
+  </a>
+  <div class="nav-section">เริ่มต้น</div>
+  <a class="nav-link" href="index.html"><span class="ni">🏠</span>ภาพรวมระบบ</a>
+  <a class="nav-link" href="architecture.html"><span class="ni">🏗️</span>สถาปัตยกรรม</a>
+  <a class="nav-link" href="prerequisites.html"><span class="ni">📋</span>ข้อกำหนดเบื้องต้น</a>
+  
+  <div class="nav-section">ตั้งค่าระบบ</div>
+  <a class="nav-link" href="main-server.html"><span class="ni">🧠</span>Main Server<span class="nav-badge nb-warn">Step 1-3</span></a>
+  <a class="nav-link" href="edge-node.html"><span class="ni">🌐</span>Edge Node<span class="nav-badge nb-warn">Step 4-6</span></a>
+  <a class="nav-link" href="control-api.html"><span class="ni">📦</span>Control API<span class="nav-badge nb-new">Done</span></a>
+  <a class="nav-link" href="firewall.html"><span class="ni">🔥</span>Firewall (UFW)</a>
+  <a class="nav-link" href="dashboard.html"><span class="ni">📊</span>Dashboard & Analytics</a>
+  
+  <div class="nav-section">ขยายระบบ</div>
+  <a class="nav-link" href="ssl.html"><span class="ni">🔒</span>HTTPS & SSL</a>
+  <a class="nav-link" href="multi-edge.html"><span class="ni">🌏</span>Multi-Region Edge</a>
+  
+  <div class="nav-section">แผนพัฒนา</div>
+  <a class="nav-link" href="roadmap.html"><span class="ni">📅</span>Roadmap</a>
+  <a class="nav-link" href="reference.html"><span class="ni">📖</span>API Reference</a>
+  
+  <div class="nav-section">การตรวจสอบ</div>
+  <a class="nav-link active" href="review.html"><span class="ni">🔍</span>Project Review</a>
+</nav>
+
+<div class="main">
+<div class="topbar">
+  <div class="tb-breadcrumb">🛡️ WAF & CDN <span>›</span> <span>Project Review</span></div>
+</div>
+
+<div class="content">
+
+<div class="page-hero">
+  <div class="page-tag" style="background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.2)">🔍 Project Review</div>
+  <h1>Enterprise Project Review</h1>
+  <p>ระบบตรวจสอบโปรเจกต์ WAF + CDN ระดับ Enterprise ด้วย Multi-Agent Review Board</p>
+</div>
+
+<h2 class="h2">👥 Agent Team</h2>
+<div class="grid-2">
+  <div class="card">
+    <h3>🎯 Lead Reviewer</h3>
+    <p><strong>Role:</strong> ผู้อำนวยการรีวิว</p>
+    <ul>
+      <li>Cross-reference findings & เชื่อมโยงปัญหาข้ามโดเมน</li>
+      <li>Executive Summary สำหรับผู้บริหารระดับสูง</li>
+      <li>Priority Matrix & Risk Correlation</li>
+      <li>Remediation Roadmap จัดลำดับการแก้ไข</li>
+    </ul>
+    <br/>
+    <span class="tag tb">Orchestrator</span>
+  </div>
+  <div class="card">
+    <h3>🔒 Security Auditor</h3>
+    <p><strong>Role:</strong> Cybersecurity Specialist</p>
+    <ul>
+      <li>WAF Rule bypass testing & Regex flaw analysis</li>
+      <li>DDoS mitigation review (L3/L4/L7)</li>
+      <li>Bot management & Credential stuffing defense</li>
+      <li>SSL/TLS configuration & Cipher suite audit</li>
+      <li>Origin IP protection & Direct bypass prevention</li>
+      <li>API security audit & Tamper-proof logging</li>
+    </ul>
+    <div class="notice n-info"><span class="ni-icon">💡</span><p><strong>Key Question:</strong> "ถ้า attacker รู้ว่าใช้ WAF ตัวนี้ จะ bypass ได้ทางไหน?"</p></div>
+    <span class="tag tr">Security</span>
+  </div>
+  <div class="card">
+    <h3>🌐 Network Architect</h3>
+    <p><strong>Role:</strong> Network & Infrastructure Reviewer</p>
+    <ul>
+      <li>CDN PoP architecture & Cache hit ratio strategy</li>
+      <li>DNS design (Anycast / GeoDNS / DNSSEC)</li>
+      <li>Load balancing & Failover routing (RTO/RPO)</li>
+      <li>Origin Shield & Request storm protection</li>
+      <li>HA design & Single Point of Failure analysis</li>
+      <li>Protocol support (HTTP/2, HTTP/3, QUIC, WebSocket)</li>
+    </ul>
+    <div class="notice n-info"><span class="ni-icon">💡</span><p><strong>Key Question:</strong> "ถ้า traffic spike 100x ระบบยังยืนไหม? PoP 1 จุดล่มแล้ว traffic ไปไหน?"</p></div>
+    <span class="tag tg">Network</span>
+  </div>
+  <div class="card">
+    <h3>📊 Business & Risk Analyst</h3>
+    <p><strong>Role:</strong> Business Logic & Risk Reviewer</p>
+    <ul>
+      <li>SLA design & Penalty clause calculation</li>
+      <li>Cost model analysis (Bandwidth vs Compute economics)</li>
+      <li>False positive revenue impact (ลูกค้าถูกบล็อก = เสียเงินเท่าไหร่)</li>
+      <li>Business continuity (fail-open vs fail-close trade-off)</li>
+      <li>Incident cost per hour & Risk appetite mapping</li>
+      <li>Third-party threat feed & Vendor risk assessment</li>
+    </ul>
+    <div class="notice n-info"><span class="ni-icon">💡</span><p><strong>Key Question:</strong> "WAF block legit customer 1% = เสียรายได้เท่าไหร่ต่อเดือน?"</p></div>
+    <span class="tag ty">Business</span>
+  </div>
+  <div class="card">
+    <h3>⚖️ Legal & Compliance</h3>
+    <p><strong>Role:</strong> Cyber Law & Data Protection Specialist</p>
+    <ul>
+      <li>PDPA (Data Processor obligations, DPA, DPIA)</li>
+      <li>Data sovereignty & Cross-border traffic routing</li>
+      <li>Log retention balance (พ.ร.บ.คอมฯ 90 วัน vs PDPA Minimization)</li>
+      <li>Content liability สำหรับข้อมูลที่ถูก Cache บน CDN</li>
+      <li>พ.ร.บ.ไซเบอร์ (CII Classification & NCSA Reporting)</li>
+      <li>PCI-DSS Requirement 6.6 (Web Application Firewall)</li>
+      <li>Data Breach Notification (แจ้ง สคส. ภายใน 72 ชั่วโมง)</li>
+    </ul>
+    <div class="notice n-info"><span class="ni-icon">💡</span><p><strong>Key Question:</strong> "WAF อ่าน request body ที่มี PII ของ end-user = เราเป็น Data Processor ต้องมี DPA กับลูกค้าทุกรายไหม?"</p></div>
+    <span class="tag tp">Legal</span>
+  </div>
+  <div class="card">
+    <h3>🔍 Engineering Quality</h3>
+    <p><strong>Role:</strong> Code, Testing & Architecture Reviewer</p>
+    <ul>
+      <li>WAF rule engine performance (ReDoS prevention & µs latency)</li>
+      <li>Cache logic review (Cache poisoning & Cache keys)</li>
+      <li>Config as Code & GitOps automated sync</li>
+      <li>Performance testing (p50/p95/p99 latency under load)</li>
+      <li>Automated security test suite & WAF regression tests</li>
+      <li>Chaos testing (PoP failure & Origin drop simulation)</li>
+      <li>CI/CD rule deployment & Instant rollback pipeline</li>
+    </ul>
+    <div class="notice n-info"><span class="ni-icon">💡</span><p><strong>Key Question:</strong> "WAF rule ใหม่ deploy แล้วพัง production → rollback ได้ภายในกี่วินาที?"</p></div>
+    <span class="tag tc">Engineering</span>
+  </div>
+</div>
+
+<h2 class="h2">📋 Responsibility Matrix</h2>
+<table class="tbl">
+<thead>
+<tr>
+<th>Component</th>
+<th><span style="color:var(--red)">🔒 Security</span></th>
+<th><span style="color:var(--green)">🌐 Network</span></th>
+<th><span style="color:var(--yellow)">📊 Business</span></th>
+<th><span style="color:var(--purple)">⚖️ Legal</span></th>
+<th><span style="color:var(--cyan)">🔍 Engineering</span></th>
+</tr>
+</thead>
+<tbody>
+<tr><td>WAF Rules</td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--blue)">●</span></td></tr>
+<tr><td>DDoS Mitigation</td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td></tr>
+<tr><td>CDN/Cache</td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--blue)">●</span></td></tr>
+<tr><td>DNS</td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td></tr>
+<tr><td>SSL/TLS</td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td></tr>
+<tr><td>Bot Management</td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td></tr>
+<tr><td>Rate Limiting</td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td></tr>
+<tr><td>Logging & Data</td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td></tr>
+<tr><td>Dashboard</td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--blue)">●</span></td></tr>
+<tr><td>API Gateway</td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td></tr>
+<tr><td>Origin Shield</td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td></tr>
+<tr><td>Data Flow</td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">—</span></td></tr>
+<tr><td>CI/CD</td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--blue)">●</span></td></tr>
+<tr><td>SLA/Uptime</td><td><span style="color:var(--text3)">—</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--blue)">●</span></td><td><span style="color:var(--text3)">○</span></td><td><span style="color:var(--text3)">—</span></td></tr>
+</tbody>
+</table>
+
+<h2 class="h2">🔄 Review Process</h2>
+<div class="timeline">
+  <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">1. สั่งรีวิวโปรเจกต์</div><div class="tl-desc">Lead Reviewer วิเคราะห์ scope, Architecture blueprint และ Threat landscape รวม</div></div>
+  <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">2. กระจายงานให้ 5 Specialist Agents (Parallel Execution)</div><div class="tl-desc">ส่ง Context เชิงลึกให้ผู้เชี่ยวชาญแต่ละด้านประเมินไปพร้อมกัน</div></div>
+  <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">3. แต่ละ Agent ส่ง Domain Report กลับ</div><div class="tl-desc">รวบรวม Technical Findings, Vulnerabilities, Compliance Gaps และ Business Risks</div></div>
+  <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">4. Lead Reviewer ทำ Cross-Domain Correlation</div><div class="tl-desc">วิเคราะห์ปัญหาข้ามสาย (เช่น Open Port &rarr; Data Leak &rarr; PDPA Violation 5 ล้านบาท)</div></div>
+  <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">5. สร้าง Consolidated Report + Remediation Roadmap</div><div class="tl-desc">จัดลำดับความเร่งด่วน P0-P4 และจัดทำแผน Actionable 4 Phases</div></div>
+  <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">6. ส่ง Executive Summary + Technical Report</div><div class="tl-desc">สรุปผลระดับบริหารสำหรับ C-Levels และรายงานเทคนิคสำหรับทีม Engineering</div></div>
+</div>
+
+<h2 class="h2">🧠 6 วิธีคิดหา Feature (Feature Design Methodologies)</h2>
+<p>การเลือกวิธีคิดหา Feature มีผลโดยตรงต่อสถาปัตยกรรม คุณภาพความปลอดภัย และความคุ้มค่าของการพัฒนา สำหรับระบบ Enterprise WAF+CDN มี 6 แนวคิดหลักดังนี้:</p>
+
+<div class="grid-2">
+  <!-- 1. Top-Down -->
+  <div class="card">
+    <h3>1️⃣ Top-Down — "เริ่มจากเป้าหมาย แตกลงมา"</h3>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin:.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.6">
+      🎯 <strong>เป้าหมาย:</strong> "ป้องกัน web application จากการโจมตี"<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      📦 <strong>ต้องมีอะไร:</strong> WAF, DDoS, Bot Protection<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      ⚙️ <strong>แต่ละตัวทำอะไร:</strong> WAF → rule engine, logging, blocking<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      🔧 <strong>ฟังก์ชัน:</strong> parseRequest(), matchRule(), blockIP()
+    </div>
+    <table class="tbl" style="margin:.5rem 0">
+      <thead><tr><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>เห็นภาพรวมชัด ไม่หลงทาง, เหมาะกับโปรเจกต์ใหม่, ลำดับความสำคัญชัดเจน</td>
+          <td>อาจมองข้ามรายละเอียดเล็กๆ ที่สำคัญ, ต้องมีคนที่เข้าใจ domain ดีพอ, ถ้า goal ผิดจะผิดทั้งระบบ</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. Threat-Driven -->
+  <div class="card">
+    <h3>2️⃣ Threat-Driven — "เริ่มจากภัยคุกคาม แล้วสร้างเกราะ"</h3>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin:.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.6">
+      💀 <strong>มีภัยอะไร:</strong> SQLi, XSS, DDoS, Bot, Zero-day<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      🗺️ <strong>โจมตีทางไหน:</strong> HTTP body, headers, URL params, request rate<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      🛡️ <strong>ป้องกันยังไง:</strong> regex matching, rate limit, IP reputation<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      ⚙️ <strong>ต้องสร้างอะไร:</strong> rule engine + rate limiter + threat intel feed
+    </div>
+    <table class="tbl" style="margin:.5rem 0">
+      <thead><tr><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>ตรงจุดที่สุดสำหรับ security product, ทุก feature มีเหตุผลชัดเจน, จัด priority ง่าย</td>
+          <td>อาจละเลย non-security (UX, perf), ต้อง update ตาม threat ตลอด, เสี่ยง over-engineer</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="notice n-info" style="margin-top:.4rem"><span class="ni-icon">⭐</span><p><strong>เหมาะกับ WAF มาก:</strong> เพราะ WAF มีอยู่เพื่อ counter threats โดยตรง</p></div>
+  </div>
+
+  <!-- 3. Standards-Based -->
+  <div class="card">
+    <h3>3️⃣ Standards-Based — "เริ่มจากมาตรฐาน checklist ลงมา"</h3>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin:.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.6">
+      📋 <strong>มาตรฐาน:</strong> OWASP Top 10, NIST CSF, PCI-DSS, ISO 27001<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      ✅ <strong>ต้องผ่านข้อไหน:</strong> A01-Broken Access, A03-Injection, A07-XSS...<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      ⚙️ <strong>ต้องสร้างอะไร:</strong> input validation, output encoding, access control<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      🏗️ <strong>ออกแบบ:</strong> OWASP CRS ruleset, compliance dashboard, audit log
+    </div>
+    <table class="tbl" style="margin:.5rem 0">
+      <thead><tr><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>ครบถ้วนตาม industry standard, ขายลูกค้าง่าย (ผ่าน checklist), มี reference ให้ศึกษา</td>
+          <td>อาจได้ feature ที่ลูกค้าไม่ได้ใช้จริง, Checklist mentality (ทำแค่ให้ผ่าน), มาตรฐานอาจตามไม่ทันภัยใหม่</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="notice n-info" style="margin-top:.4rem"><span class="ni-icon">⭐</span><p><strong>เหมาะกับ Legal/Compliance:</strong> เพื่อตอบโจทย์ลูกค้า Enterprise และ Audit</p></div>
+  </div>
+
+  <!-- 4. Gap Analysis -->
+  <div class="card">
+    <h3>4️⃣ Gap Analysis — "ดูคู่แข่ง แล้วหาช่องว่าง"</h3>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin:.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.6">
+      🔍 <strong>Benchmark:</strong> Cloudflare (WAF/CDN/Workers), Akamai, AWS WAF<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      📊 <strong>เปรียบเทียบ:</strong> เราขาดอะไร? เราเด่นกว่าตรงไหน?<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      🎯 <strong>Differentiator:</strong> "เข้าใจกฎหมายไทย + PDPA + Data Sovereignty + Local PoP Latency ดีกว่า"
+    </div>
+    <table class="tbl" style="margin:.5rem 0">
+      <thead><tr><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>มี benchmark ชัดเจน, เห็นความต้องการตลาด, ลดความเสี่ยงด้วยฟังก์ชันที่พิสูจน์แล้ว</td>
+          <td>อาจ copy ไม่ทันคู่แข่งรายใหญ่, ไม่ได้สร้างนวัตกรรมใหม่, เสี่ยงไม่ fit กับ architecture เดิม</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. User Story / Use Case -->
+  <div class="card">
+    <h3>5️⃣ User Story / Use Case — "เริ่มจากผู้ใช้"</h3>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin:.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.6">
+      👤 <strong>Persona:</strong> Security Admin ของบริษัท e-commerce<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      📖 <strong>User Story:</strong> "ในฐานะ admin ฉันต้องการ block IP ที่โจมตีภายใน 5 วินาที เพื่อกัน data breach"<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      ⚙️ <strong>สร้างฟังก์ชัน:</strong> real-time IP blocking API, dashboard, auto-block rules<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      📐 <strong>Acceptance Criteria:</strong> block ได้ใน &lt;5s, มี audit log, rollback ได้
+    </div>
+    <table class="tbl" style="margin:.5rem 0">
+      <thead><tr><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>ตรงใจและตอบโจทย์ผู้ใช้งานจริง, ทดสอบง่ายด้วย Acceptance Criteria, ทีมเข้าใจตรงกัน</td>
+          <td>ผู้ใช้อาจไม่รู้ requirement เชิงลึก, ใช้เวลาเก็บข้อมูลนาน, อาจพลาด technical requirement</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Risk-Based -->
+  <div class="card">
+    <h3>6️⃣ Risk-Based — "เริ่มจากสิ่งที่เสียหายมากที่สุด"</h3>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:.75rem 1rem;margin:.6rem 0;font-family:'IBM Plex Mono',monospace;font-size:.76rem;color:var(--text);line-height:1.6">
+      📊 <strong>Risk Assessment:</strong><br/>
+      &nbsp;&nbsp;&nbsp;• Data Breach &nbsp;&nbsp;→ Impact 5 × Likelihood 3 = 15<br/>
+      &nbsp;&nbsp;&nbsp;• DDoS Downtime → Impact 4 × Likelihood 4 = 16<br/>
+      &nbsp;&nbsp;&nbsp;• PDPA Fine &nbsp;&nbsp;&nbsp;&nbsp;→ Impact 3 × Likelihood 5 = 15<br/>
+      &nbsp;&nbsp;&nbsp;• Config Error &nbsp;→ Impact 2 × Likelihood 5 = 10<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      🎯 <strong>Priority:</strong> DDoS (16) → Data Breach (15) → PDPA (15) → Config (10)<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--blue)">↓</span><br/>
+      ⚙️ <strong>จัดคิวสร้าง:</strong> DDoS mitigation ก่อน → Data protection → PDPA → Config validation
+    </div>
+    <table class="tbl" style="margin:.5rem 0">
+      <thead><tr><th>ข้อดี</th><th>ข้อเสีย</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>ใช้ทรัพยากรคุ้มค่าที่สุด (High ROI), ผู้บริหารเข้าใจง่าย Justify งบประมาณชัดเจน</td>
+          <td>ต้องประเมิน risk แม่นยำ, อาจมองข้าม feature เล็กๆ ที่ risk ต่ำแต่ user ชื่นชอบ</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<h2 class="h2">🏆 เปรียบเทียบทั้ง 6 วิธี</h2>
+<table class="tbl">
+<thead>
+<tr>
+<th>เกณฑ์</th>
+<th>Top-Down</th>
+<th>Threat</th>
+<th>Standards</th>
+<th>Gap Analysis</th>
+<th>User Story</th>
+<th>Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>ครบถ้วน</td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td></tr>
+<tr><td>ตรงจุด</td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--green)">●●●●○</span></td></tr>
+<tr><td>ไม่ over-engineer</td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--green)">●●●●○</span></td></tr>
+<tr><td>เร็ว</td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td></tr>
+<tr><td>เหมาะกับ Security Product</td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--green);font-weight:700">●●●●●</span></td><td><span style="color:var(--green)">●●●●○</span></td><td><span style="color:var(--text2)">●●●○○</span></td><td><span style="color:var(--text2)">●●○○○</span></td><td><span style="color:var(--green)">●●●●○</span></td></tr>
+</tbody>
+</table>
+
+<h2 class="h2">✅ แนะนำ: Framework Hybrid 3 ชั้น (สำหรับ WAF+CDN โดยเฉพาะ)</h2>
+<p>สำหรับโปรเจกต์ WAF+CDN ไม่ควรใช้วิธีใดวิธีหนึ่งโดดๆ แต่ควรนำ 3 วิธีมาซ้อนเป็นเลเยอร์ต่อเนื่อง:</p>
+
+<div class="grid-2" style="margin-bottom:1rem">
+  <div class="card" style="border-left:3px solid var(--red)">
+    <h3>💀 ชั้นที่ 1: Threat-Driven</h3>
+    <p><strong>เริ่มจากภัยคุกคาม:</strong> ระบุ Attacker vectors (SQLi, XSS, DDoS, Bots) เพื่อสร้าง Core Engine และ Rule Baseline</p>
+    <span class="tag tr">ตอบคำถาม: "ทำอะไร"</span>
+  </div>
+  <div class="card" style="border-left:3px solid var(--blue)">
+    <h3>📋 ชั้นที่ 2: Standards-Based</h3>
+    <p><strong>ตรวจความครบถ้วน:</strong> ทาบกับ OWASP Top 10, NIST, PCI-DSS, PDPA เพื่อเติมเต็มฟังก์ชันที่อาจมองข้าม</p>
+    <span class="tag tb">ตอบคำถาม: "ขาดอะไร"</span>
+  </div>
+  <div class="card" style="border-left:3px solid var(--yellow);grid-column:1/-1">
+    <h3>📊 ชั้นที่ 3: Risk-Based</h3>
+    <p><strong>จัดลำดับความเร่งด่วน:</strong> ประเมิน Impact × Likelihood เพื่อจัด Feature Roadmap ให้ทีมงานพัฒนาสิ่งที่ ROI สูงสุดก่อน</p>
+    <span class="tag ty">ตอบคำถาม: "ทำอะไรก่อน"</span>
+  </div>
+</div>
+
+<table class="tbl">
+<thead>
+<tr>
+<th>ชั้น</th>
+<th>ทำไมต้องมี</th>
+<th>ตัวอย่างฟังก์ชันจริงใน WAF+CDN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Threat-Driven ก่อน</strong></td>
+<td>WAF เป็นระบบ Security ด่านหน้า ต้องเริ่มจากเป้าหมายว่าต้อง "กันอะไร" ได้จริง</td>
+<td>SQLi/XSS Detection, L3/L4/L7 DDoS Defense, Rate Limiter, IP Blocklist</td>
+</tr>
+<tr>
+<td><strong>2. Standards เช็คซ้ำ</strong></td>
+<td>ลูกค้า Enterprise และผู้ตรวจต้องการ Compliance Checklist ที่เป็นมาตรฐานสากล</td>
+<td>OWASP CRS Ruleset, SSRF Protection, Audit Logging 90 วัน, TLS 1.3 Strict</td>
+</tr>
+<tr>
+<td><strong>3. Risk จัดลำดับ</strong></td>
+<td>ทรัพยากรและเวลามีจำกัด ต้องลงแรงกับสิ่งที่ป้องกันความเสียหายหลักล้านก่อน</td>
+<td>สร้าง DDoS Mitigation & Origin Protection ก่อนสร้าง Custom Bot Detection</td>
+</tr>
+</tbody>
+</table>
+
+<div class="notice n-info" style="margin:1rem 0">
+  <span class="ni-icon">💡</span>
+  <p><strong>สรุปง่ายๆ:</strong> Threat บอกว่า <em>"ทำอะไร"</em> &rarr; Standards บอกว่า <em>"ขาดอะไร"</em> &rarr; Risk บอกว่า <em>"ทำอะไรก่อน"</em></p>
+</div>
+
+<h2 class="h2">🚀 Feature Roadmap สำหรับ WAF + CDN (Applying Hybrid Framework)</h2>
+<div class="step-list">
+  <div class="card" style="border-left:3px solid var(--red)">
+    <h3>🔴 Phase 1: Foundation & Threat-Driven Core (เดือนที่ 1-2)</h3>
+    <p><strong>เป้าหมาย:</strong> สกัดกั้นภัยคุกคามวิกฤตและสร้างโครงสร้างพื้นฐานทราฟฟิกให้ปลอดภัย</p>
+    <ul>
+      <li><strong>ModSecurity + OWASP Core Rule Set:</strong> ป้องกัน SQLi, XSS, Command Injection, RFI/LFI</li>
+      <li><strong>Layer 3/4 & 7 DDoS Mitigation:</strong> Global rate limit, Connection limiting, SYN Flood drop</li>
+      <li><strong>Edge Node Caching & TLS 1.3 Termination:</strong> Nginx reverse proxy + automated HTTPS</li>
+      <li><strong>Auth & Tenant Ownership:</strong> Multi-tenant isolation, RBAC (Admin / Tenant / Viewer)</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--blue)">
+    <h3>🔵 Phase 2: Standards & Compliance Layer (เดือนที่ 3-4)</h3>
+    <p><strong>เป้าหมาย:</strong> ผ่านเกณฑ์มาตรฐานความปลอดภัยและกฎหมายคุ้มครองข้อมูล</p>
+    <ul>
+      <li><strong>PDPA & Data Sovereignty:</strong> Data Processing Agreement (DPA), Local PoP logging, Log anonymization</li>
+      <li><strong>Audit Logging Compliance (พ.ร.บ.คอมฯ 90 วัน):</strong> Immutable logging ใน ClickHouse พร้อม timestamp signing</li>
+      <li><strong>Per-Origin Rule Customization:</strong> แยก WAF Sensitivity และ Custom White/Blacklist รายโดเมน</li>
+      <li><strong>Origin IP Masking & Shielding:</strong> บังคับทราฟฟิกผ่าน CDN Edge เท่านั้น ป้องกันการโจมตี Origin โดยตรง</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--yellow)">
+    <h3>🟡 Phase 3: Risk Mitigation & Enterprise Hardening (เดือนที่ 5-6)</h3>
+    <p><strong>เป้าหมาย:</strong> ปิดช่องโหว่ความเสี่ยงระดับสูงและเพิ่มเสถียรภาพระดับองค์กร</p>
+    <ul>
+      <li><strong>Bot Management & Credential Stuffing Defense:</strong> JS Challenge, Turnstile/CAPTCHA fallback, Threat feed sync</li>
+      <li><strong>ReDoS-Safe Engine & Rule Evaluation Optimization:</strong> ป้องกัน Regex Denial of Service ใน WAF rules</li>
+      <li><strong>Multi-Region Edge Failover:</strong> GeoDNS Anycast routing, automated health check & traffic reroute</li>
+      <li><strong>Automated Security CI/CD Gate:</strong> Automated WAF bypass test suite ก่อน deploy rule ใหม่ทุกครั้ง</li>
+      <li><strong>Real-time Incident Notification:</strong> Telegram Bot Alerting + SIEM Webhook Integration (&lt;2 วินาที)</li>
+    </ul>
+  </div>
+
+  <div class="card" style="border-left:3px solid var(--green)">
+    <h3>🟢 Phase 4: Business Differentiation & Optimization (เดือนที่ 7-12)</h3>
+    <p><strong>เป้าหมาย:</strong> สร้างความได้เปรียบทางธุรกิจ ความคุ้มค่า และการใช้งานที่ง่ายดาย</p>
+    <ul>
+      <li><strong>Self-Service Domain & SSL Wizard:</strong> Automated ACME DNS-01/HTTP-01 verification</li>
+      <li><strong>Smart Edge Caching:</strong> Cache-Tags, stale-while-revalidate, instant purge API (&lt;100ms)</li>
+      <li><strong>Executive & Compliance Dashboard:</strong> Risk heat map, Real-time attack telemetry, PDF Audit Reports</li>
+      <li><strong>FinOps & Capacity Economics:</strong> Traffic cost optimization, Bandwidth saving analytics, SLA tracking (99.99%)</li>
+    </ul>
+  </div>
+</div>
+
+<h2 class="h2">🚨 Severity Classification</h2>
+<table class="tbl">
+<thead>
+<tr>
+<th>Level</th>
+<th>Definition</th>
+<th>SLA (Fix within)</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><span class="p0">🔴 P0 CRITICAL</span></td><td>Actively exploitable, data breach imminent</td><td>24 hours</td></tr>
+<tr><td><span class="p1">🟠 P1 HIGH</span></td><td>Exploitable with moderate effort</td><td>7 days</td></tr>
+<tr><td><span class="p2">🟡 P2 MEDIUM</span></td><td>Requires specific conditions</td><td>30 days</td></tr>
+<tr><td><span class="p3">🔵 P3 LOW</span></td><td>Minor issue, limited impact</td><td>90 days</td></tr>
+<tr><td><span class="p4">⚪ P4 INFO</span></td><td>Best practice recommendation</td><td>Backlog</td></tr>
+</tbody>
+</table>
+
+<h2 class="h2">📑 Report Structure</h2>
+<div class="card">
+<pre class="report"><code>📋 <strong>Enterprise Project Review Report</strong>
+├── 1. Executive Summary (Overall Risk Score A-F, Top 5 Risks, Immediate Actions)
+├── 2. Risk Heat Map (Impact × Likelihood Matrix)
+├── 3. Cross-Domain Findings (Security×Legal, Network×Security, Business×Legal, Code×Security)
+├── 4. Detailed Findings by Domain (6 sections)
+├── 5. Remediation Roadmap (Phase 1: 0-7d, Phase 2: 1-4w, Phase 3: 1-3m, Phase 4: 3-12m)
+├── 6. Compliance Status
+└── 7. Appendices</code></pre>
+
+<div class="pbar-wrap" style="padding-top:1rem;margin-top:1rem;border-top:1px solid var(--border)">
+  <div class="pbar-row"><div class="pbar-lbl">PDPA</div><div class="pbar"><div class="pfill" style="width:80%;background:var(--green)"></div></div><div class="ppct" style="color:var(--green)">80%</div></div>
+  <div class="pbar-row"><div class="pbar-lbl">ISO 27001</div><div class="pbar"><div class="pfill" style="width:60%;background:var(--yellow)"></div></div><div class="ppct" style="color:var(--yellow)">60%</div></div>
+  <div class="pbar-row"><div class="pbar-lbl">NIST CSF</div><div class="pbar"><div class="pfill" style="width:70%;background:var(--blue)"></div></div><div class="ppct" style="color:var(--blue)">70%</div></div>
+  <div class="pbar-row"><div class="pbar-lbl">PCI-DSS</div><div class="pbar"><div class="pfill" style="width:30%;background:var(--red)"></div></div><div class="ppct" style="color:var(--red)">30%</div></div>
+</div>
+</div>
+
+<div class="footer-notice">
+Updated: August 2026 &bull; <a href="index.html">&larr; กลับไปหน้า ภาพรวมระบบ</a>
+</div>
+
+</div>
+</div>
+
+<script>
+window.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.pfill').forEach(el=>{
+    const w=el.style.width;el.style.width='0';
+    setTimeout(()=>{el.style.width=w},300);
+  });
+});
+</script>
+</body>
+</html>
