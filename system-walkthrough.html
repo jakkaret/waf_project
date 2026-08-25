@@ -4,42 +4,36 @@
 <title>วิเคราะห์ระบบเชิงลึก & UI Mockup — WAF & CDN Guide</title>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<!-- Google Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<!-- FontAwesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#080d14;--bg2:#0d1520;--bg3:#101a28;
-  --card:#111927;--card2:#162234;--card-hover:#1c293d;
-  --border:#1a2840;--border2:#223652;--border-active:#3b82f6;
-  --blue:#3b82f6;--blue2:#60a5fa;--blue-glow:rgba(59,130,246,0.18);
-  --green:#22c55e;--green2:#4ade80;
-  --yellow:#f59e0b;--orange:#f97316;
-  --red:#ef4444;--red2:#f87171;
+  --card:#131d2e;--card2:#172133;
+  --border:#1a2840;--border2:#203350;
+  --blue:#3b82f6;--blue2:#60a5fa;
+  --green:#22c55e;--yellow:#f59e0b;
+  --red:#ef4444;--orange:#f97316;
   --purple:#a855f7;--cyan:#06b6d4;--teal:#14b8a6;
-  --text:#dce6f0;--text2:#8fa4be;--text3:#526985;
-  --r:14px;--rs:8px;
+  --text:#dce6f0;--text2:#8fa4be;--text3:#4d6480;
+  --r:14px;--rs:9px;
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Thai',sans-serif;line-height:1.75;overflow-x:hidden;min-height:100vh}
-::-webkit-scrollbar{width:6px;height:6px}
+button{font-family:inherit;font-size:inherit;outline:none}
+::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:var(--bg2)}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
 a{color:var(--blue2);text-decoration:none}
 a:hover{text-decoration:underline}
-code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);padding:2px 6px;border-radius:4px;color:var(--blue2)}
+code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2);padding:1px 6px;border-radius:4px;color:var(--blue2)}
 
-/* ---- NAV / SIDEBAR ---- */
+/* ---- NAV ---- */
 .sidenav{
-  position:fixed;top:0;left:0;bottom:0;width:264px;
+  position:fixed;top:0;left:0;bottom:0;width:260px;
   background:var(--bg2);border-right:1px solid var(--border);
   overflow-y:auto;z-index:50;padding:0 0 2rem;
   display:flex;flex-direction:column;
-  transition:transform .3s ease;
 }
 .nav-brand{
   display:flex;align-items:center;gap:10px;
@@ -47,13 +41,13 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
   font-weight:700;font-size:.95rem;color:var(--text);
   text-decoration:none;flex-shrink:0;
 }
-.nav-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.nav-section{padding:.6rem 1rem .25rem;font-size:.65rem;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem}
+.nav-logo{width:32px;height:32px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.nav-section{padding:.6rem 1rem .25rem;font-size:.67rem;font-weight:700;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem}
 .nav-link{
   display:flex;align-items:center;gap:9px;
   padding:.42rem 1rem .42rem 1.1rem;
-  font-size:.82rem;font-weight:500;color:var(--text2);
-  text-decoration:none;transition:all .15s;
+  font-size:.83rem;font-weight:500;color:var(--text2);
+  text-decoration:none;border-radius:0;transition:all .15s;
   border-left:3px solid transparent;
 }
 .nav-link:hover{background:var(--card);color:var(--text);text-decoration:none}
@@ -64,136 +58,97 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 .nb-pro{background:rgba(168,85,247,.15);color:var(--purple);border:1px solid rgba(168,85,247,.3)}
 
 /* ---- MAIN ---- */
-.main{margin-left:264px;min-height:100vh;display:flex;flex-direction:column}
+.main{margin-left:260px;min-height:100vh}
 .topbar{
   position:sticky;top:0;z-index:40;
-  background:rgba(8,13,20,.94);backdrop-filter:blur(20px);
+  background:rgba(8,13,20,.92);backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
   padding:.7rem 2rem;display:flex;align-items:center;gap:1rem;
 }
-.mobile-toggle{display:none;background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer;padding:4px}
 .tb-breadcrumb{font-size:.8rem;color:var(--text3);display:flex;align-items:center;gap:.4rem}
 .tb-breadcrumb span{color:var(--text2)}
 .machine-pill{margin-left:auto;display:flex;align-items:center;gap:.5rem;font-size:.75rem}
-.mp{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-weight:600}
+.mp{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-weight:600}
 .mp.main{background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
 .mp.edge{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.25)}
 
 /* ---- CONTENT ---- */
-.content{padding:2rem 2.5rem 5rem;max-width:1120px;margin:0 auto;width:100%}
-.page-hero{margin-bottom:2.2rem}
-.page-tag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:.8rem}
-.page-hero h1{font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem;color:var(--text)}
-.page-hero p{font-size:.95rem;color:var(--text2);max-width:860px;line-height:1.7}
+.content{padding:2rem 2.5rem 4rem;max-width:880px}
+.page-hero{margin-bottom:2rem}
+.page-tag{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;margin-bottom:.9rem}
+.page-hero h1{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;line-height:1.25;margin-bottom:.6rem}
+.page-hero p{font-size:.95rem;color:var(--text2);max-width:640px}
 
-/* ---- CARDS & LAYOUTS ---- */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin:1.2rem 0;position:relative}
+/* ---- COMPONENTS ---- */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin:1rem 0}
 .card:hover{border-color:var(--border2)}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)}
-.card-title{font-size:1.05rem;font-weight:600;display:flex;align-items:center;gap:8px;color:var(--text)}
+.card h3{font-size:.95rem;font-weight:600;margin-bottom:.5rem;display:flex;align-items:center;gap:8px}
 
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1rem 0}
-.grid-3{display:grid;grid-template-columns:repeat(3, 1fr);gap:1.2rem;margin:1rem 0}
-.grid-4{display:grid;grid-template-columns:repeat(4, 1fr);gap:1rem;margin:1rem 0}
-@media(max-width:960px){.grid-3,.grid-4{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr}}
 
-/* ---- STAT BOX ---- */
-.stat-box{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.1rem;display:flex;flex-direction:column;gap:5px;transition:all .2s}
-.stat-box:hover{transform:translateY(-2px);border-color:var(--border-active);box-shadow:0 8px 20px rgba(0,0,0,0.3)}
-.stat-label{font-size:.75rem;color:var(--text2);display:flex;align-items:center;justify-content:space-between}
-.stat-val{font-size:1.65rem;font-weight:700;font-family:'Outfit',sans-serif;color:var(--text);line-height:1.2}
-.stat-sub{font-size:.72rem;color:var(--text3);display:flex;align-items:center;gap:4px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:10px;margin:1rem 0}
+.stat-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px}
+.stat-lbl{font-size:.72rem;color:var(--text2)}
+.stat-val{font-size:1.5rem;font-weight:700;color:var(--text);margin:3px 0}
+.stat-sub{font-size:.7rem;color:var(--text3)}
 
-/* ---- MOCKUP CONTAINER ---- */
-.mockup-window{
-  background:#0b111d;border:1px solid var(--border2);border-radius:var(--r);
-  overflow:hidden;margin:1.8rem 0;box-shadow:0 20px 50px rgba(0,0,0,0.6);
+.step-list{display:flex;flex-direction:column;gap:1.2rem;margin:1rem 0}
+.step{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--card)}
+.step-hdr{display:flex;align-items:flex-start;gap:12px;padding:1.1rem 1.2rem;cursor:pointer;transition:background .15s;user-select:none}
+.step-hdr:hover{background:var(--card2)}
+.step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.78rem;flex-shrink:0;margin-top:1px}
+.step-info{flex:1}
+.step-title{font-weight:600;font-size:.9rem;margin-bottom:3px}
+.step-sub{font-size:.78rem;color:var(--text2)}
+.step-meta{display:flex;align-items:center;gap:.4rem;flex-shrink:0;margin-top:1px}
+.chev{color:var(--text3);font-size:.8rem;transition:transform .2s;margin-top:2px;flex-shrink:0}
+.step.open .chev{transform:rotate(90deg)}
+.step-body{display:none;padding:0 1.2rem 1.2rem 3.5rem;border-top:1px solid var(--border)}
+.step.open .step-body{display:block}
+.step-why{background:rgba(59,130,246,.05);border:1px solid rgba(59,130,246,.15);border-radius:var(--rs);padding:.7rem 1rem;margin:.8rem 0;font-size:.82rem;color:var(--text2)}
+.step-why strong{color:var(--blue2)}
+
+.notice{display:flex;gap:10px;padding:10px 14px;border-radius:var(--rs);margin:.65rem 0;font-size:.83rem}
+.ni-icon{flex-shrink:0;font-size:.95rem;margin-top:2px}
+.notice p{margin:0;color:var(--text2);line-height:1.6}
+.notice strong{color:var(--text)}
+.n-info{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2)}
+
+.tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:.68rem;font-weight:600}
+.tg{background:rgba(34,197,94,.1);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.ty{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.2)}
+.tr{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.tb{background:rgba(59,130,246,.1);color:var(--blue);border:1px solid rgba(59,130,246,.2)}
+.tp{background:rgba(168,85,247,.1);color:var(--purple);border:1px solid rgba(168,85,247,.2)}
+
+/* ---- PILL TABS ---- */
+.pill-tabs{display:flex;gap:8px;overflow-x:auto;margin:1.2rem 0;padding-bottom:4px}
+.pill-tab{
+  padding:8px 16px;background:var(--card);border:1px solid var(--border);
+  color:var(--text2);border-radius:99px;cursor:pointer;font-weight:600;
+  font-size:.82rem;white-space:nowrap;transition:all .2s;
 }
-.mockup-bar{
-  background:#070b13;border-bottom:1px solid var(--border);
-  padding:10px 16px;display:flex;align-items:center;gap:12px;
-}
-.window-dots{display:flex;gap:6px}
-.w-dot{width:11px;height:11px;border-radius:50%}
-.w-red{background:#ef4444}.w-yel{background:#f59e0b}.w-grn{background:#22c55e}
-.mockup-url{
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  border-radius:6px;padding:3px 14px;font-size:.73rem;font-family:'IBM Plex Mono',monospace;
-  color:var(--text2);flex:1;max-width:560px;text-align:center;
-}
-.mockup-tabs{
-  display:flex;background:var(--bg2);border-bottom:1px solid var(--border);
-  overflow-x:auto;padding:0 6px;gap:2px;
-}
-.m-tab{
-  padding:11px 18px;font-size:.83rem;font-weight:600;color:var(--text2);
-  cursor:pointer;border:none;background:none;display:flex;align-items:center;gap:8px;
-  border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
-}
-.m-tab:hover{color:var(--text);background:rgba(255,255,255,0.02)}
-.m-tab.active{color:var(--blue2);border-bottom-color:var(--blue);background:rgba(59,130,246,0.07)}
-.mockup-content{padding:1.5rem;min-height:400px}
+.pill-tab.active{background:rgba(59,130,246,.12);border-color:var(--blue);color:var(--blue2)}
 
-/* ---- TAB PANELS ---- */
-.tab-panel{display:none}
-.tab-panel.active{display:block;animation:fadeIn .25s ease-in-out}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.tab-view{display:none}
+.tab-view.active{display:block}
 
-/* ---- TABLE MOCKUP ---- */
-.m-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:.8rem}
-.m-table th{background:rgba(255,255,255,0.025);padding:10px 12px;text-align:left;color:var(--text3);border-bottom:1px solid var(--border);font-weight:600}
-.m-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text2)}
-.m-table tr:hover td{background:rgba(59,130,246,0.03);cursor:pointer}
-
-/* ---- BADGES ---- */
-.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:.68rem;font-weight:600}
-.tg{background:rgba(34,197,94,.12);color:var(--green2);border:1px solid rgba(34,197,94,.25)}
-.tr{background:rgba(239,68,68,.12);color:var(--red2);border:1px solid rgba(239,68,68,.25)}
-.ty{background:rgba(245,158,11,.12);color:var(--yellow);border:1px solid rgba(245,158,11,.25)}
-.tb{background:rgba(59,130,246,.12);color:var(--blue2);border:1px solid rgba(59,130,246,.25)}
-.tp{background:rgba(168,85,247,.12);color:var(--purple);border:1px solid rgba(168,85,247,.25)}
-
-/* ---- CALLOUTS & PIPELINE ---- */
-.deep-card{background:linear-gradient(180deg, var(--card) 0%, var(--bg2) 100%);border:1px solid var(--border);border-radius:var(--r);padding:1.6rem;margin:1.8rem 0}
-.deep-card h3{font-size:1.15rem;font-weight:700;margin-bottom:.8rem;color:var(--blue2);display:flex;align-items:center;gap:10px}
-.pipeline{display:flex;align-items:stretch;gap:8px;margin:1.2rem 0;overflow-x:auto;padding-bottom:.5rem}
-.pipe-step{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1rem;flex:1;min-width:180px;position:relative}
-.pipe-num{font-size:.68rem;font-weight:700;color:var(--blue2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-.pipe-title{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:6px}
-.pipe-desc{font-size:.75rem;color:var(--text2);line-height:1.5}
-
-/* ---- ROLEPLAY WALKTHROUGH BOX ---- */
-.scenario-box{background:rgba(16,26,40,0.8);border-left:4px solid var(--purple);border-radius:0 var(--rs) var(--rs) 0;padding:1.2rem;margin:1rem 0}
-.scenario-step{display:flex;gap:12px;margin:.8rem 0;font-size:.84rem}
-.sc-dot{width:24px;height:24px;border-radius:50%;background:rgba(168,85,247,0.2);color:var(--purple);display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0}
-
-/* ---- MODAL POPUP ---- */
-.modal-backdrop{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center}
-.modal-backdrop.show{display:flex}
-.modal-box{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);width:90%;max-width:550px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,0.8);animation:modalIn .2s ease}
-@keyframes modalIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
-.modal-hdr{padding:12px 18px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-weight:700;font-size:.92rem}
-.modal-body{padding:1.4rem;font-size:.82rem;color:var(--text2);display:flex;flex-direction:column;gap:12px}
-.modal-ftr{padding:10px 18px;background:var(--bg2);border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
-
-/* ---- TOAST NOTIFICATION ---- */
-#toast{position:fixed;bottom:24px;right:24px;background:#1e293b;border:1px solid var(--border-active);color:#fff;padding:10px 18px;border-radius:8px;font-size:.82rem;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,0.5);transform:translateY(100px);opacity:0;transition:all .3s ease;z-index:1000;display:flex;align-items:center;gap:8px}
-#toast.show{transform:translateY(0);opacity:1}
+/* ---- TABLE ---- */
+.tbl{width:100%;border-collapse:collapse;font-size:.78rem;margin:.6rem 0}
+.tbl th{background:var(--bg2);padding:8px 10px;text-align:left;font-weight:600;border:1px solid var(--border);color:var(--text3)}
+.tbl td{padding:8px 10px;border:1px solid var(--border);color:var(--text2)}
 
 @media(max-width:900px){
-  .sidenav{transform:translateX(-100%)}
-  .sidenav.open{transform:translateX(0)}
+  .sidenav{display:none}
   .main{margin-left:0}
-  .mobile-toggle{display:block}
   .content{padding:1.25rem 1rem 3rem}
 }
 </style>
 </head>
 <body>
 
-<!-- SIDEBAR NAVIGATION -->
-<nav class="sidenav" id="sidenav">
+<nav class="sidenav">
   <a class="nav-brand" href="index.html">
     <div class="nav-logo">🛡️</div>
     <div><div style="font-size:.9rem">WAF & CDN</div><div style="font-size:.67rem;font-weight:400;color:var(--text3)">คู่มือการตั้งค่า</div></div>
@@ -217,768 +172,365 @@ code{font-family:'IBM Plex Mono',monospace;font-size:.85em;background:rgba(59,13
 </nav>
 
 <div class="main">
-  <!-- TOPBAR -->
   <div class="topbar">
-    <button class="mobile-toggle" onclick="toggleNav()"><i class="fa-solid fa-bars"></i></button>
     <div class="tb-breadcrumb">🛡️ WAF & CDN <span>›</span> <span>วิเคราะห์ระบบเชิงลึก & UI Mockup</span></div>
     <div class="machine-pill">
-      <span class="mp main"><i class="fa-solid fa-server"></i> Main: 178.104.53.123</span>
-      <span class="mp edge"><i class="fa-solid fa-network-wired"></i> Edge: 45.154.26.91</span>
+      <span class="mp main">🧠 Main: 178.104.53.123</span>
+      <span class="mp edge">🌐 Edge: 45.154.26.91</span>
     </div>
   </div>
 
   <div class="content">
-    <!-- PAGE HERO -->
     <div class="page-hero">
-      <div class="page-tag" style="background:rgba(168,85,247,0.12);color:var(--purple);border:1px solid rgba(168,85,247,0.25)">
-        <i class="fa-solid fa-microchip"></i> Architectural Scrutiny & In-Depth Walkthrough
+      <div class="page-tag" style="background:rgba(59,130,246,0.1);color:var(--blue2);border:1px solid rgba(59,130,246,0.25)">
+        ⚡ Architecture Scrutiny & In-Depth Walkthrough
       </div>
       <h1>วิเคราะห์ระบบ WAF + CDN ต้นน้ำถึงปลายน้ำ</h1>
       <p>
-        ถอดรหัสการทำงานจริงของระบบป้องกันเว็บไซต์ WAF (Web Application Firewall) และเครือข่าย CDN กระจายทราฟฟิก 
-        เจาะลึก 4 หน้าจอหลักพร้อม Interactive Mockup จำลองบทบาทผู้ใช้งานจริง และตรวจสอบสิ่งที่เกิดขึ้นเบื้องหลังในระดับ Kernel, Network, WAF Engine และ Database
+        ถอดรหัสการทำงานจริงของระบบป้องกัน WAF และเครือข่าย CDN กระจายทราฟฟิก 
+        เจาะลึก 4 หน้าจอหลักพร้อมจำลองผลลัพธ์และสิ่งที่เกิดขึ้นหลังบ้านในระดับ Kernel, Network, WAF Engine และ Database
       </p>
     </div>
 
-    <!-- 🌐 END-TO-END DATA FLOW -->
-    <div class="deep-card">
-      <h3><i class="fa-solid fa-route"></i> สถาปัตยกรรมทราฟฟิก (Upstream ➔ Midstream ➔ Downstream)</h3>
-      <p style="font-size:.88rem;color:var(--text2)">
-        เส้นทางการเดินทางของ Request ตั้งแต่ผู้ใช้หรือแฮกเกอร์ส่งคำขอ จนถึงการตัดสินใจคัดกรองที่ Edge Node และส่งต่อมายัง Main Origin
+    <div class="notice n-info">
+      <div class="ni-icon">🛣️</div>
+      <p>
+        <strong>การไหลของข้อมูลจากต้นน้ำถึงปลายน้ำ:</strong><br/>
+        Client ➔ <strong>DNS Resolution</strong> (ชี้มาที่ Edge IP <code>45.154.26.91</code>) ➔ <strong>Edge TLS & Rate Limit</strong> ➔ <strong>ModSecurity WAF Engine</strong> (คำนวณ Anomaly Score) ➔ <strong>Nginx Cache</strong> (ถ้า HIT ตอบกลับ &lt;5ms) ➔ ถ้า MISS/BYPASS ส่งต่อผ่าน Private Tunnel ➔ <strong>Main Server Origin</strong> (<code>178.104.53.123:8080</code>)
       </p>
-
-      <div class="pipeline">
-        <div class="pipe-step">
-          <div class="pipe-num">1. ต้นน้ำ (Client / Attacker)</div>
-          <div class="pipe-title">DNS & Inbound Traffic</div>
-          <div class="pipe-desc">
-            Client เรียกโดเมน ➔ CNAME หรือ A Record ชี้มาที่ Edge IP <code>45.154.26.91</code> (พอร์ต 80/443)
-          </div>
-        </div>
-
-        <div class="pipe-step" style="border-color:var(--blue)">
-          <div class="pipe-num" style="color:var(--blue2)">2. กลางน้ำ (Edge Node SG/TH)</div>
-          <div class="pipe-title">TLS & Rate Limit</div>
-          <div class="pipe-desc">
-            Nginx รับ Connection, ถอดรหัส SSL, ตรวจ <code>limit_req_zone</code> (RPS Limit) ถ้าเกินส่ง <code>429.html</code> ทันที
-          </div>
-        </div>
-
-        <div class="pipe-step" style="border-color:var(--purple)">
-          <div class="pipe-num" style="color:var(--purple)">3. กลางน้ำ (WAF Inspection)</div>
-          <div class="pipe-title">ModSecurity CRS Engine</div>
-          <div class="pipe-desc">
-            ตรวจวิเคราะห์ Headers & Body ด้วยกฎ CRS v3.3/v4 + Custom Rules ถ้า Anomaly Score &gt; 10 ส่ง <code>403.html</code>
-          </div>
-        </div>
-
-        <div class="pipe-step" style="border-color:var(--teal)">
-          <div class="pipe-num" style="color:var(--teal)">4. กลางน้ำ (CDN Cache)</div>
-          <div class="pipe-title">Nginx Proxy Cache</div>
-          <div class="pipe-desc">
-            Static Assets (CSS, JS, Img) ตอบกลับทันที (HIT &lt; 5ms) ถ้า MISS/BYPASS จึงส่งต่อผ่าน Internal Tunnel
-          </div>
-        </div>
-
-        <div class="pipe-step" style="border-color:var(--green)">
-          <div class="pipe-num" style="color:var(--green)">5. ปลายน้ำ (Main Server)</div>
-          <div class="pipe-title">Origin Server & Analytics</div>
-          <div class="pipe-desc">
-            Main <code>178.104.53.123</code> รับ Clean Traffic เข้า Web App / Log Forwarder ส่ง Audit เข้า ClickHouse
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- 🖥️ INTERACTIVE UI MOCKUP SECTION -->
-    <div style="margin:2.5rem 0 1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-      <div>
-        <h2 style="font-size:1.35rem;font-weight:700;display:flex;align-items:center;gap:10px">
-          <i class="fa-solid fa-laptop-code" style="color:var(--blue2)"></i> 
-          Interactive UI Mockup & Forensic Breakdown
-        </h2>
-        <p style="font-size:.86rem;color:var(--text2)">
-          กดสลับแท็บเพื่อดูหน้าจอ UI ของจริง ทดลองค้นหา ล้างแคช หรือจำลองการยิงโจมตีแบบ Real-time
-        </p>
-      </div>
-      <button onclick="simulateAttack()" style="background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 15px rgba(239,68,68,0.3)">
-        <i class="fa-solid fa-bolt"></i> จำลองการยิงโจมตี (Simulate Attack)
-      </button>
+    <!-- TABS -->
+    <div class="pill-tabs">
+      <button class="pill-tab active" onclick="switchTab('tab-1', this)">🛡️ 1. Security Dashboard</button>
+      <button class="pill-tab" onclick="switchTab('tab-2', this)">📜 2. Traffic Log (Attack Viewer)</button>
+      <button class="pill-tab" onclick="switchTab('tab-3', this)">🌐 3. Web Origin & Tunnel</button>
+      <button class="pill-tab" onclick="switchTab('tab-4', this)">⚡ 4. CDN & Edge Nodes</button>
     </div>
 
-    <div class="mockup-window">
-      <div class="mockup-bar">
-        <div class="window-dots">
-          <div class="w-dot w-red"></div>
-          <div class="w-dot w-yel"></div>
-          <div class="w-dot w-grn"></div>
+    <!-- TAB 1: DASHBOARD -->
+    <div id="tab-1" class="tab-view active">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-lbl">Total Requests (24h)</div>
+          <div class="stat-val" id="stat-tot">128,490</div>
+          <div class="stat-sub" style="color:var(--green)">▲ +14.2% from yesterday</div>
         </div>
-        <div class="mockup-url" id="mockup-url-bar">https://waf-dashboard.cloud/security-overview</div>
+        <div class="stat-card" style="border-color:rgba(239,68,68,0.3)">
+          <div class="stat-lbl">Blocked Threats (403/429)</div>
+          <div class="stat-val" style="color:var(--red)" id="stat-blk">3,842</div>
+          <div class="stat-sub"><span class="tag tr">2.98% Block Rate</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Unique Attacker IPs</div>
+          <div class="stat-val" style="color:var(--yellow)">412</div>
+          <div class="stat-sub">Top: 185.220.101.4</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Edge Health Status</div>
+          <div class="stat-val" style="color:var(--green)">100%</div>
+          <div class="stat-sub"><span class="tag tg">All 2 Nodes Online</span></div>
+        </div>
       </div>
 
-      <div class="mockup-tabs">
-        <button class="m-tab active" onclick="switchMockTab('tab-dashboard', 'https://waf-dashboard.cloud/security-overview', this)">
-          <i class="fa-solid fa-shield-halved"></i> 1. Security Dashboard
-        </button>
-        <button class="m-tab" onclick="switchMockTab('tab-logs', 'https://waf-dashboard.cloud/logs/attack-viewer', this)">
-          <i class="fa-solid fa-scroll"></i> 2. Traffic Log (Attack Viewer)
-        </button>
-        <button class="m-tab" onclick="switchMockTab('tab-origins', 'https://waf-dashboard.cloud/origins/dns-tunnel', this)">
-          <i class="fa-solid fa-server"></i> 3. Web Origin & Tunnel
-        </button>
-        <button class="m-tab" onclick="switchMockTab('tab-cdn', 'https://waf-dashboard.cloud/cdn/edge-monitor', this)">
-          <i class="fa-solid fa-globe"></i> 4. CDN & Edge Nodes
-        </button>
-      </div>
-
-      <div class="mockup-content">
-        <!-- ================= TAB 1: SECURITY DASHBOARD ================= -->
-        <div id="tab-dashboard" class="tab-panel active">
-          <div class="grid-4">
-            <div class="stat-box">
-              <div class="stat-label">Total Events (24h) <i class="fa-solid fa-chart-line" style="color:var(--blue)"></i></div>
-              <div class="stat-val" id="kpi-total">128,490</div>
-              <div class="stat-sub" style="color:var(--green)"><i class="fa-solid fa-arrow-up"></i> +14.2% from yesterday</div>
-            </div>
-            <div class="stat-box" style="border-color:rgba(239,68,68,0.3)">
-              <div class="stat-label">Blocked Threats (403/429) <i class="fa-solid fa-ban" style="color:var(--red)"></i></div>
-              <div class="stat-val" style="color:var(--red2)" id="kpi-blocked">3,842</div>
-              <div class="stat-sub"><span class="tag tr" id="kpi-rate">2.98% Block Rate</span></div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Unique Attacker IPs <i class="fa-solid fa-user-ninja" style="color:var(--yellow)"></i></div>
-              <div class="stat-val" style="color:var(--yellow)" id="kpi-ips">412</div>
-              <div class="stat-sub" style="color:var(--text3)">Top: 185.220.101.4</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Edge Health Status <i class="fa-solid fa-heart-pulse" style="color:var(--green)"></i></div>
-              <div class="stat-val" style="color:var(--green2)">100%</div>
-              <div class="stat-sub"><span class="tag tg">All 2 Nodes Online</span></div>
-            </div>
-          </div>
-
-          <div class="grid-2" style="margin-top:1.2rem">
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem">
-              <div style="font-size:.85rem;font-weight:600;margin-bottom:10px;display:flex;justify-content:space-between">
-                <span><i class="fa-solid fa-shield-virus" style="color:var(--purple)"></i> Attack Vector Distribution</span>
-                <span class="tag tp">Real-time CRS</span>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:9px;font-size:.78rem">
-                <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                    <span>SQL Injection (SQLi) - Rule 942100</span>
-                    <span style="font-weight:600;color:var(--red2)">54% (2,074)</span>
-                  </div>
-                  <div style="height:6px;background:var(--bg);border-radius:4px;overflow:hidden">
-                    <div style="width:54%;height:100%;background:var(--red)"></div>
-                  </div>
-                </div>
-                <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                    <span>Cross-Site Scripting (XSS) - Rule 941100</span>
-                    <span style="font-weight:600;color:var(--yellow)">26% (998)</span>
-                  </div>
-                  <div style="height:6px;background:var(--bg);border-radius:4px;overflow:hidden">
-                    <div style="width:26%;height:100%;background:var(--yellow)"></div>
-                  </div>
-                </div>
-                <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                    <span>Rate Limit Exceeded (HTTP 429)</span>
-                    <span style="font-weight:600;color:var(--blue2)">15% (576)</span>
-                  </div>
-                  <div style="height:6px;background:var(--bg);border-radius:4px;overflow:hidden">
-                    <div style="width:15%;height:100%;background:var(--blue)"></div>
-                  </div>
-                </div>
-                <div>
-                  <div style="display:flex;justify-content:space-between;margin-bottom:3px">
-                    <span>Remote Code Execution (RCE) - Rule 932100</span>
-                    <span style="font-weight:600;color:var(--purple)">5% (194)</span>
-                  </div>
-                  <div style="height:6px;background:var(--bg);border-radius:4px;overflow:hidden">
-                    <div style="width:5%;height:100%;background:var(--purple)"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem">
-              <div style="font-size:.85rem;font-weight:600;margin-bottom:8px">
-                <i class="fa-solid fa-wand-magic-sparkles" style="color:var(--yellow)"></i> AI Incident Summary & Recommendation
-              </div>
-              <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:6px;padding:12px;font-size:.76rem;color:var(--text2);line-height:1.6">
-                <strong>ตรวจพบพฤติกรรมผิดปกติ:</strong> ตรวจพบการพยายามสแกน SQL Injection ต่อเนื่องจาก Subnet <code>185.220.101.0/24</code> พุ่งเป้าไปที่ Endpoint <code>/dvwa/vulnerabilities/sqli/</code><br/>
-                <span style="color:var(--green2)">🛡️ <strong>ผลลัพธ์:</strong> WAF Blocked 100% ที่ Edge Node SG (Anomaly Score 15/10) Origin Server ปลอดภัย 100%</span>
-              </div>
-              <div style="margin-top:12px;font-size:.74rem;color:var(--text3);display:flex;align-items:center;gap:6px">
-                <i class="fa-solid fa-clock"></i> อัปเดตล่าสุด: ทุกๆ 10 วินาที ผ่าน ClickHouse Materialized Aggregation
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ================= TAB 2: TRAFFIC LOG ================= -->
-        <div id="tab-logs" class="tab-panel">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-            <div style="display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:6px 12px;width:320px">
-              <i class="fa-solid fa-search" style="color:var(--text3);font-size:.8rem"></i>
-              <input type="text" id="log-search-input" onkeyup="filterLogs()" style="background:none;border:none;outline:none;color:var(--text);font-size:.78rem;width:100%" placeholder="ค้นหา IP, URL, Rule ID..."/>
-            </div>
-            <div style="display:flex;gap:6px">
-              <button onclick="setLogFilter('ALL')" class="tag tb" style="cursor:pointer;border:none">Show All</button>
-              <button onclick="setLogFilter('403')" class="tag tr" style="cursor:pointer;border:none">Only 403 Blocked</button>
-              <button onclick="downloadCSV()" class="tag tg" style="cursor:pointer;border:none"><i class="fa-solid fa-download"></i> Export CSV</button>
-            </div>
-          </div>
-
-          <div style="overflow-x:auto">
-            <table class="m-table" id="logs-table">
-              <thead>
-                <tr>
-                  <th>Timestamp (UTC+7)</th>
-                  <th>Client IP / Geo</th>
-                  <th>Method & URI</th>
-                  <th>Status</th>
-                  <th>Matched Rule</th>
-                  <th>Severity</th>
-                </tr>
-              </thead>
-              <tbody id="logs-tbody">
-                <tr onclick="openForensicModal('185.220.101.4', 'GET', '/dvwa/vulnerabilities/sqli/?id=1\'+UNION+SELECT+1,2--', '403 Blocked', '942100', 'CRITICAL', 'Matched Data: UNION SELECT detected in ARGS:id (Score 15/10)')">
-                  <td>21:30:14</td>
-                  <td><code>185.220.101.4</code> <span class="tag tb">DE</span></td>
-                  <td><span class="tag tr">GET</span> <code>/dvwa/vulnerabilities/sqli/?id=1'+UNION+SELECT+1,2--</code></td>
-                  <td><span class="tag tr">403 Blocked</span></td>
-                  <td><code>942100 (SQLi Detection)</code></td>
-                  <td><span class="tag tr">CRITICAL</span></td>
-                </tr>
-                <tr onclick="openForensicModal('45.154.26.88', 'POST', '/login.php', '403 Blocked', '941100', 'CRITICAL', 'XSS detected via LibInjection in BODY:password')">
-                  <td>21:29:45</td>
-                  <td><code>45.154.26.88</code> <span class="tag tb">TH</span></td>
-                  <td><span class="tag tr">POST</span> <code>/login.php</code> (Payload: &lt;script&gt;alert(1)&lt;/script&gt;)</td>
-                  <td><span class="tag tr">403 Blocked</span></td>
-                  <td><code>941100 (XSS LibInjection)</code></td>
-                  <td><span class="tag tr">CRITICAL</span></td>
-                </tr>
-                <tr onclick="openForensicModal('171.96.12.190', 'GET', '/static/css/main.css', '200 OK (HIT)', '-', 'CLEAN', 'Served from Nginx Cache (/var/cache/nginx) in 2ms')">
-                  <td>21:28:10</td>
-                  <td><code>171.96.12.190</code> <span class="tag tb">TH</span></td>
-                  <td><span class="tag tg">GET</span> <code>/static/css/main.css</code></td>
-                  <td><span class="tag tg">200 OK (HIT)</span></td>
-                  <td><code>- (Cache Hit)</code></td>
-                  <td><span class="tag tg">CLEAN</span></td>
-                </tr>
-                <tr onclick="openForensicModal('194.26.29.112', 'GET', '/api/v1/auth/flood', '429 RateLimit', 'RPS-Zone', 'HIGH', 'Client exceeded limit_req_zone rate=30r/s burst=60')">
-                  <td>21:27:02</td>
-                  <td><code>194.26.29.112</code> <span class="tag tb">RU</span></td>
-                  <td><span class="tag ty">GET</span> <code>/api/v1/auth/flood</code> (50 req/sec)</td>
-                  <td><span class="tag ty">429 RateLimit</span></td>
-                  <td><code>RateLimit: RPS Exceeded</code></td>
-                  <td><span class="tag ty">HIGH</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div style="margin-top:10px;font-size:.72rem;color:var(--text3);text-align:right">
-            💡 คลิกที่แต่ละแถวเพื่อเปิดดูรายงานการตรวจจับ Forensic Breakdown
-          </div>
-        </div>
-
-        <!-- ================= TAB 3: WEB ORIGIN & TUNNEL ================= -->
-        <div id="tab-origins" class="tab-panel">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+      <div class="grid-2">
+        <div class="card" style="margin:0">
+          <h3>🛡️ Attack Vector Distribution</h3>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.76rem;margin-top:6px">
             <div>
-              <div style="font-size:1rem;font-weight:700">Origin Servers & Domain Routing</div>
-              <div style="font-size:.76rem;color:var(--text2)">กำหนดเซิร์ฟเวอร์ปลายทางและตั้งค่า CNAME เพื่อคุ้มครอง WAF</div>
-            </div>
-            <button onclick="openAddOriginModal()" style="background:var(--blue);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:.78rem;font-weight:600;cursor:pointer">
-              <i class="fa-solid fa-plus"></i> Add New Origin
-            </button>
-          </div>
-
-          <div class="grid-2">
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem" id="origin-card-1">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-                <div style="display:flex;align-items:center;gap:8px">
-                  <div style="width:10px;height:10px;border-radius:50%;background:var(--green)"></div>
-                  <strong style="font-size:.9rem" id="orig-name">DVWA Production App</strong>
-                </div>
-                <span class="tag tg">Active</span>
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                <span>SQL Injection (SQLi) - Rule 942100</span>
+                <span style="color:var(--red);font-weight:600">54%</span>
               </div>
-              <div style="font-size:.78rem;color:var(--text2);display:flex;flex-direction:column;gap:6px">
-                <div><strong>Origin Target:</strong> <code id="orig-target">178.104.53.123:8080</code> (Main Server)</div>
-                <div><strong>Protected Domain:</strong> <code id="orig-domain">app.mysecuresite.com</code></div>
-                <div><strong>DNS Status:</strong> <span class="tag tg"><i class="fa-solid fa-check"></i> CNAME Verified</span></div>
-                <div><strong>SSL/TLS:</strong> <span class="tag tb"><i class="fa-solid fa-lock"></i> Auto Let's Encrypt (Caddy)</span></div>
+              <div style="height:5px;background:var(--bg2);border-radius:4px;overflow:hidden">
+                <div style="width:54%;height:100%;background:var(--red)"></div>
               </div>
             </div>
-
-            <div style="background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1.2rem">
-              <div style="font-size:.85rem;font-weight:600;margin-bottom:8px">
-                <i class="fa-solid fa-circle-info" style="color:var(--cyan)"></i> การตั้งค่า DNS สำหรับลูกค้า (DNS Setup Instruction)
-              </div>
-              <p style="font-size:.75rem;color:var(--text2);margin-bottom:8px">
-                เพื่อให้ทราฟฟิกวิ่งผ่าน Edge WAF ให้ลูกค้าเพิ่มค่า CNAME หรือ A Record ใน DNS Provider (เช่น Cloudflare / GoDaddy):
-              </p>
-              <div style="background:#060a10;border:1px solid var(--border);border-radius:6px;padding:10px;font-family:'IBM Plex Mono',monospace;font-size:.74rem;display:flex;flex-direction:column;gap:4px">
-                <div>Type: <span style="color:var(--blue2)">CNAME</span> | Name: <code>@ / app</code> | Target: <code>edge-sg.waf-cloud.com</code></div>
-                <div>Type: <span style="color:var(--green2)">A</span>     | Name: <code>app</code>       | Value:  <code>45.154.26.91</code></div>
-              </div>
-              <button onclick="copyDNS()" style="margin-top:8px;background:none;border:1px solid var(--border);color:var(--text2);border-radius:4px;padding:4px 10px;font-size:.72rem;cursor:pointer">
-                <i class="fa-regular fa-copy"></i> คัดลอกค่า DNS Record
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- ================= TAB 4: CDN & EDGE NODES ================= -->
-        <div id="tab-cdn" class="tab-panel">
-          <div class="grid-3" style="margin-bottom:1rem">
-            <div class="stat-box">
-              <div class="stat-label">Cache Hit Ratio <i class="fa-solid fa-database" style="color:var(--green)"></i></div>
-              <div class="stat-val" style="color:var(--green2)">84.2%</div>
-              <div class="stat-sub">ประหยัดแบนด์วิดท์ Origin 84%</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Average Edge Latency <i class="fa-solid fa-bolt" style="color:var(--yellow)"></i></div>
-              <div class="stat-val">12 ms</div>
-              <div class="stat-sub" style="color:var(--green)">ตอบสนองไวกว่า Origin 8x</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Threats Blocked at Edge <i class="fa-solid fa-shield" style="color:var(--purple)"></i></div>
-              <div class="stat-val" style="color:var(--purple)">100%</div>
-              <div class="stat-sub">Zero Bad Request reaches Origin</div>
-            </div>
-          </div>
-
-          <div style="overflow-x:auto">
-            <table class="m-table">
-              <thead>
-                <tr>
-                  <th>Region / Node Name</th>
-                  <th>Public Edge IP</th>
-                  <th>Status</th>
-                  <th>Requests (1h)</th>
-                  <th>Cache HIT / MISS</th>
-                  <th>Rule Sync State</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>🇸🇬 Singapore (SG-01)</strong></td>
-                  <td><code>45.154.26.91</code></td>
-                  <td><span class="tag tg"><i class="fa-solid fa-circle-dot"></i> Healthy</span></td>
-                  <td>84,120</td>
-                  <td><span class="tag tg">71k HIT</span> / <span class="tag ty">13k MISS</span></td>
-                  <td><span class="tag tb"><i class="fa-solid fa-rotate"></i> Synced (SHA-256 Valid)</span></td>
-                </tr>
-                <tr>
-                  <td><strong>🇹🇭 Thailand (TH-Main)</strong></td>
-                  <td><code>178.104.53.123</code></td>
-                  <td><span class="tag tg"><i class="fa-solid fa-circle-dot"></i> Healthy</span></td>
-                  <td>44,370</td>
-                  <td><span class="tag tg">36k HIT</span> / <span class="tag ty">8k MISS</span></td>
-                  <td><span class="tag tg">Master Control Node</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div style="margin-top:1.2rem;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
             <div>
-              <div style="font-size:.85rem;font-weight:600"><i class="fa-solid fa-trash-can" style="color:var(--red)"></i> Instant Cache Purge Tool</div>
-              <div style="font-size:.74rem;color:var(--text2)">สั่งลบแคชบน Edge Nodes ทุกตัวทันทีเมื่อมีการอัปเดตไฟล์หน้าเว็บ</div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                <span>Cross-Site Scripting (XSS) - Rule 941100</span>
+                <span style="color:var(--yellow);font-weight:600">26%</span>
+              </div>
+              <div style="height:5px;background:var(--bg2);border-radius:4px;overflow:hidden">
+                <div style="width:26%;height:100%;background:var(--yellow)"></div>
+              </div>
             </div>
-            <div style="display:flex;gap:6px">
-              <input type="text" value="/*" id="purge-input" style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 10px;font-size:.78rem;color:var(--text);width:150px"/>
-              <button onclick="triggerPurge()" style="background:var(--red);color:#fff;border:none;border-radius:4px;padding:5px 14px;font-size:.76rem;font-weight:600;cursor:pointer">
-                Purge All Edge Cache
-              </button>
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                <span>Rate Limit Exceeded (HTTP 429)</span>
+                <span style="color:var(--blue2);font-weight:600">15%</span>
+              </div>
+              <div style="height:5px;background:var(--bg2);border-radius:4px;overflow:hidden">
+                <div style="width:15%;height:100%;background:var(--blue)"></div>
+              </div>
             </div>
           </div>
         </div>
+
+        <div class="card" style="margin:0">
+          <h3 style="color:var(--yellow)">✨ AI Incident Summary</h3>
+          <div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:6px;padding:10px;font-size:.76rem;color:var(--text2);line-height:1.6">
+            <strong>ตรวจพบพฤติกรรมผิดปกติ:</strong> การพยายามสแกน SQL Injection ต่อเนื่องจาก Subnet <code>185.220.101.0/24</code> พุ่งเป้าไปที่ <code>/dvwa/vulnerabilities/sqli/</code><br/>
+            <span style="color:var(--green)">🛡️ <strong>ผลลัพธ์:</strong> WAF Blocked 100% ที่ Edge Node SG (Score 15/10) Origin ปลอดภัย 100%</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 🔍 DEEP DIVE TECHNICAL EXPLANATION FOR EACH SECTION -->
-    <div style="margin:3.5rem 0 1rem">
-      <h2 style="font-size:1.45rem;font-weight:700;margin-bottom:.5rem">
-        📖 คำอธิบายเชิงลึก 4 ระบบหลัก (Purpose, Visuals, Under-the-hood & Tools)
-      </h2>
-      <p style="font-size:.9rem;color:var(--text2)">
-        รายละเอียดการทำงาน กลไกเบื้องหลัง และเครื่องมือที่ใช้ในแต่ละโมดูลของระบบ
-      </p>
+    <!-- TAB 2: TRAFFIC LOG -->
+    <div id="tab-2" class="tab-view">
+      <div class="card" style="margin:0;padding:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap">
+          <input type="text" id="log-search" onkeyup="searchLogs()" placeholder="ค้นหา IP, URL, Rule..." style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:.76rem;color:var(--text);width:200px"/>
+          <div style="display:flex;gap:4px">
+            <button onclick="filterStatus('ALL')" class="tag tb" style="cursor:pointer;border:1px solid var(--border)">All</button>
+            <button onclick="filterStatus('403')" class="tag tr" style="cursor:pointer;border:1px solid var(--border)">403 Blocked</button>
+            <button onclick="filterStatus('200')" class="tag tg" style="cursor:pointer;border:1px solid var(--border)">200 OK</button>
+          </div>
+        </div>
+
+        <table class="tbl" id="log-tbl">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>IP / Geo</th>
+              <th>Method & URI</th>
+              <th>Status</th>
+              <th>Matched Rule</th>
+              <th>Severity</th>
+            </tr>
+          </thead>
+          <tbody id="log-body">
+            <tr>
+              <td>21:30:14</td>
+              <td><code>185.220.101.4</code> (DE)</td>
+              <td><span style="color:var(--red)">GET</span> <code>/dvwa/sqli/?id=1'+UNION+SELECT+1,2--</code></td>
+              <td><span class="tag tr">403 Blocked</span></td>
+              <td><code>942100 (SQLi)</code></td>
+              <td><span style="color:var(--red);font-weight:600">CRITICAL</span></td>
+            </tr>
+            <tr>
+              <td>21:29:45</td>
+              <td><code>45.154.26.88</code> (TH)</td>
+              <td><span style="color:var(--yellow)">POST</span> <code>/login.php</code></td>
+              <td><span class="tag tr">403 Blocked</span></td>
+              <td><code>941100 (XSS)</code></td>
+              <td><span style="color:var(--red);font-weight:600">CRITICAL</span></td>
+            </tr>
+            <tr>
+              <td>21:28:10</td>
+              <td><code>171.96.12.190</code> (TH)</td>
+              <td><span style="color:var(--green)">GET</span> <code>/static/css/main.css</code></td>
+              <td><span class="tag tg">200 OK (HIT)</span></td>
+              <td><code>- (Cache Hit)</code></td>
+              <td><span style="color:var(--green);font-weight:600">CLEAN</span></td>
+            </tr>
+            <tr>
+              <td>21:27:02</td>
+              <td><code>194.26.29.112</code> (RU)</td>
+              <td><span style="color:var(--blue2)">GET</span> <code>/api/v1/auth/flood</code></td>
+              <td><span class="tag ty">429 RateLimit</span></td>
+              <td><code>RPS Exceeded</code></td>
+              <td><span style="color:var(--yellow);font-weight:600">HIGH</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- SECTION 1 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><i class="fa-solid fa-shield-halved" style="color:var(--blue)"></i> 1. Security Dashboard (ภาพรวมความปลอดภัย)</div>
-        <span class="tag tb">Frontend + Fast Analytics</span>
-      </div>
+    <!-- TAB 3: ORIGINS -->
+    <div id="tab-3" class="tab-view">
       <div class="grid-2">
-        <div>
-          <h4 style="font-size:.9rem;color:var(--blue2);margin-bottom:6px">📌 มีไว้ทำไม & ดูอะไรได้บ้าง</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>วัตถุประสงค์:</strong> เป็นศูนย์รวมการสังเกตการณ์ (Single Pane of Glass) ให้ผู้ดูแลระบบและผู้ใช้งานเห็นสถานะความปลอดภัยแบบ Real-time</li>
-            <li><strong>Total Events / Blocked Rate:</strong> ติดตามปริมาณทราฟฟิกและเปอร์เซ็นต์ภัยคุกคามที่ถูกสกัดกั้น</li>
-            <li><strong>Attack Vector Breakdown:</strong> แยกประเภทการโจมตี (SQLi, XSS, RCE, Flood) ตามกฎ OWASP ModSecurity Core Rule Set</li>
-            <li><strong>AI / Automated Summary:</strong> สรุปพฤติกรรมของ IP อันตรายและข้อแนะนำการตั้งค่าความปลอดภัย</li>
-          </ul>
-        </div>
-        <div>
-          <h4 style="font-size:.9rem;color:var(--purple);margin-bottom:6px">⚙️ เบื้องหลังทำงานยังไง & สแตกที่ใช้</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>Data Pipeline:</strong> React Frontend โพลลิ่ง <code>GET /api/analytics/stats</code> ทุก 10 วินาทีผ่าน TanStack Query</li>
-            <li><strong>Analytics Engine:</strong> Backend ยิง SQL Aggregate เข้า <strong>ClickHouse MergeTree</strong> ซึ่งประมวลผลข้อมูลนับล้านแถวได้ในเวลา &lt;10ms</li>
-            <li><strong>Stack:</strong> FastAPI (Python 3.11), ClickHouse 23+, Redis 7 (Cache), Recharts (Data Visualizer), TailwindCSS</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 2 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><i class="fa-solid fa-scroll" style="color:var(--yellow)"></i> 2. Traffic Log (บันทึกทราฟฟิกและประวัติการโจมตี)</div>
-        <span class="tag ty">Audit & Forensics</span>
-      </div>
-      <div class="grid-2">
-        <div>
-          <h4 style="font-size:.9rem;color:var(--yellow);margin-bottom:6px">📌 มีไว้ทำไม & ดูอะไรได้บ้าง</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>วัตถุประสงค์:</strong> ใช้สำหรับสืบสวนเชิงลึก (Forensic Analysis) เมื่อเกิดเหตุการณ์โจมตี หรือตรวจสอบ False Positive (คำขอปกติที่โดนบล็อกผิดพลาด)</li>
-            <li><strong>ข้อมูลที่แสดง:</strong> วันเวลา (Timestamp), IP ต้นทาง, Geo Location, HTTP Method, Requested URL/Payload, Status Code (200, 403, 429), และ ModSecurity Rule ID</li>
-            <li><strong>CSV Export:</strong> ดาวน์โหลดบันทึกเพื่อนำไปทำรายงานความปลอดภัยหรือส่งให้ฝ่ายกฎหมาย/SOC</li>
-          </ul>
-        </div>
-        <div>
-          <h4 style="font-size:.9rem;color:var(--green);margin-bottom:6px">⚙️ เบื้องหลังทำงานยังไง & สแตกที่ใช้</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>Inspection & Logging:</strong> เมื่อ Request ผ่าน Nginx WAF ตัว ModSecurity จะตรวจคำขอใน Phase 1 (Headers) และ Phase 2 (Body)</li>
-            <li><strong>Audit Shipping:</strong> หากมีคะแนน Anomaly Score &gt; 10 จะเขียน Log ลง <code>/var/log/modsecurity/audit.log</code> จากนั้น Python Log Forwarder จะส่งแบบ Streaming เข้า ClickHouse ตาราง <code>security_audit_logs</code></li>
-            <li><strong>Stack:</strong> ModSecurity CRS 3.3/4.0, Nginx <code>log_format</code>, Python Async Ingestion, ClickHouse DB</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 3 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><i class="fa-solid fa-server" style="color:var(--green)"></i> 3. Web Origin & Tunnel (จัดการเซิร์ฟเวอร์และทันเนล)</div>
-        <span class="tag tg">Routing & DNS</span>
-      </div>
-      <div class="grid-2">
-        <div>
-          <h4 style="font-size:.9rem;color:var(--green2);margin-bottom:6px">📌 มีไว้ทำไม & ดูอะไรได้บ้าง</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>วัตถุประสงค์:</strong> ให้ลูกค้าสามารถเพิ่มเว็บไซต์/แอปพลิเคชัน (Origin) เข้ามาผูกกับเครือข่าย WAF Proxy โดยไม่ต้องย้ายโฮสติ้งเดิม</li>
-            <li><strong>Quota Management:</strong> กำหนดจำนวน Origin สูงสุดที่อนุญาตต่อบัญชี (เช่น 5 Origins) เพื่อควบคุมทรัพยากร</li>
-            <li><strong>DNS Setup Wizard:</strong> แสดงค่า CNAME และ TXT Verification Token ให้ลูกค้านำไปใส่ที่ DNS ผู้ให้บริการ (Cloudflare, Namecheap)</li>
-          </ul>
-        </div>
-        <div>
-          <h4 style="font-size:.9rem;color:var(--cyan);margin-bottom:6px">⚙️ เบื้องหลังทำงานยังไง & สแตกที่ใช้</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>Origin Storage:</strong> จัดเก็บข้อมูล Domain และ Target IP/Port ใน <strong>AWS DynamoDB / LocalStack</strong></li>
-            <li><strong>DNS Background Verification:</strong> Worker (<code>dns_verification_worker.py</code>) ใช้ <code>dnspython</code> เช็กสถานะการชี้ DNS ในอินเทอร์เน็ต เมื่อถูกต้องจะเปลี่ยนสถานะเป็น Active</li>
-            <li><strong>Reverse Proxy Upstream:</strong> Nginx/Caddy สลับ Upstream ไปยัง Origin IP ผ่าน SSL Tunneling</li>
-            <li><strong>Stack:</strong> AWS DynamoDB, FastAPI Backend, Python <code>dnspython</code>, Caddy 2 SSL Auto-provisioning</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- SECTION 4 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title"><i class="fa-solid fa-globe" style="color:var(--purple)"></i> 4. CDN & Edge Node (เครือข่าย Edge Caching)</div>
-        <span class="tag tp">Edge Performance & Sync</span>
-      </div>
-      <div class="grid-2">
-        <div>
-          <h4 style="font-size:.9rem;color:var(--purple);margin-bottom:6px">📌 มีไว้ทำไม & ดูอะไรได้บ้าง</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>วัตถุประสงค์:</strong> วางเซิร์ฟเวอร์ไว้ตามภูมิภาคต่างๆ (เช่น SG: <code>45.154.26.91</code>, TH: <code>178.104.53.123</code>) เพื่อลด Latency แคชข้อมูล Static และสกัดกั้นการโจมตีตั้งแต่ขอบเครือข่ายก่อนถึงเซิร์ฟเวอร์หลัก</li>
-            <li><strong>Cache Ratio (HIT/MISS/BYPASS):</strong> ตรวจดูอัตราการตอบสนองจากหน่วยความจำแคช</li>
-            <li><strong>Edge Health & Rule Status:</strong> ตรวจสอบว่าโหนดแต่ละตัวซิงก์กฎความปลอดภัยล่าสุดแล้วหรือไม่</li>
-          </ul>
-        </div>
-        <div>
-          <h4 style="font-size:.9rem;color:var(--blue2);margin-bottom:6px">⚙️ เบื้องหลังทำงานยังไง & สแตกที่ใช้</h4>
-          <ul style="font-size:.82rem;line-height:1.7;padding-left:1.2rem;color:var(--text2)">
-            <li><strong>Daemon Rule Synchronization:</strong> สคริปต์ <code>99-rulesync.sh</code> บน Edge Node จะส่งคำขอเช็ก Checksum Bundle ไปที่ Control API (<code>178.104.53.123:8070</code>) ทุก 5 วินาที</li>
-            <li><strong>Zero-Downtime Reload:</strong> หากพบลักษณะกฎใหม่ จะโหลด Tarball แตกไฟล์ลง <code>/opt/custom-rules</code> รัน <code>nginx -t</code> เพื่อทดสอบความถูกต้อง แล้วสั่ง <code>nginx -s reload</code> ทันทีโดยไม่สะดุดการทำงาน</li>
-            <li><strong>Caching Engine:</strong> <code>proxy_cache_path /var/cache/nginx</code> พร้อมระบบ Purge ผ่าน REST API</li>
-            <li><strong>Stack:</strong> Nginx HTTP Cache, ModSecurity Daemon, Docker Compose, GeoDNS, Bash Sync Loop</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- 🎭 REAL USER & ATTACKER ROLEPLAY WALKTHROUGH -->
-    <div class="deep-card" style="margin-top:2.5rem">
-      <h3><i class="fa-solid fa-masks-theater"></i> Roleplay Simulation: สวมบทบาทผู้ใช้จริง vs แฮกเกอร์</h3>
-      <p style="font-size:.88rem;color:var(--text2);margin-bottom:1.2rem">
-        จำลองสิ่งที่เกิดขึ้นจริงในมุมมองหน้าบ้าน (Frontend Action) และสิ่งที่ระบบหลังบ้าน (Backend & Edge Execution) ทำงานตอบสนองแบบ Step-by-Step
-      </p>
-
-      <div class="grid-2">
-        <!-- Scenario 1: Customer setup origin -->
-        <div class="scenario-box">
-          <div style="font-weight:700;font-size:.92rem;color:var(--green2);margin-bottom:6px">
-            <i class="fa-solid fa-user-check"></i> Scenario A: เจ้าของเว็บเพิ่ม Origin และตั้งค่าโดเมน
+        <div class="card" style="margin:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <strong>DVWA Production App</strong>
+            <span class="tag tg">Active ✓</span>
           </div>
-          <div class="scenario-step">
-            <div class="sc-dot">1</div>
-            <div><strong>ผู้ใช้กดเพิ่ม Origin:</strong> กรอกชื่อ <code>My Shop</code>, IP <code>178.104.53.123</code>, Port <code>8080</code> บนหน้าเว็บ</div>
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot">2</div>
-            <div><strong>ระบบหลังบ้านบันทึก:</strong> FastAPI ตรวจสอบรูปแบบ IP และเช็กโควตา จากนั้นบันทึกข้อมูลลง DynamoDB <code>origins</code> table</div>
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot">3</div>
-            <div><strong>ผู้ใช้ผูกโดเมน & ชี้ DNS:</strong> นำค่า CNAME ไปตั้งใน Cloudflare ให้ชี้มาที่ Edge IP <code>45.154.26.91</code></div>
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot">4</div>
-            <div><strong>Worker ตรวจสอบสำเร็จ:</strong> <code>dns_verification_worker.py</code> ดึง Record พบค่าถูกต้อง อัปเดตสถานะเป็น <code>Active</code> พร้อมสร้างใบรับรอง SSL อัตโนมัติ</div>
+          <div style="font-size:.76rem;color:var(--text2);display:flex;flex-direction:column;gap:4px">
+            <div><strong>Origin Target:</strong> <code>178.104.53.123:8080</code></div>
+            <div><strong>Protected Domain:</strong> <code>app.mysecuresite.com</code></div>
+            <div><strong>DNS Status:</strong> <span style="color:var(--green)">CNAME Verified ✓</span></div>
+            <div><strong>SSL:</strong> <span style="color:var(--blue2)">Auto Let's Encrypt (Caddy)</span></div>
           </div>
         </div>
 
-        <!-- Scenario 2: Hacker attacks -->
-        <div class="scenario-box" style="border-left-color:var(--red)">
-          <div style="font-weight:700;font-size:.92rem;color:var(--red2);margin-bottom:6px">
-            <i class="fa-solid fa-skull-crossbones"></i> Scenario B: แฮกเกอร์ยิง SQL Injection เข้ามา
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot" style="background:rgba(239,68,68,0.2);color:var(--red)">1</div>
-            <div><strong>แฮกเกอร์ส่ง Payload:</strong> ยิงคำขอ <code>GET /dvwa/vulnerabilities/sqli/?id=1'+OR+'1'='1</code> มาที่โดเมน</div>
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot" style="background:rgba(239,68,68,0.2);color:var(--red)">2</div>
-            <div><strong>Edge Node สกัดกั้น:</strong> ModSecurity ตรวจพบ CRS Rule <code>942100</code> คำนวณ Anomaly Score แตะ 15 คะแนน (เกินเกณฑ์ 10)</div>
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot" style="background:rgba(239,68,68,0.2);color:var(--red)">3</div>
-            <div><strong>ตัดการเชื่อมต่อทันที:</strong> Edge Nginx ตอบกลับหน้า <code>403 Forbidden</code> ทันที โดยที่ Request นี้<strong>ไม่ได้วิ่งไปถึง Main Server แม้แต่น้อย</strong></div>
-          </div>
-          <div class="scenario-step">
-            <div class="sc-dot" style="background:rgba(239,68,68,0.2);color:var(--red)">4</div>
-            <div><strong>Log & Alert อัตโนมัติ:</strong> Log ถูกส่งเข้า ClickHouse หน้า Dashboard อัปเดตกราฟทันที และ Telegram Bot ส่งแจ้งเตือนแอดมิน</div>
+        <div class="card" style="margin:0">
+          <h3 style="color:var(--cyan)">ℹ️ การตั้งค่า DNS สำหรับลูกค้า</h3>
+          <p style="font-size:.75rem;color:var(--text2);margin-bottom:6px">นำค่าด้านล่างไปใส่ที่ DNS Provider (เช่น Cloudflare, GoDaddy):</p>
+          <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;font-family:'IBM Plex Mono',monospace;font-size:.72rem">
+            <div>Type: CNAME | Name: @ | Target: edge-sg.waf-cloud.com</div>
+            <div>Type: A     | Name: app | Value: 45.154.26.91</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SUMMARY VERDICT -->
-    <div class="card" style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.2);padding:1.4rem">
-      <h3 style="font-size:1rem;font-weight:700;color:var(--blue2);margin-bottom:.5rem">
-        <i class="fa-solid fa-circle-check"></i> บทสรุปการประเมินสถาปัตยกรรม (Architectural Scrutiny Verdict)
-      </h3>
-      <p style="font-size:.85rem;color:var(--text2);line-height:1.7;margin:0">
-        สถาปัตยกรรมของระบบ WAF & CDN นี้ถูกออกแบบตามมาตรฐาน <strong>Edge-First Security Architecture</strong> อย่างถูกต้อง:
-        การแยก Control Plane (FastAPI + DynamoDB บน Main) ออกจาก Data Plane (Nginx + ModSecurity CRS บน Edge Node) 
-        ทำให้ระบบมีเสถียรภาพสูง ทนต่อการถูกโจมตีแบบ DDoS และช่วยลดโหลดของ Main Origin ได้อย่างมีนัยสำคัญ
-      </p>
+    <!-- TAB 4: CDN -->
+    <div id="tab-4" class="tab-view">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-lbl">Cache Hit Ratio</div>
+          <div class="stat-val" style="color:var(--green)">84.2%</div>
+          <div class="stat-sub">ประหยัดแบนด์วิดท์ Origin 84%</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Average Edge Latency</div>
+          <div class="stat-val" style="color:var(--yellow)">12 ms</div>
+          <div class="stat-sub">เร็วกว่า Origin 8 เท่า</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Blocked at Edge</div>
+          <div class="stat-val" style="color:var(--purple)">100%</div>
+          <div class="stat-sub">Zero Bad Request reaches Origin</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin:0;padding:1rem">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Region / Node Name</th>
+              <th>Edge IP</th>
+              <th>Status</th>
+              <th>Requests (1h)</th>
+              <th>Rule Sync State</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>🇸🇬 Singapore (SG-01)</strong></td>
+              <td><code>45.154.26.91</code></td>
+              <td><span style="color:var(--green)">● Healthy</span></td>
+              <td>84,120 (71k HIT)</td>
+              <td><span style="color:var(--blue2)">Synced (SHA-256 Valid)</span></td>
+            </tr>
+            <tr>
+              <td><strong>🇹🇭 Thailand (TH-Main)</strong></td>
+              <td><code>178.104.53.123</code></td>
+              <td><span style="color:var(--green)">● Healthy</span></td>
+              <td>44,370 (36k HIT)</td>
+              <td><span style="color:var(--green)">Master Control Node</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 📖 DETAILED SYSTEM BREAKDOWN -->
+    <div style="margin-top:2.5rem">
+      <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem">📖 เจาะลึก 4 ส่วนหลักของระบบ</h2>
+
+      <div class="step-list">
+        <div class="step open">
+          <div class="step-hdr" onclick="toggleStep(this)">
+            <div class="step-num" style="background:#3b82f618;color:#3b82f6">1</div>
+            <div class="step-info">
+              <div class="step-title">Security Dashboard — สรุปความปลอดภัยและ Anomaly Scoring</div>
+              <div class="step-sub">Fast Analytics & Visuals</div>
+            </div>
+            <div class="step-meta">
+              <span class="mp main" style="font-size:.65rem">🧠 Main</span>
+              <span class="chev">▶</span>
+            </div>
+          </div>
+          <div class="step-body">
+            <p><strong>มีไว้ทำไม:</strong> เพื่อให้ผู้ดูแลระบบเห็นภาพรวมทราฟฟิก ตรวจจับแนวโน้มการโจมตี (Threat Vectors) และประเมินสถานะของระบบแบบ Real-time</p>
+            <p><strong>เบื้องหลังการทำงาน:</strong> React Frontend ยิง Polling ไปที่ <code>GET /api/analytics/stats</code> ทุก 10 วินาที FastAPI จะยิง Aggregate Query ตรงเข้า <strong>ClickHouse Database</strong> ซึ่งใช้โครงสร้าง Columnar Storage ทำให้ Query ข้อมูลล้านแถวได้ภายในเวลา &lt;10ms</p>
+            <div class="step-why"><strong>สแตกและเครื่องมือที่ใช้:</strong> React 18, TailwindCSS, Recharts, FastAPI (Python 3.11), ClickHouse MergeTree, Docker</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-hdr" onclick="toggleStep(this)">
+            <div class="step-num" style="background:#f59e0b18;color:#f59e0b">2</div>
+            <div class="step-info">
+              <div class="step-title">Traffic Log (Attack Viewer) — บันทึกทราฟฟิกและหลักฐานการโจมตี</div>
+              <div class="step-sub">Forensics & Incident Investigation</div>
+            </div>
+            <div class="step-meta">
+              <span class="mp edge" style="font-size:.65rem">🌐 Edge</span>
+              <span class="chev">▶</span>
+            </div>
+          </div>
+          <div class="step-body">
+            <p><strong>มีไว้ทำไม:</strong> สำหรับสืบสวนเชิงลึก (Forensic Analysis) ดูว่า Request ไหนโดนบล็อกด้วย ModSecurity Rule ID อะไร และสามารถ Export CSV ไปใช้เป็นหลักฐานได้</p>
+            <p><strong>เบื้องหลังการทำงาน:</strong> เมื่อ Request วิ่งผ่าน Nginx WAF ตัว <strong>ModSecurity CRS Engine</strong> จะตรวจ Header และ Body ถ้า Anomaly Score &ge; 10 จะเขียน Log ลง <code>/var/log/modsecurity/audit.log</code> จากนั้น Python Log Forwarder จะส่งแบบ Streaming เข้า ClickHouse ตาราง <code>security_audit_logs</code></p>
+            <div class="step-why"><strong>สแตกและเครื่องมือที่ใช้:</strong> OWASP ModSecurity Core Rule Set (CRS 3.3/4.0), Nginx Audit Log, Python Log Forwarder, ClickHouse</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-hdr" onclick="toggleStep(this)">
+            <div class="step-num" style="background:#22c55e18;color:#22c55e">3</div>
+            <div class="step-info">
+              <div class="step-title">Web Origin & Tunnel — การจัดการเซิร์ฟเวอร์และตั้งค่า DNS</div>
+              <div class="step-sub">Routing & Automated DNS Verification</div>
+            </div>
+            <div class="step-meta">
+              <span class="mp main" style="font-size:.65rem">🧠 Main</span>
+              <span class="chev">▶</span>
+            </div>
+          </div>
+          <div class="step-body">
+            <p><strong>มีไว้ทำไม:</strong> ให้เจ้าของเว็บไซต์นำโดเมนและ IP ของเซิร์ฟเวอร์จริง (Origin) มาผูกเข้ากับระบบ WAF เพื่อรับการปกป้องโดยไม่ต้องย้ายโฮสติ้งเดิม</p>
+            <p><strong>เบื้องหลังการทำงาน:</strong> ข้อมูล Origin จะบันทึกลง <strong>AWS DynamoDB / LocalStack</strong> จากนั้น Background Worker (<code>dns_verification_worker.py</code>) จะใช้ <code>dnspython</code> ตรวจสอบ DNS Record ในอินเทอร์เน็ตจริง เมื่อชี้ CNAME ถูกต้องจะเปิดใช้งาน Routing และขอ SSL อัตโนมัติผ่าน Caddy</p>
+            <div class="step-why"><strong>สแตกและเครื่องมือที่ใช้:</strong> AWS DynamoDB, FastAPI, dnspython, Caddy 2 SSL Auto-provisioning</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-hdr" onclick="toggleStep(this)">
+            <div class="step-num" style="background:#a855f718;color:#a855f7">4</div>
+            <div class="step-info">
+              <div class="step-title">CDN & Edge Nodes — เครือข่าย Edge Caching และการซิงก์กฎความปลอดภัย</div>
+              <div class="step-sub">Zero-Downtime Rule Sync & Edge Shield</div>
+            </div>
+            <div class="step-meta">
+              <span class="mp edge" style="font-size:.65rem">🌐 Edge</span>
+              <span class="chev">▶</span>
+            </div>
+          </div>
+          <div class="step-body">
+            <p><strong>มีไว้ทำไม:</strong> วางเซิร์ฟเวอร์ไว้ตามภูมิภาค (SG: <code>45.154.26.91</code>, TH: <code>178.104.53.123</code>) เพื่อลด Latency แคชข้อมูล Static และสกัดกั้นการโจมตีตั้งแต่ขอบเครือข่าย</p>
+            <p><strong>เบื้องหลังการทำงาน:</strong> สคริปต์ <code>99-rulesync.sh</code> บน Edge Node จะส่งคำขอเช็ก Checksum Bundle ไปที่ Control API (<code>178.104.53.123:8070</code>) ทุก 5 วินาที เมื่อตรวจพบกฎใหม่ จะโหลด Tarball แตกไฟล์ลง <code>/opt/custom-rules</code> รัน <code>nginx -t</code> แล้วสั่ง <code>nginx -s reload</code> ทันทีแบบ Zero-Downtime!</p>
+            <div class="step-why"><strong>สแตกและเครื่องมือที่ใช้:</strong> Nginx proxy_cache, ModSecurity CRS, Docker Compose, GeoDNS, Bash Rulesync Loop</div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
-</div>
-
-<!-- FORENSIC MODAL -->
-<div class="modal-backdrop" id="forensic-modal" onclick="closeForensicModal(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-hdr">
-      <span><i class="fa-solid fa-magnifying-glass" style="color:var(--blue2)"></i> Forensic Event Breakdown</span>
-      <button onclick="closeForensicModal()" style="background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div><strong>Client IP:</strong> <code id="modal-ip">185.220.101.4</code></div>
-      <div><strong>Request URI:</strong> <code id="modal-uri" style="word-break:break-all">/dvwa/...</code></div>
-      <div><strong>Detection Rule ID:</strong> <span class="tag tr" id="modal-rule">942100</span></div>
-      <div><strong>Severity:</strong> <span class="tag tr" id="modal-sev">CRITICAL</span></div>
-      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:10px">
-        <div style="font-weight:700;margin-bottom:4px;color:var(--text)">Match Data & Engine Diagnostics:</div>
-        <div id="modal-desc" style="font-size:.76rem;color:var(--text2);line-height:1.6">...</div>
-      </div>
-    </div>
-    <div class="modal-ftr">
-      <button onclick="closeForensicModal()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:.78rem;cursor:pointer">ปิด</button>
-    </div>
-  </div>
-</div>
-
-<!-- ADD ORIGIN MODAL -->
-<div class="modal-backdrop" id="add-origin-modal" onclick="closeAddOriginModal(event)">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <div class="modal-hdr">
-      <span><i class="fa-solid fa-plus" style="color:var(--green2)"></i> เพิ่ม Origin Server ใหม่</span>
-      <button onclick="closeAddOriginModal()" style="background:none;border:none;color:var(--text2);font-size:1.1rem;cursor:pointer">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div>
-        <label style="display:block;margin-bottom:4px;font-weight:600">ชื่อ Server / Label:</label>
-        <input type="text" id="new-origin-label" value="My Production API" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;color:#fff;font-size:.8rem"/>
-      </div>
-      <div>
-        <label style="display:block;margin-bottom:4px;font-weight:600">Origin IP Address:</label>
-        <input type="text" id="new-origin-ip" value="178.104.53.123" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;color:#fff;font-size:.8rem"/>
-      </div>
-      <div>
-        <label style="display:block;margin-bottom:4px;font-weight:600">Port (เช่น 80, 443, 8080):</label>
-        <input type="number" id="new-origin-port" value="8080" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:8px;color:#fff;font-size:.8rem"/>
-      </div>
-    </div>
-    <div class="modal-ftr">
-      <button onclick="closeAddOriginModal()" style="background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 14px;font-size:.78rem;cursor:pointer">ยกเลิก</button>
-      <button onclick="saveNewOrigin()" style="background:var(--blue);border:none;color:#fff;border-radius:6px;padding:6px 16px;font-size:.78rem;font-weight:600;cursor:pointer">บันทึก Origin</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div id="toast">
-  <i class="fa-solid fa-circle-check" style="color:var(--green2)"></i>
-  <span id="toast-msg">Notification</span>
 </div>
 
 <script>
-// Mobile navigation
-function toggleNav() {
-  const sidenav = document.getElementById('sidenav');
-  sidenav.classList.toggle('open');
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.pill-tab').forEach(el => el.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-view').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('active');
 }
 
-// Tab switcher
-function switchMockTab(tabId, urlText, btnElement) {
-  document.querySelectorAll('.m-tab').forEach(el => el.classList.remove('active'));
-  btnElement.classList.add('active');
-
-  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  const targetPanel = document.getElementById(tabId);
-  if (targetPanel) targetPanel.classList.add('active');
-
-  const urlBar = document.getElementById('mockup-url-bar');
-  if (urlBar) urlBar.innerText = urlText;
+function toggleStep(hdr) {
+  const step = hdr.closest('.step');
+  step.classList.toggle('open');
 }
 
-// Toast helper
-function showToast(msg) {
-  const toast = document.getElementById('toast');
-  const toastMsg = document.getElementById('toast-msg');
-  toastMsg.innerText = msg;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3200);
-}
-
-// Search & Filter in Traffic Log
-function filterLogs() {
-  const query = document.getElementById('log-search-input').value.toLowerCase();
-  const rows = document.querySelectorAll('#logs-tbody tr');
+function searchLogs() {
+  const q = document.getElementById('log-search').value.toLowerCase();
+  const rows = document.querySelectorAll('#log-body tr');
   rows.forEach(r => {
-    const text = r.innerText.toLowerCase();
-    r.style.display = text.includes(query) ? '' : 'none';
+    r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
   });
 }
 
-function setLogFilter(status) {
-  const rows = document.querySelectorAll('#logs-tbody tr');
+function filterStatus(status) {
+  const rows = document.querySelectorAll('#log-body tr');
   rows.forEach(r => {
-    if (status === 'ALL') {
-      r.style.display = '';
-    } else {
-      r.style.display = r.innerText.includes(status) ? '' : 'none';
-    }
+    if (status === 'ALL') r.style.display = '';
+    else r.style.display = r.innerText.includes(status) ? '' : 'none';
   });
-}
-
-function downloadCSV() {
-  const csv = "timestamp,ip,method,uri,status,rule,severity\n21:30:14,185.220.101.4,GET,/dvwa/sqli,403,942100,CRITICAL\n21:29:45,45.154.26.88,POST,/login.php,403,941100,CRITICAL\n21:28:10,171.96.12.190,GET,/static/css/main.css,200,-,CLEAN\n21:27:02,194.26.29.112,GET,/api/v1/auth/flood,429,RPS-Zone,HIGH";
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = "waf_attack_logs.csv";
-  a.click();
-  showToast("ดาวน์โหลดไฟล์ CSV เรียบร้อยแล้ว!");
-}
-
-// Forensic Modal
-function openForensicModal(ip, method, uri, status, rule, sev, desc) {
-  document.getElementById('modal-ip').innerText = ip;
-  document.getElementById('modal-uri').innerText = method + ' ' + uri;
-  document.getElementById('modal-rule').innerText = rule;
-  document.getElementById('modal-sev').innerText = sev;
-  document.getElementById('modal-desc').innerText = desc;
-  document.getElementById('forensic-modal').classList.add('show');
-}
-function closeForensicModal() {
-  document.getElementById('forensic-modal').classList.remove('show');
-}
-
-// Add Origin Modal
-function openAddOriginModal() {
-  document.getElementById('add-origin-modal').classList.add('show');
-}
-function closeAddOriginModal() {
-  document.getElementById('add-origin-modal').classList.remove('show');
-}
-function saveNewOrigin() {
-  const label = document.getElementById('new-origin-label').value;
-  const ip = document.getElementById('new-origin-ip').value;
-  const port = document.getElementById('new-origin-port').value;
-  document.getElementById('orig-name').innerText = label;
-  document.getElementById('orig-target').innerText = ip + ':' + port;
-  closeAddOriginModal();
-  showToast("บันทึก Origin Server: " + label + " สำเร็จ!");
-}
-
-// Copy DNS
-function copyDNS() {
-  navigator.clipboard.writeText("Type: CNAME | Name: @ | Target: edge-sg.waf-cloud.com\nType: A | Name: app | Value: 45.154.26.91");
-  showToast("คัดลอกค่า DNS Record ลง Clipboard สำเร็จ!");
-}
-
-// Purge Cache
-function triggerPurge() {
-  const path = document.getElementById('purge-input').value;
-  showToast("กำลังสั่งล้างแคช Path: " + path + " บน Edge SG & TH...");
-  setTimeout(() => {
-    showToast("✓ ล้างแคชสำเร็จ 100% บน Edge ทุกตัว (Zero-Downtime)");
-  }, 1000);
-}
-
-// Attack Simulation
-let blockedCounter = 3842;
-let totalCounter = 128490;
-function simulateAttack() {
-  totalCounter += 1;
-  blockedCounter += 1;
-  document.getElementById('kpi-total').innerText = totalCounter.toLocaleString();
-  document.getElementById('kpi-blocked').innerText = blockedCounter.toLocaleString();
-
-  // Add row to table
-  const tbody = document.getElementById('logs-tbody');
-  const tr = document.createElement('tr');
-  const now = new Date().toLocaleTimeString('en-GB');
-  tr.innerHTML = `
-    <td>${now}</td>
-    <td><code>203.0.113.88</code> <span class="tag tr">ATTACK</span></td>
-    <td><span class="tag tr">GET</span> <code>/dvwa/sqli/?id=99'+OR+1=1--</code></td>
-    <td><span class="tag tr">403 Blocked</span></td>
-    <td><code>942100 (SQLi)</code></td>
-    <td><span class="tag tr">CRITICAL</span></td>
-  `;
-  tr.onclick = () => openForensicModal('203.0.113.88', 'GET', '/dvwa/sqli/?id=99\'+OR+1=1--', '403 Blocked', '942100', 'CRITICAL', 'Simulated live attack blocked by Edge CRS');
-  tbody.insertBefore(tr, tbody.firstChild);
-
-  showToast("⚡ ตรวจพบการโจมตี SQL Injection! Edge Node SG สกัดกั้น 403 สำเร็จ!");
 }
 </script>
-
 </body>
 </html>
