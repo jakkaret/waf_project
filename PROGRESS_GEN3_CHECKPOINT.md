@@ -61,8 +61,22 @@ Attack recall ที่ benign 98.5% บน dataset ที่ไม่เคย�
 **เทียบกับ Promotion Gate v2** (`WAF_GEN3_ROADMAP.md` 3.1-G.0, อนุมัติ 28/09 — ทุก dataset น้ำหนักเท่ากัน): F **G3 = 61.1%** (เป้า ≥ 70%) → ❌ ยังไม่ผ่าน; G4 ต่ำสุด = CSIC ที่ไม่เคยเห็น 41.0% (เป้า ≥ 40%); G5 scenario 37/37 + 23/26, stress 60.1%. G1/G2 ยังไม่มีตัวเลขที่ยืนยันได้ — ต้องให้ `ml/promotion_gate.py` คำนวณจากรายงาน 3 fold (อยู่ใน Drive) ร่วมกับรายงานรอบที่ 4
 > ⚠️ Correction: ตาราง "F เทียบกับ gate" ที่รายงานในแชทก่อนหน้านี้ใส่ค่า benign open-appsec ~99.8%, attack holdout ~93–95% และ CSIC signal ~79% โดยไม่ได้ดึงจากรายงานของ F จริง — ถอนออก; ใช้ผลจาก `ml/promotion_gate.py` แทน
 
-### งานถัดไป
-1. **รัน Colab โหมด `EXPERIMENT_MODE = "full"`** (ค่าตั้งต้น, ~1 ชม.) — ได้ G1–G5 ของทุก config จากรายงานเดียวที่ใช้โค้ดสุดท้ายทั้งหมด (threshold แบบ exact ทั้ง holdout และ LOFO). โหมด `"gate"` ใช้ไม่ได้ในรอบนี้เพราะ Drive มีแต่ LOFO แบบ grid (รายงานรอบที่ 4 ไม่ถูกคัดลอกลง Drive เพราะ cell สรุปเดิม error ก่อนถึง cell zip)
+### รอบที่ 5 (21:44): full run ด้วยโค้ดสุดท้าย + Promotion Gate v2 (archive `experiment-value-features-20260928-144424`, `live_logs/gate.log`)
+ทุกตัวเลขจากรายงานเดียว (3 fold + leave-one-dataset-out, threshold แบบ exact)
+
+| Config | G1 benign ทุก dataset | G2 known attack เฉลี่ย | G3 unseen attack เฉลี่ย | G4 ต่ำสุด | G5 | ผ่าน |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| A 36 เดิม | ✅ 98.66 | ❌ 84.0 | ❌ 15.2 | ❌ 5.3 | ❌ | 1/5 |
+| B + value | ❌ 98.49 | ✅ 85.6 | ❌ 52.8 | ❌ 38.7 | ❌ (stress 42%) | 1/5 |
+| D | ❌ 98.43 | ❌ 81.1 | ❌ 40.9 | ❌ 17.1 | ❌ | 0/5 |
+| E | ❌ 98.41 | ❌ 83.5 | ❌ 41.0 | ❌ 22.6 | ❌ | 0/5 |
+| **F = E + qbe** | ✅ **98.69** | ❌ 83.6 | ❌ **61.1** | ✅ **41.0** | ✅ (37/37, 23/26, stress 60.1%) | **3/5** |
+| D + qbe | ❌ 98.41 | ❌ 82.0 | ❌ 47.7 | ❌ 27.5 | ❌ | 0/5 |
+
+F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen: CSIC 41.0 / open-appsec 78.0 / SR-BH 64.3. ช่องว่าง: G2 −1.4pp (CSIC ต้อง ≈ 61%), G3 −8.9pp. G1 ถูกกำหนดโดย CSIC ทุก config (threshold เลือกที่ 98.5% บน CSIC OOF พอดี จึงแกว่งรอบเกณฑ์) → รอบหน้าควรเผื่อระยะให้ threshold. **ชุดฟีเจอร์ F ถูกล็อกเป็นชุดหลัก**
+
+### งานถัดไป (เดิม — ทำแล้ว)
+1. ~~**รัน Colab โหมด `EXPERIMENT_MODE = "full"`**~~ (รอบที่ 5) (ค่าตั้งต้น, ~1 ชม.) — ได้ G1–G5 ของทุก config จากรายงานเดียวที่ใช้โค้ดสุดท้ายทั้งหมด (threshold แบบ exact ทั้ง holdout และ LOFO). โหมด `"gate"` ใช้ไม่ได้ในรอบนี้เพราะ Drive มีแต่ LOFO แบบ grid (รายงานรอบที่ 4 ไม่ถูกคัดลอกลง Drive เพราะ cell สรุปเดิม error ก่อนถึง cell zip)
 2. ใช้ชุด F เป็นชุดฟีเจอร์หลักของตัวเทรน + รายงาน gate v2 แล้วรวมกับ unit (MIL) model เพื่อปิดช่องว่าง G3 (61 → 70%)
 2. จากนั้นรวม config ที่ดีที่สุดกับ unit (MIL) model (`RUN_TRAINER` + `RUN_UNIT_EXPERIMENT`)
 3. รอการตัดสินใจ: นิยาม gate สำหรับ CSIC structural-only; จะใช้ข้อมูล VPS บน Drive หรือไม่ (CORE gate จริงต้องใช้)
