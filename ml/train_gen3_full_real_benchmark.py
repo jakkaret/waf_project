@@ -531,23 +531,37 @@ def weighted_recalls(y_true, y_pred, w):
     return out
 
 
-def choose_threshold_weighted(y_true, probs, w):
-    """Highest weighted attack recall subject to weighted benign recall >= MIN_BENIGN_RECALL."""
-    y_true, probs, w = np.asarray(y_true), np.asarray(probs), np.asarray(w, dtype=float)
+def choose_threshold_weighted(y_true, probs, w, benign_target=MIN_BENIGN_RECALL):
+    """Highest weighted attack recall subject to weighted benign recall >= benign_target (attack = probs >= t).
+
+    Exact on the scores. The previous 0.0005 grid broke when more than 1 - target
+    of the benign weight scored above 0.9995 (LightGBM saturates on unseen data):
+    the only admissible grid point was 1.0 and attack recall read 0 at AUC 0.94.
+    Among thresholds with the same attack recall the highest is returned, which
+    maximises benign recall (the grid's tie-break).
+    """
+    y_true, probs, w = np.asarray(y_true), np.asarray(probs, dtype=float), np.asarray(w, dtype=float)
     ben, att = y_true == 0, y_true == 1
     wb, wa = w[ben].sum(), w[att].sum()
-    best = None
-    for t in np.linspace(0.0, 1.0, 2001):
-        b_rec = w[ben & (probs < t)].sum() / wb
-        if b_rec < MIN_BENIGN_RECALL:
-            continue
-        a_rec = w[att & (probs >= t)].sum() / wa
-        if best is None or (a_rec, b_rec) > (best[1], best[2]):
-            best = (float(t), float(a_rec), float(b_rec))
-    if best is None:
-        return {"threshold": 1.0, "attack_recall": 0.0, "benign_recall": 1.0, "status": "no_threshold_met_benign_gate"}
-    status = "passed_both_gates" if best[1] >= MIN_ATTACK_RECALL else "failed_attack_gate"
-    return {"threshold": best[0], "attack_recall": best[1], "benign_recall": best[2], "status": status}
+    if wb <= 0 or wa <= 0:
+        return {"threshold": 1.0, "attack_recall": 0.0, "benign_recall": 1.0, "status": "single_class"}
+    order = np.argsort(-probs[ben], kind="stable")
+    pb = probs[ben][order]
+    above = np.cumsum(w[ben][order]) / wb  # benign weight scoring >= pb[i]
+    k = int(np.searchsorted(above, (1.0 - benign_target) + 1e-12, side="right"))
+    if k >= len(pb):
+        t = 0.0  # the whole benign weight fits in the allowance
+    else:
+        # every benign score >= pb[k] must stay below t; raising t up to the next
+        # attack score keeps attack recall and only adds benign recall
+        pa = probs[att]
+        higher = pa[pa > pb[k]]
+        # (no attack above it: recall is 0 anyway, so pass every benign request)
+        t = float(higher.min()) if higher.size else float(np.nextafter(probs.max(), np.inf))
+    b_rec = float(w[ben & (probs < t)].sum() / wb)
+    a_rec = float(w[att & (probs >= t)].sum() / wa)
+    status = "passed_both_gates" if a_rec >= MIN_ATTACK_RECALL else "failed_attack_gate"
+    return {"threshold": t, "attack_recall": a_rec, "benign_recall": b_rec, "status": status}
 
 
 def oof_predict(X, y, meta, params, n_splits=N_SPLITS):

@@ -20,6 +20,8 @@ judged on four things, not on the in-distribution gate alone:
      benign on the unseen dataset (threshold-free), plus benign and attack
      recall at a threshold chosen on the training datasets only
 Metrics 1-3 are repeated over --folds group-level holdout folds (mean ± std).
+Each configuration is also scored against promotion gate 3.1-G.0
+(ml/promotion_gate.py: every dataset weighted equally).
 
 Configurations (LightGBM, hyperparameters of the latest archived candidate):
   A  36 structural features (baseline)
@@ -59,6 +61,7 @@ from ml.train_gen3_full_real_benchmark import (  # noqa: E402
     ARCHIVE_DIR, BUILD_CACHE_DIR, CORE_SOURCES, LGBM_PARAMS, _build_cache_key, _sha256_file,
     build_full_real_dataset, choose_threshold_weighted, group_folds, weighted_recalls,
 )
+from ml.promotion_gate import dataset_of, evaluate as evaluate_gate, format_gate  # noqa: E402
 from ml.value_features import (  # noqa: E402
     VALUE_FEATURE_COLUMNS, VALUE_MONOTONE_COLUMNS, extract_value_features, extract_value_features_from_units,
 )
@@ -166,19 +169,6 @@ def request_matrix(method, url, body, columns):
     return np.array([[feats[c] for c in columns]], dtype=np.float32)
 
 
-def source_family(source):
-    """Held-out unit for leave-one-out: a whole dataset, so it carries both classes where it has them.
-
-    open-appsec ships benign and attack traffic as two sources; held out one at
-    a time each fold has a single class and no AUC, so they leave together.
-    """
-    if source.startswith("OpenAppSec_"):
-        return "OpenAppSec"
-    if "VPS" in source:
-        return "VPS"
-    return source
-
-
 def evaluate_fold(name, columns, params, Xc, yv, w, has_signal_all, meta, dev, hold, stress):
     """Trainer protocol on one group-level dev/holdout split: CORE dev-OOF threshold, holdout evaluated once."""
     t0 = time.time()
@@ -216,22 +206,8 @@ def evaluate_fold(name, columns, params, Xc, yv, w, has_signal_all, meta, dev, h
 
 
 def attack_recall_at_benign(y, p, w, benign_target=0.985):
-    """Weighted attack recall at the threshold that keeps `benign_target` of benign weight below it.
-
-    Exact on the scores: choose_threshold_weighted() scans a 0.0005 grid, and when
-    more than 1.5% of benign scores saturate above 0.9995 (common for LightGBM on
-    an unseen dataset) the only admissible grid threshold is 1.0, reporting 0 even
-    at AUC 0.94.
-    """
-    y, p, w = np.asarray(y), np.asarray(p), np.asarray(w, dtype=float)
-    ben, att = y == 0, y == 1
-    order = np.argsort(-p[ben], kind="stable")
-    pb, wb = p[ben][order], w[ben][order]
-    over = np.cumsum(wb) / wb.sum()  # benign weight scoring >= pb[i]
-    k = int(np.searchsorted(over, 1.0 - benign_target, side="right"))
-    if k >= len(pb):
-        return 1.0
-    return float(w[att][p[att] > pb[k]].sum() / w[att].sum())
+    """Weighted attack recall at the best threshold keeping `benign_target` of benign weight below it."""
+    return choose_threshold_weighted(y, p, w, benign_target)["attack_recall"]
 
 
 def leave_one_family_out(name, params, Xc, yv, w, meta):
@@ -245,7 +221,9 @@ def leave_one_family_out(name, params, Xc, yv, w, meta):
       untuned deployment. A single threshold from another model, as in the
       28/09 runs, mixed score shift into "generalisation".
     """
-    fam = meta["Source"].map(source_family).to_numpy()
+    # A whole dataset leaves at once (dataset_of joins open-appsec's benign and attack
+    # sources), so each held-out unit carries both classes where the dataset has them.
+    fam = meta["Source"].map(dataset_of).to_numpy()
     out = {}
     for held in sorted(set(fam)):
         test = fam == held
@@ -341,6 +319,7 @@ def main():
                                    "summary": summarize(folds) if folds else {}, "folds": folds}
         if not args.no_loso:
             report["configs"][name]["leave_one_dataset_out"] = leave_one_family_out(name, params, Xc, yv, w, meta)
+        report["configs"][name]["gate"] = evaluate_gate(folds, report["configs"][name].get("leave_one_dataset_out"))
 
     def ms(d, pct=True):
         return f"{d['mean']*100:5.1f}±{d['std']*100:3.1f}" if pct and d else (f"{d['mean']:4.1f}" if d else "  n/a")
@@ -356,6 +335,10 @@ def main():
             for h, r in e.get("leave_one_dataset_out", {}).items())
         print(f" {name:30s} {ms(s['core_benign']):>10s} {ms(s['core_attack']):>10s} {ms(s['lfi']):>10s} "
               f"{ms(s['stress_detect']):>10s} {ms(s['scenario_attack_blocked'], pct=False):>8s}   {lofo}")
+
+    print(f"\n{'='*70}\n PROMOTION GATE 3.1-G.0 (this run only; ml/promotion_gate.py combines runs)\n{'='*70}")
+    for name, e in report["configs"].items():
+        print(format_gate(name, e["gate"]))
 
     out_dir = os.path.join(ARCHIVE_DIR, f"experiment-value-features-{datetime.now().strftime('%Y%m%d-%H%M%S')}")
     os.makedirs(out_dir, exist_ok=True)

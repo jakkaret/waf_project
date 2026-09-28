@@ -55,9 +55,15 @@ Archive `experiment-value-features-20260928-101316`: E (ไม่มีบริ
 
 → **ชุดฟีเจอร์ที่เลือก: F (48 ฟีเจอร์)** — ดีกว่า B ด้าน stress (+18pp, เกิน 10 sd) และ AUC บน dataset ที่ไม่เคยเห็น แลกกับ CSIC attack −3.7pp; เมื่อมี qbe แล้ว monotone ไม่ช่วย. "attack@benign98.5" ของรอบนี้โดนบั๊ก grid (OpenAppSec = 0 ทุก config) → แก้เป็น exact quantile (`18d8a6b`) และรัน `--only-lofo` ใหม่ (ผลแรก: OpenAppSec A 9.5% → B 80.8%). ⚠️ ที่ threshold จาก dataset อื่น เว็บจริงที่ไม่เคยเห็น (open-appsec legit) ผ่านแค่ 37–66% ทุก config → ต้อง Silent → Tuning ราย tenant ก่อน enforce
 
+### รอบที่ 4 (19:10): leave-one-dataset-out ด้วยตัววัดแบบ exact (archive `experiment-value-features-20260928-121047`)
+Attack recall ที่ benign 98.5% บน dataset ที่ไม่เคยเห็น (CSIC / OpenAppSec / SR-BH): A 30.8 / 9.5 / 5.3 · B 38.7 / **80.8** / 38.8 · D 39.6 / 66.1 / 17.1 · E 24.5 / 75.9 / 22.6 · **F 41.0 / 78.0 / 64.3** · D+qbe 39.8 / 76.0 / 27.5 → F ดีที่สุดโดยรวม (แบบเดียวที่ SR-BH > 60%)
+
+**เทียบกับ Promotion Gate v2** (`WAF_GEN3_ROADMAP.md` 3.1-G.0, อนุมัติ 28/09 — ทุก dataset น้ำหนักเท่ากัน): F **G3 = 61.1%** (เป้า ≥ 70%) → ❌ ยังไม่ผ่าน; G4 ต่ำสุด = CSIC ที่ไม่เคยเห็น 41.0% (เป้า ≥ 40%); G5 scenario 37/37 + 23/26, stress 60.1%. G1/G2 ยังไม่มีตัวเลขที่ยืนยันได้ — ต้องให้ `ml/promotion_gate.py` คำนวณจากรายงาน 3 fold (อยู่ใน Drive) ร่วมกับรายงานรอบที่ 4
+> ⚠️ Correction: ตาราง "F เทียบกับ gate" ที่รายงานในแชทก่อนหน้านี้ใส่ค่า benign open-appsec ~99.8%, attack holdout ~93–95% และ CSIC signal ~79% โดยไม่ได้ดึงจากรายงานของ F จริง — ถอนออก; ใช้ผลจาก `ml/promotion_gate.py` แทน
+
 ### งานถัดไป
-1. **อ่านผล `--only-lofo`** แล้วเทียบกับ Promotion Gate ฉบับใหม่ (`WAF_GEN3_ROADMAP.md` 3.1-G.0, อนุมัติ 28/09)
-2. ใช้ชุด F เป็นชุดฟีเจอร์หลักของตัวเทรน + รายงานตาม gate ใหม่ แล้วรวมกับ unit (MIL) model
+1. **รัน Colab โหมด `EXPERIMENT_MODE = "full"`** (ค่าตั้งต้น, ~1 ชม.) — ได้ G1–G5 ของทุก config จากรายงานเดียวที่ใช้โค้ดสุดท้ายทั้งหมด (threshold แบบ exact ทั้ง holdout และ LOFO). โหมด `"gate"` ใช้ไม่ได้ในรอบนี้เพราะ Drive มีแต่ LOFO แบบ grid (รายงานรอบที่ 4 ไม่ถูกคัดลอกลง Drive เพราะ cell สรุปเดิม error ก่อนถึง cell zip)
+2. ใช้ชุด F เป็นชุดฟีเจอร์หลักของตัวเทรน + รายงาน gate v2 แล้วรวมกับ unit (MIL) model เพื่อปิดช่องว่าง G3 (61 → 70%)
 2. จากนั้นรวม config ที่ดีที่สุดกับ unit (MIL) model (`RUN_TRAINER` + `RUN_UNIT_EXPERIMENT`)
 3. รอการตัดสินใจ: นิยาม gate สำหรับ CSIC structural-only; จะใช้ข้อมูล VPS บน Drive หรือไม่ (CORE gate จริงต้องใช้)
 
