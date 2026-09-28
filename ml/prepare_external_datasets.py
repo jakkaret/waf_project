@@ -174,6 +174,10 @@ DOWNLOADS = [
 def download_sources():
     """Fetch the public datasets (~1.7 GB) unless already present with the expected hash."""
     import urllib.request
+    # Harvard Dataverse answers 403 to urllib's default "Python-urllib/x.y" User-Agent
+    opener = urllib.request.build_opener()
+    opener.addheaders = [("User-Agent", "Mozilla/5.0 (compatible; waf-project-dataset-fetch)")]
+    urllib.request.install_opener(opener)
     for url, rel, expected in DOWNLOADS:
         path = os.path.join(EXT_DIR, rel)
         if os.path.exists(path) and sha256_file(path) == expected:
