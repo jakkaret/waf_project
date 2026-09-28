@@ -33,8 +33,8 @@ except ImportError as exc:  # fail loudly: silently zeroed features would change
 
 MAX_DECODE_ROUNDS = 3
 
-_HEX_ESCAPE = re.compile(r"\\x([0-9a-f]{2})")
-_UNICODE_ESCAPE = re.compile(r"(?:\\u|%u)([0-9a-f]{4})")
+_HEX_ESCAPE = re.compile(r"\\x([0-9a-f]{2})", re.I)
+_UNICODE_ESCAPE = re.compile(r"(?:\\u|%u)([0-9a-f]{4})", re.I)
 _SQL_INLINE_COMMENT = re.compile(r"/\*.*?\*/")
 _WHITESPACE = re.compile(r"\s+")
 
@@ -45,32 +45,61 @@ _WHITESPACE = re.compile(r"\s+")
 _SHELL_BINARIES = (
     r"cat|ls|id|whoami|uname|pwd|wget|curl|nc|ncat|netcat|bash|sh|zsh|dash|ksh|python\d?|perl|php|ruby|"
     r"ping|nslookup|dig|sleep|echo|rm|chmod|chown|tail|env|ifconfig|ipconfig|powershell|cmd|certutil|"
-    r"tftp|telnet|base64|xargs|sudo|busybox|awk|sed|tee|touch|mkfifo|systeminfo|net\.exe|type"
+    r"tftp|telnet|base64|xargs|sudo|busybox|awk|sed|tee|touch|mkfifo|systeminfo|net\.exe|type|dir|netstat"
 )
+# Unambiguous admin commands that may open a value with no separator before them
+_STANDALONE_BINARIES = r"whoami|ipconfig|ifconfig|netstat|uname|systeminfo|powershell|certutil|busybox"
+_CMD_SEPARATOR = r"(?:[;|`\n&]|\$\()"
+_CMD_ARGUMENT = r"(?=\s*$|[;|&<>`$)'\"]|\s+(?:[-/.~$\d'\"\\]|[a-z]:\\|[a-z]+://))"
+# Command substitution ($(...) and backticks) must also name a binary: bot-detection
+# sensor strings in real browsing traffic are random text full of "$(" and "`".
 CMD_INJECTION_PATTERN = re.compile(
-    r"(?:(?:[;|`\n]|&&|\|\||\$\()\s*(?:/(?:usr/)?s?bin/)?(?:" + _SHELL_BINARIES + r")"
-    r"(?=\s*$|[;|&<>`$)]|\s+(?:[-/.~$\d'\"]|[a-z]+://)))"
-    r"|\$\{ifs\}|\$\([a-z/]|`[a-z/][^`]*`|/bin/(?:ba)?sh\b|\bcmd(?:\.exe)?\s*/c\b"
+    _CMD_SEPARATOR + r"\s*(?:/(?:usr/)?s?bin/)?(?:" + _SHELL_BINARIES + r")" + _CMD_ARGUMENT
+    + r"|" + _CMD_SEPARATOR + r"\s*(?:echo|printf?)\s+\S"                     # echo probes: ;echo MARKER
+    + r"|\$\(\s*(?:" + _SHELL_BINARIES + r")\b|\$\(\(\s*\d"                   # $(cmd ...), $((1+2))
+    + r"|`\s*(?:" + _SHELL_BINARIES + r")\b[^`]*`"                            # `cmd ...`
+    + r"|^(?:" + _STANDALONE_BINARIES + r")(?=\s|$)"
+    + r"|\$\{ifs\}|/bin/(?:ba)?sh\b|\bcmd(?:\.exe)?\s*/c\b"
 )
-TRAVERSAL_PATTERN = re.compile(r"\.\.[/\\]")
+TRAVERSAL_PATTERN = re.compile(r"\.\.(?:[/\\]|%[0-9a-z]{2})")
+# Path detectors run on a copy with evasion junk undone: control bytes (null-byte
+# padding) removed, overlong UTF-8 separators (%c0%af, %f0%80%80%af -> U+FFFD runs)
+# read as "/", and unicode slashes / literal 0x2e, 0x2f, 0x5c mapped back.
+_PATH_JUNK = re.compile(r"[\x00-\x1f\x7f]")
+_PATH_OVERLONG = re.compile(r"�+")
+_PATH_HEX = {"0x2e": ".", "0x2f": "/", "0x5c": "\\", "∕": "/", "∖": "\\", "⁄": "/"}
+_PATH_HEX_PATTERN = re.compile("|".join(map(re.escape, _PATH_HEX)))
 SENSITIVE_FILE_PATTERN = re.compile(
     r"/etc/(?:passwd|shadow|group|hosts|issue)|/proc/self/|c:[/\\]windows|win\.ini|boot\.ini|/var/log/"
 )
-TEMPLATE_PATTERN = re.compile(r"\{\{.*?\}\}|\$\{[^}]*\}|#\{[^}]*\}|<%=?.*?%>|\$\{jndi:")
+# Expressions only: plain placeholders such as ad-tech macros (${gdpr}, ${bsw_uuid})
+# and mustache/angular variables ({{name}}) are unexpanded benign templates.
+_PLACEHOLDER = r"\s*[a-z_][a-z0-9_.-]*\s*"
+TEMPLATE_PATTERN = re.compile(
+    r"\{\{(?!" + _PLACEHOLDER + r"\}\}).*?\}\}|\$\{(?!" + _PLACEHOLDER + r"\})[^}]*\}"
+    r"|#\{(?!" + _PLACEHOLDER + r"\})[^}]*\}|<%=?.*?%>|\$\{jndi:"
+)
 NOSQL_PATTERN = re.compile(r"^\$(?:ne|gt|gte|lt|lte|regex|where|or|and|in|nin|exists|expr|not)$|\[\$(?:ne|gt|gte|lt|lte|regex|where|in|nin|exists)\]")
 SSRF_PATTERN = re.compile(
     r"(?:gopher|dict|file|ldap|tftp|jar|netdoc)://"
     r"|(?:https?|ftp)://(?:[^/@]*@)?(?:127\.|0\.0\.0\.0|localhost|\[::1?\]|169\.254\.|10\.|192\.168\.|"
     r"172\.(?:1[6-9]|2\d|3[01])\.|metadata\.google\.internal|0x7f|2130706433)"
 )
+# Not after "@", "." or "$": GraphQL directives (@include(if: ...)) and method calls are benign.
 CODE_EXEC_PATTERN = re.compile(
-    r"\b(?:system|exec|passthru|shell_exec|popen|proc_open|pcntl_exec|eval|assert|base64_decode|phpinfo|"
+    r"(?<![@.$\w])(?:system|exec|passthru|shell_exec|popen|proc_open|pcntl_exec|eval|assert|base64_decode|phpinfo|"
     r"file_get_contents|file_put_contents|fopen|include|require(?:_once)?|include_once|runtime\.getruntime|"
     r"processbuilder|__import__|os\.system|subprocess)\s*\("
     r"|(?:php|data|expect|zip|phar)://|<\?php|<\?=|\.getclass\(\)|java\.lang\."
 )
 XML_ENTITY_PATTERN = re.compile(r"<!doctype[^>]*\[|<!entity|\bsystem\s+[\"'](?:file|https?|php|expect):")
-CRLF_HEADER_PATTERN = re.compile(r"[\r\n]\s*[a-z][a-z0-9-]*\s*:")
+# A line break followed by a header an attacker would inject. Any "newline + word:"
+# also matched multi-line GraphQL queries and multipart bodies in real browsing.
+CRLF_HEADER_PATTERN = re.compile(
+    r"[\r\n]\s*(?:set-cookie|location|refresh|content-length|content-type|x-xss-protection|"
+    r"access-control-allow-[a-z-]+|http/1\.[01])\s*[:\s]"
+)
+MULTIPART_PATTERN = re.compile(r"content-disposition:\s*form-data|filename=\"")  # parse_qsl splits parts at "="
 
 DETECTORS = {
     "v_cmd_injection": CMD_INJECTION_PATTERN,
@@ -113,18 +142,47 @@ def normalize_unit(unit):
             break
         text, layers = decoded, layers + 1
     text = _SQL_INLINE_COMMENT.sub(" ", text.lower())
+    # %uD800 / \uDAA3 decode to lone surrogates, which libinjection cannot encode
+    # (UnicodeEncodeError): a request crafted with one would crash scoring.
+    text = text.encode("utf-8", "replace").decode("utf-8")
     return text, layers
 
 
+_CONTROL_CHARS = re.compile(r"[\x00-\x08\x0e-\x1f\x7f�]")
+BINARY_CONTROL_RATIO = 0.05
+
+
+def is_binary(text):
+    """Protobuf/compressed/beacon bodies: libinjection and the regexes fire on their random bytes."""
+    # A few control characters (null-byte evasion such as "..%00/etc/passwd") do not make a unit binary
+    n = len(_CONTROL_CHARS.findall(text))
+    return n >= 4 and n / len(text) > BINARY_CONTROL_RATIO
+
+
+PATH_DETECTORS = ("v_path_traversal", "v_sensitive_file")
+
+
 def unit_hits(text):
-    """Detector name -> bool for one normalised unit."""
-    hits = {
-        "v_sqli_libinjection": bool(libinjection.is_sql_injection(text)["is_sqli"]),
-        "v_xss_libinjection": bool(libinjection.is_xss(text)["is_xss"]),
-    }
+    """Detector name -> bool for one normalised unit.
+
+    Path detectors always run, on a copy with evasion junk removed; the others
+    are skipped for binary units, where they only ever fired on random bytes.
+    """
+    path_text = _PATH_OVERLONG.sub("/", _PATH_JUNK.sub("", text))
+    path_text = _PATH_HEX_PATTERN.sub(lambda m: _PATH_HEX[m.group()], path_text)
+    hits = dict.fromkeys(DETECTOR_COLUMNS, False)
+    hits["v_path_traversal"] = TRAVERSAL_PATTERN.search(path_text) is not None
+    hits["v_sensitive_file"] = SENSITIVE_FILE_PATTERN.search(path_text) is not None
+    hits["v_restricted_file"] = RESTRICTED_FILE_PATTERN.search("/" + path_text) is not None
+    if is_binary(text):
+        return hits
+    hits["v_sqli_libinjection"] = bool(libinjection.is_sql_injection(text)["is_sqli"])
+    hits["v_xss_libinjection"] = bool(libinjection.is_xss(text)["is_xss"])
     for name, pattern in DETECTORS.items():
-        hits[name] = pattern.search(text) is not None
-    hits["v_restricted_file"] = RESTRICTED_FILE_PATTERN.search("/" + text) is not None
+        if name not in PATH_DETECTORS:
+            hits[name] = pattern.search(text) is not None
+    if hits["v_crlf_header"] and MULTIPART_PATTERN.search(text):
+        hits["v_crlf_header"] = False
     return hits
 
 

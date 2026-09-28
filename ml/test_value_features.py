@@ -71,6 +71,36 @@ class ValueFeatureTests(unittest.TestCase):
         for request in benign:
             self.assertEqual(vf(*request)["v_detector_units"], 0, request)
 
+    def test_command_injection_variants(self):
+        # open-appsec cmdexe payloads the first tightening of the pattern missed
+        for query in ("p=%3Becho%20ZJGMJR%24%28%2829%2B4%29%29", "p=x%24%28echo%20A%29", "p=%60cat%20/etc/hosts%60",
+                      "p=%26%20ls%20-l%20/etc/", "p=%7C%20dir%20C%3A%5C", "p=ipconfig%20/all"):
+            self.assertGreaterEqual(vf("GET", "/", query)["v_cmd_injection"], 1, query)
+
+    def test_overlong_utf8_traversal(self):
+        for query in ("p=%c0%ae%c0%ae0x2f%c0%ae%c0%ae0x2fetc0x2fissue", "p=..%01%f0%80%80%af..%01%f0%80%80%afetc%f0%80%80%afpasswd",
+                      "p=.%00.%u2216.%00.%u2216etc%u2216passwd"):
+            feats = vf("GET", "/", query)
+            self.assertGreaterEqual(feats["v_path_traversal"] + feats["v_sensitive_file"], 1, query)
+
+    def test_real_browsing_false_positives(self):
+        # Seen in open-appsec legitimate traffic (185 real sites)
+        benign = [
+            ("GET", "/sync", "partnerid=kueez&userid=${bsw_uuid}&gdpr=${gdpr}", ""),                  # ad-tech macros
+            ("GET", "/page", "tpl={{ user.name }}", ""),                                              # template variable
+            ("POST", "/graphql", "", '{"query": "query q($a: Boolean!) {\\n  me @include(if: $a) {\\n    id\\n  }\\n}"}'),
+            ("POST", "/upload", "", 'x\r\nContent-Disposition: form-data; name="file"; filename="blob"\r\nContent-Type: image/svg\r\n\r\nabc'),
+            ("POST", "/sensor", "", "sensor_data=3;0;1;0;37;pjkw=;9,379,0,1;n3lv=34o}hvw$(r\"rcw\"b`j\"jov`1bi"),
+            ("POST", "/beacon", "", "\x08\x96\x01\x12\x07testing\x1a\x03\x08\x01\x10\x02\x1a\x00\x12\x04\x10\x01\x18\x02"),
+        ]
+        for request in benign:
+            self.assertEqual(vf(*request)["v_detector_units"], 0, request)
+        self.assertGreaterEqual(vf("GET", "/t", "name={{7*7}}")["v_template_injection"], 1)
+
+    def test_lone_surrogates_do_not_crash(self):
+        for query in ("q=%uDAA3", "q=%5CuD800x", "q=%ED%A0%80"):
+            vf("GET", "/search", query)
+
     def test_all_columns_present(self):
         self.assertEqual(set(vf("GET", "/")), set(VALUE_FEATURE_COLUMNS))
 
