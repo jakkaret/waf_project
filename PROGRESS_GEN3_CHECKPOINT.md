@@ -33,8 +33,16 @@
 - เพดานเดิม: CSIC ที่ไม่มีสัญญาณโจมตี 11–20% ทุก config (gate CSIC ≥ 85% ทำไม่ได้ด้วยฟีเจอร์); admin-path probe (`/wp-admin`, `/phpmyadmin`, `/actuator`) หลุดทุก config — เหมาะเป็นกฎราย tenant ไม่ใช่ detector; traffic เว็บจริงที่ไม่เคยเห็นยังผ่านแค่ 37–61%
 - ข้อควรระวัง: benign ของ SR-BH ใน LOSO สูงเกินจริงเล็กน้อย เพราะแถวที่ตัดคือแถวที่ detector จับได้
 
+### รอบที่ 2 (17:13): E + ablation และ ⚠️ Correction จาก scrutiny
+Archive `experiment-value-features-20260928-101316`: E (ไม่มีบริบท, ไม่ monotone) CSIC 98.16/57.71, stress 59.1%; ใส่ฟีเจอร์บริบทกลับทีละตัว — `url_path_entropy` คืน LFI เป็น 100% แต่ SR-BH LOSO attack (threshold คงที่) 4.7%; `query_body_entropy` stress 61.3% / FP 0%, CSIC benign 98.74%
+
+> [!WARNING]
+> **Correction (28/09 17:40, จาก `/scrutinize`):** ตัวเลข "LOSO attack" ของทั้งสองรอบใช้ threshold เดียวที่เลือกจาก OOF ของโมเดลที่เทรนทุก source แล้วนำไปใช้กับโมเดลที่เทรนใหม่โดยไม่มี source นั้น → วัด **การเลื่อนของคะแนน (calibration)** ปนกับความสามารถในการแยก เช่น SR-BH เมื่อไม่เคยเห็น: B attack 4.8% / benign 99.75% / **AUC 0.911** vs E attack 76.1% / benign **91.97%** / AUC 0.890 — E ดูดีเพราะให้คะแนนสูงขึ้นทั้งสองคลาส. ดังนั้น (1) ข้อสรุปว่า `url_path_entropy` / `path_depth` เป็นลายนิ้วมือ dataset **ถอนออก** (AUC 0.897 / 0.902 ≥ E); (2) "monotone แย่ลง" สรุปจาก C vs B เท่านั้น — เมื่อตัดบริบทแล้ว D ดีกว่า E ใน stress (66.1 vs 59.1) และ benign เว็บจริงที่ไม่เคยเห็น (60.8 vs 45.9%); (3) F / E / D ต่างกันอยู่ในระดับ noise ของ split เดียว (SE: CSIC attack ±1.5pp, stress ±1.3pp). **ที่ยังยืนยันได้:** value features ดีกว่า 36 ฟีเจอร์เดิม (SR-BH LOSO AUC 0.766 → 0.911, stress 28 → 44%) และการตัดฟีเจอร์บริบทเพิ่ม stress detection (44 → 59–66%) จริง
+>
+> แก้ `experiment_value_features.py`: leave-one-**dataset**-out (open-appsec legit + malicious เป็นรอบเดียว) รายงาน AUC + attack recall ที่ benign 98.5% (ไม่ขึ้นกับ threshold) และ benign/attack ที่ threshold จาก dataset ที่ใช้เทรนเท่านั้น; ทำซ้ำ 3 holdout fold (mean ± std); เพิ่ม `D_plus_query_body_entropy`
+
 ### งานถัดไป
-1. **รัน Colab รอบถัดไป** (ค่า default ของ `experiment_value_features.py` แล้ว): A, B, **E = D ไม่ใช้ monotone**, และ **ablation `E_plus_<feature>`** ใส่ฟีเจอร์บริบทกลับทีละตัว — หาว่าตัวไหนมีสัญญาณ LFI/CSIC จริง ตัวไหนเป็นลายนิ้วมือ dataset
+1. **รัน Colab รอบถัดไป** (ค่า default ใหม่): A, B, D, E, E + qbe, D + qbe × 3 fold + leave-one-dataset-out — เลือกชุดฟีเจอร์จาก AUC / attack@benign98.5 บน dataset ที่ไม่เคยเห็น และ stress test
 2. จากนั้นรวม config ที่ดีที่สุดกับ unit (MIL) model (`RUN_TRAINER` + `RUN_UNIT_EXPERIMENT`)
 3. รอการตัดสินใจ: นิยาม gate สำหรับ CSIC structural-only; จะใช้ข้อมูล VPS บน Drive หรือไม่ (CORE gate จริงต้องใช้)
 
