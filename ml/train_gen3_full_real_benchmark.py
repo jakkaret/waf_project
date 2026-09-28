@@ -51,6 +51,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from ml.benchmark_real_holdout import load_real_csic_dataset, MIN_BENIGN_RECALL, MIN_ATTACK_RECALL, N_SPLITS, RANDOM_STATE
 from ml.benchmark_gen3_real_augmented import load_real_telemetry
+from ml.download_dataset import download_csic_dataset
 from ml.feature_engineering import EXTENDED_FEATURE_COLUMNS, extract_features_from_request
 from ml.hybrid_model import (
     TOKEN_SCORE_COLUMN, Gen3HybridModel, TokenModel, make_vectorizer, request_text, request_units,
@@ -324,6 +325,9 @@ def _build_cache_key():
 
 def build_full_real_dataset(use_cache=True):
     """Cached wrapper: rebuilding (dedup + grouping + feature extraction) takes minutes."""
+    # CSIC is auto-downloaded on first use; fetch it before hashing inputs, or the key
+    # of a fresh runtime (no CSIC yet) differs from every later run in the same runtime.
+    download_csic_dataset()
     key = _build_cache_key()
     path = os.path.join(BUILD_CACHE_DIR, f"{key}.joblib")
     if use_cache and os.path.exists(path):
