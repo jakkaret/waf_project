@@ -247,6 +247,33 @@ def load_jsonl_source(path, source_name=None):
     return df
 
 
+def exclude_contradicted_benign(df):
+    """Drop SR-BH "000 - Normal" rows that carry an unmistakable attack payload (3.1-D).
+
+    The SR-BH normal class contains real attacks (e.g. shellshock `() { :;};
+    /bin/sleep 15`, `;cat /etc/passwd`, `'"<script>alert(1);</script>`), about
+    7-8% of it. Label and evidence contradict each other, so those rows are
+    treated as unknown and excluded from training and evaluation alike; they are
+    never relabelled as attacks. Evidence = any value detector hit
+    (ml/value_features.py), which fires on 0.52% of real browsing traffic
+    (open-appsec legitimate), so few genuine benign rows are lost.
+    """
+    from ml.value_features import DETECTOR_COLUMNS, extract_value_features  # needs libinjection
+
+    def contradicted(method, uri, query, body):
+        feats = extract_value_features(method or "GET", uri, query, body)
+        return any(feats[c] > 0 for c in DETECTOR_COLUMNS)  # includes hits in the path itself
+
+    benign = df["Class"] == "Valid"
+    hit = pd.Series(False, index=df.index)
+    hit[benign] = [contradicted(m, u, q, b)
+                   for u, q, b, m in df.loc[benign, ["URI", "GET-Query", "POST-Data", "Method"]].itertuples(index=False)]
+    stats = {"benign_rows": int(benign.sum()), "excluded_rows": int(hit.sum()),
+             "rule": "SR-BH Valid row with any ml/value_features.py detector hit -> excluded (unknown), never relabelled"}
+    print(f"[+] SR-BH benign contradicted by attack detectors: {stats['excluded_rows']} of {stats['benign_rows']} excluded")
+    return df.loc[~hit].reset_index(drop=True), stats
+
+
 def load_real_nginx_benign():
     """Load verified clean 200/304 requests extracted from VPS Nginx access.json."""
     if not os.path.exists(NGINX_BENIGN_PATH):
@@ -281,10 +308,12 @@ def _build_cache_key():
     """Hash of every input that can change the built dataset: data files, loader/feature code, sampling."""
     h = hashlib.sha256()
     for fn in (_build_full_real_dataset_uncached, near_duplicate_group, _value_shape, load_jsonl_source, request_text,
+               exclude_contradicted_benign,
                request_units,
                _group_sampled, load_real_nginx_benign):
         h.update(inspect.getsource(fn).encode())
-    code = [os.path.join(ML_DIR, f) for f in ("feature_engineering.py", "benchmark_real_holdout.py", "benchmark_gen3_real_augmented.py")]
+    code = [os.path.join(ML_DIR, f) for f in ("feature_engineering.py", "benchmark_real_holdout.py", "benchmark_gen3_real_augmented.py",
+                                              "value_features.py")]
     data = [CSIC_PATH, VPS_AUDIT_PATH, NGINX_BENIGN_PATH, *EXTERNAL_SOURCES.values()] + sorted(glob.glob(os.path.join(TELEMETRY_DIR, "*.jsonl")))
     for path in code + data:
         if os.path.exists(path):
@@ -349,6 +378,9 @@ def _build_full_real_dataset_uncached():
 
     # 5. Public real-traffic datasets (ml/prepare_external_datasets.py)
     external = {name: load_jsonl_source(path, name) for name, path in EXTERNAL_SOURCES.items() if os.path.exists(path)}
+    srbh_contradicted = {}
+    if "SRBH2020_Honeypot" in external:
+        external["SRBH2020_Honeypot"], srbh_contradicted = exclude_contradicted_benign(external["SRBH2020_Honeypot"])
 
     raw_counts = {
         "CSIC_2010_Cleaned": len(df_csic),
@@ -443,6 +475,7 @@ def _build_full_real_dataset_uncached():
             "conflicting_label_hashes": conflicting_hashes,
             "exact_duplicates": int(rows_before - len(df_clean)),
             "external_group_sample_rate": {f"{s}|{c}": r for (s, c), r in EXTERNAL_GROUP_SAMPLE_RATE.items()},
+            "srbh_benign_contradicted_by_detectors": srbh_contradicted,
         },
         "total_unique_samples": len(X),
         "near_duplicate_groups": int(groups.nunique()),
