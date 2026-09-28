@@ -215,6 +215,25 @@ def evaluate_fold(name, columns, params, Xc, yv, w, has_signal_all, meta, dev, h
     return entry, model, thr
 
 
+def attack_recall_at_benign(y, p, w, benign_target=0.985):
+    """Weighted attack recall at the threshold that keeps `benign_target` of benign weight below it.
+
+    Exact on the scores: choose_threshold_weighted() scans a 0.0005 grid, and when
+    more than 1.5% of benign scores saturate above 0.9995 (common for LightGBM on
+    an unseen dataset) the only admissible grid threshold is 1.0, reporting 0 even
+    at AUC 0.94.
+    """
+    y, p, w = np.asarray(y), np.asarray(p), np.asarray(w, dtype=float)
+    ben, att = y == 0, y == 1
+    order = np.argsort(-p[ben], kind="stable")
+    pb, wb = p[ben][order], w[ben][order]
+    over = np.cumsum(wb) / wb.sum()  # benign weight scoring >= pb[i]
+    k = int(np.searchsorted(over, 1.0 - benign_target, side="right"))
+    if k >= len(pb):
+        return 1.0
+    return float(w[att][p[att] > pb[k]].sum() / w[att].sum())
+
+
 def leave_one_family_out(name, params, Xc, yv, w, meta):
     """Train without one dataset, score it. Separates ranking from calibration:
 
@@ -242,7 +261,8 @@ def leave_one_family_out(name, params, Xc, yv, w, meta):
              "at_training_threshold": weighted_recalls(yv[test], (p >= thr).astype(int), w[test])}
         if len(np.unique(yv[test])) == 2:
             r["auc"] = round(float(roc_auc_score(yv[test], p, sample_weight=w[test])), 4)
-            r["attack_recall_at_benign_98_5"] = round(choose_threshold_weighted(yv[test], p, w[test])["attack_recall"], 4)
+            r["attack_recall_at_benign_98_5"] = round(attack_recall_at_benign(yv[test], p, w[test]), 4)
+            r["attack_recall_at_benign_99_9"] = round(attack_recall_at_benign(yv[test], p, w[test], 0.999), 4)
         out[held] = r
         t = r["at_training_threshold"]
         print(f"  [{name} LOFO] {held:20s} AUC {r.get('auc')} | attack@benign98.5 {r.get('attack_recall_at_benign_98_5')} | "
@@ -278,6 +298,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--no-loso", action="store_true", help="skip leave-one-dataset-out")
     ap.add_argument("--folds", type=int, default=3, help="holdout folds to repeat the evaluation on (1-5)")
+    ap.add_argument("--only-lofo", action="store_true", help="skip the holdout folds, run leave-one-dataset-out only")
     ap.add_argument("--configs", default=",".join(DEFAULT_CONFIGS), help="comma-separated subset of " + ",".join(CONFIGS))
     args = ap.parse_args()
     configs = {k: CONFIGS[k] for k in args.configs.split(",")}
@@ -293,7 +314,7 @@ def main():
           f"{(V['v_detector_units'].to_numpy()[yv == 1] > 0).mean()*100:.1f}% (benign {(V['v_detector_units'].to_numpy()[yv == 0] > 0).mean()*100:.2f}%)")
 
     # Same group-level folds as the trainer; fold 0 is the trainer's holdout
-    splits = list(group_folds(meta))[:max(1, min(args.folds, 5))]
+    splits = [] if args.only_lofo else list(group_folds(meta))[:max(1, min(args.folds, 5))]
     stress_sets = []
     for k, (_, hold) in enumerate(splits):
         print(f"\n[*] Fold {k}: building context-transfer stress set (evaluation only)")
@@ -316,8 +337,8 @@ def main():
             folds.append(entry)
             if k == 0:
                 models[name] = {"model": model, "columns": columns, "threshold": thr}
-        report["configs"][name] = {"n_features": len(columns), "monotone": monotone, "summary": summarize(folds),
-                                   "folds": folds}
+        report["configs"][name] = {"n_features": len(columns), "monotone": monotone,
+                                   "summary": summarize(folds) if folds else {}, "folds": folds}
         if not args.no_loso:
             report["configs"][name]["leave_one_dataset_out"] = leave_one_family_out(name, params, Xc, yv, w, meta)
 
@@ -328,7 +349,7 @@ def main():
     print(f" {'config':30s} {'CORE ben':>10s} {'CORE att':>10s} {'LFI':>10s} {'stress':>10s} {'scen att':>8s}"
           "   leave-one-dataset-out: AUC / attack@benign98.5 / (training-thr benign, attack)")
     for name, e in report["configs"].items():
-        s = e["summary"]
+        s = {k: None for k in ("core_benign", "core_attack", "lfi", "stress_detect", "scenario_attack_blocked")} | e["summary"]
         lofo = "  ".join(
             f"{h}: {r.get('auc')}/{r.get('attack_recall_at_benign_98_5')}/"
             f"({r['at_training_threshold']['benign_recall']}, {r['at_training_threshold']['attack_recall']})"
