@@ -75,6 +75,19 @@ Attack recall ที่ benign 98.5% บน dataset ที่ไม่เคย�
 
 F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen: CSIC 41.0 / open-appsec 78.0 / SR-BH 64.3. ช่องว่าง: G2 −1.4pp (CSIC ต้อง ≈ 61%), G3 −8.9pp. G1 ถูกกำหนดโดย CSIC ทุก config (threshold เลือกที่ 98.5% บน CSIC OOF พอดี จึงแกว่งรอบเกณฑ์) → รอบหน้าควรเผื่อระยะให้ threshold. **ชุดฟีเจอร์ F ถูกล็อกเป็นชุดหลัก**
 
+## ☀️ เริ่มงานเช้า 29/09/2026 — เทรนโมเดลสำหรับใช้งานจริง (ชุด F)
+เตรียมไว้แล้ว (ทดสอบบนเครื่อง local ด้วยข้อมูลจริงชุดย่อยครบทุกขั้น):
+- `ml/gen3_model.py` — นิยามชุด F ที่เดียว + `Gen3FModel` (คำนวณฟีเจอร์ + ให้คะแนน), latency ~0.3 ms/request
+- `ml/train_final_gen3.py` — เทรนด้วยข้อมูลทั้งหมด, threshold ให้ **benign ทุก dataset ≥ 99%** จาก OOF (เผื่อระยะจาก G1 98.5%), scenario, latency, `model_card.json`
+- `ml/ml_api.py` — `POST /predict-gen3` (shadow: ให้คะแนนอย่างเดียว ไม่บล็อก), `/health` → `gen3_shadow`; โหลดเฉพาะเมื่อมีไฟล์ `ml/models/gen3/gen3_f_model.joblib` — endpoint เดิมไม่เปลี่ยน
+- notebook ค่าตั้งต้นใหม่: `RUN_FINAL_MODEL = True`, `EXPERIMENT_MODE = "none"`
+
+**ขั้นตอน:**
+1. Colab → เปิด notebook จากลิงก์ (แท็บใหม่) → **Connect (CPU)** → รอ RAM/Disk ขึ้น → **Runtime → Run all** (~30–60 นาที) — ไม่ต้องแก้ค่าใดๆ
+2. ผล: `MyDrive/waf_ml/models/gen3-final-f-<เวลา>/gen3_f_model.joblib` + `MyDrive/waf_ml/results/<เวลา>/gen3-final-f-<เวลา>/model_card.json`
+3. ดาวน์โหลด `gen3_f_model.joblib` ไปวางที่ `ml/models/gen3/` (ไม่ขึ้น git — `.gitignore`) → ให้ Claude ตรวจ model card, ทดสอบ `/predict-gen3` และ commit เฉพาะ `model_card.json`
+- สถานะ: **ไม่ผ่าน promotion gate (3/5)** → ใช้เดโม / shadow เท่านั้น ห้าม enforce
+
 ### งานถัดไป (เดิม — ทำแล้ว)
 1. ~~**รัน Colab โหมด `EXPERIMENT_MODE = "full"`**~~ (รอบที่ 5) (ค่าตั้งต้น, ~1 ชม.) — ได้ G1–G5 ของทุก config จากรายงานเดียวที่ใช้โค้ดสุดท้ายทั้งหมด (threshold แบบ exact ทั้ง holdout และ LOFO). โหมด `"gate"` ใช้ไม่ได้ในรอบนี้เพราะ Drive มีแต่ LOFO แบบ grid (รายงานรอบที่ 4 ไม่ถูกคัดลอกลง Drive เพราะ cell สรุปเดิม error ก่อนถึง cell zip)
 2. ใช้ชุด F เป็นชุดฟีเจอร์หลักของตัวเทรน + รายงาน gate v2 แล้วรวมกับ unit (MIL) model เพื่อปิดช่องว่าง G3 (61 → 70%)

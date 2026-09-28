@@ -41,6 +41,9 @@ RF_MODEL_PATH = os.path.join(MODELS_DIR, "random_forest_waf.joblib")
 ISO_MODEL_PATH = os.path.join(MODELS_DIR, "isolation_forest_waf.joblib")
 RF_ONNX_MODEL_PATH = os.path.join(MODELS_DIR, "random_forest_waf.onnx")
 EVAL_RESULTS_PATH = os.path.join(MODELS_DIR, "eval_results.json")
+# Gen 3 model (ml/train_final_gen3.py). Optional and shadow-only: it is not
+# promoted (gate 3.1-G.0 not passed), so it scores requests but never decides.
+GEN3_MODEL_PATH = os.environ.get("WAF_GEN3_MODEL_PATH", os.path.join(MODELS_DIR, "gen3", "gen3_f_model.joblib"))
 DASHBOARD_DIR = os.path.join(BASE_DIR, "dashboard")
 
 app = FastAPI(
@@ -54,10 +57,26 @@ iso_model = None
 fast_engine = None
 fast_engine_error = None
 eval_results = {}
+gen3_model = None
+gen3_error = None
+
+
+def load_gen3_model(path=GEN3_MODEL_PATH):
+    """(model, error). Never raises: a missing file or libinjection must not stop the API."""
+    if not os.path.exists(path):
+        return None, "Gen 3 model artifact is missing"
+    try:
+        import ml.gen3_model  # noqa: F401  (class definition for unpickling; needs libinjection)
+        # joblib.load executes a pickle: only load artifacts produced by
+        # ml/train_final_gen3.py from this repository.
+        return joblib.load(path), None
+    except Exception as exc:
+        return None, f"{type(exc).__name__}: {exc}"
+
 
 @app.on_event("startup")
 def startup_event():
-    global rf_model, iso_model, fast_engine, fast_engine_error, eval_results
+    global rf_model, iso_model, fast_engine, fast_engine_error, eval_results, gen3_model, gen3_error
     if os.path.exists(RF_MODEL_PATH):
         rf_model = joblib.load(RF_MODEL_PATH)
         print(f"[+] Loaded Random Forest Model from {RF_MODEL_PATH}")
@@ -81,6 +100,10 @@ def startup_event():
             eval_results = json.load(f)
         print(f"[+] Loaded evaluation results from {EVAL_RESULTS_PATH}")
 
+    gen3_model, gen3_error = load_gen3_model()
+    if gen3_model is not None:
+        print(f"[+] Loaded Gen 3 shadow model from {GEN3_MODEL_PATH}")
+
 class PredictionRequest(BaseModel):
     url: str
     method: str = "GET"
@@ -103,6 +126,11 @@ def health_check():
         "onnx_inline": {
             "loaded": fast_engine is not None,
             "error": fast_engine_error
+        },
+        "gen3_shadow": {
+            "loaded": gen3_model is not None,
+            "error": gen3_error,
+            "feature_set": getattr(gen3_model, "card", {}).get("feature_set") if gen3_model else None,
         },
         "accuracy_target_passed": accuracy_meets_target(eval_results),
         "eval_accuracy": eval_results.get("metrics", {}).get("accuracy")
@@ -150,6 +178,21 @@ def predict_fast_decision(request: Request):
             status_code=204,
             headers={"X-WAF-ML-Decision": "error"},
         )
+
+
+@app.post("/predict-gen3")
+def predict_gen3(req: PredictionRequest):
+    """Gen 3 score for one request, shadow only: reports, never enforces.
+
+    The model is not promoted (gate 3.1-G.0 passed 3/5), so `is_attack` is
+    advisory; the RandomForest /predict path is unchanged.
+    """
+    if gen3_model is None:
+        raise HTTPException(503, detail=f"Gen 3 model is not available: {gen3_error}")
+    try:
+        return gen3_model.predict(method=req.method, url=req.url, body=req.body) | {"mode": "shadow"}
+    except Exception as exc:
+        raise HTTPException(500, detail=f"Gen 3 scoring failed: {type(exc).__name__}")
 
 
 @app.post("/capture", include_in_schema=False)

@@ -58,6 +58,15 @@ repo private ให้เพิ่ม Colab Secret `GITHUB_TOKEN` (fine-grained,
 `MyDrive/waf_ml/private/` เฉพาะเมื่อได้รับอนุญาตให้เก็บบน Google Drive — ถ้าไม่มี notebook จะรันด้วย public data อย่างเดียว.
 Dataset, build cache และโมเดล `.joblib` เก็บใน `MyDrive/waf_ml/`; ผล (JSON + log) ดาวน์โหลดเป็น zip แล้วแตกที่ root ของ repo
 
+## โมเดลสำหรับใช้งาน (Gen 3, ชุดฟีเจอร์ F)
+
+```bash
+PYTHONPATH=. .venv/bin/python ml/train_final_gen3.py        # หรือ Colab: RUN_FINAL_MODEL = True
+mkdir -p ml/models/gen3 && cp ml/models/archive/gen3-final-f-<เวลา>/gen3_f_model.joblib ml/models/gen3/
+# ml_api.py: POST /predict-gen3 {"url": "...", "method": "GET", "body": ""}  → คะแนนแบบ shadow (ไม่บล็อก)
+```
+ไฟล์ `.joblib` ไม่ขึ้น git (`.gitignore`); commit `model_card.json` แทน. ยังไม่ผ่าน promotion gate 3.1-G.0 → ห้าม enforce
+
 ## ความต้องการของเครื่อง
 
 - Python 3.12, RAM ≥ 8 GB (peak ~3 GB ตอนสร้าง dataset), ดิสก์ว่าง ≥ 6 GB

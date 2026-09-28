@@ -48,5 +48,6 @@ ml/dataset/*.stats.json
 ml/telemetry/
 # Candidate model binaries (reproducible from code; reports/manifests are committed)
 ml/models/archive/**/*.joblib
+ml/models/gen3/*.joblib
 ml/models/archive/**/*.onnx
 ml/onnx_export.py.orig
