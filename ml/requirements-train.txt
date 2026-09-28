@@ -8,6 +8,10 @@ lightgbm==4.7.0
 joblib==1.5.3
 # SQLi/XSS detector behind OWASP CRS 942100/941100, used by ml/value_features.py (builds from source, needs gcc)
 libinjection-python==1.1.6
+# ONNX export + parity check of the Gen 3 model (ml/gen3_onnx.py)
+onnx==1.23.0
+onnxmltools==1.16.0
+onnxruntime==1.30.0
 # API/tests (ml/ml_api.py, ml/tests)
 fastapi
 httpx

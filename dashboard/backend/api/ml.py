@@ -1,6 +1,8 @@
+import ipaddress
 import logging
+import os
 import httpx
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request, Response
 from services.rbac import require_viewer_or_above
 from services.gemini_service import gemini_service
 from pydantic import BaseModel
@@ -9,7 +11,20 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/ml", tags=["ML Analyst"])
 
-ML_SERVICE_URL = "http://127.0.0.1:5000"
+# The ML service can run on this host (default) or on a separate ML host
+# (deploy/azure-ml/README.md): set ML_SERVICE_URL to its private address and
+# ML_SERVICE_TOKEN to the WAF_ML_API_TOKEN configured there.
+ML_SERVICE_URL = os.getenv("ML_SERVICE_URL", "http://127.0.0.1:5000").rstrip("/")
+ML_SERVICE_TOKEN = os.getenv("ML_SERVICE_TOKEN", "")
+ML_TOKEN_HEADER = "X-WAF-ML-Token"
+# Budget of the Nginx shadow hook and capture relay; both fail open when exceeded.
+ML_FAST_TIMEOUT = float(os.getenv("ML_FAST_TIMEOUT", "0.5"))
+# Where lab telemetry capture goes; defaults to the ML service, empty disables it
+# (e.g. to keep production request samples off a remote ML host).
+ML_CAPTURE_URL = os.getenv("ML_CAPTURE_URL", ML_SERVICE_URL).rstrip("/")
+INTERNAL_RELAY_HEADER = "X-Internal-ML-Relay"
+INTERNAL_RELAY_VALUE = "nginx-shadow-v1"
+INTERNAL_RELAY_NETWORK = ipaddress.ip_network("172.16.0.0/12")
 
 class PredictRequest(BaseModel):
     url: str
@@ -44,6 +59,93 @@ async def _attach_explanation(req: PredictRequest, result: dict) -> dict:
     return result
 
 
+
+def _ml_headers(extra: dict | None = None) -> dict:
+    """Headers for every call to the ML service (token only when configured)."""
+    headers = dict(extra or {})
+    if ML_SERVICE_TOKEN:
+        headers[ML_TOKEN_HEADER] = ML_SERVICE_TOKEN
+    return headers
+
+
+def _is_internal_relay_request(request: Request) -> bool:
+    if request.headers.get(INTERNAL_RELAY_HEADER) != INTERNAL_RELAY_VALUE:
+        return False
+    client_host = request.client.host if request.client else ""
+    try:
+        return ipaddress.ip_address(client_host) in INTERNAL_RELAY_NETWORK
+    except ValueError:
+        return False
+
+
+@router.get("/shadow/decision", include_in_schema=False)
+async def shadow_decision(request: Request):
+    """Internal Docker-to-loopback relay for the Nginx shadow hook."""
+    if not _is_internal_relay_request(request):
+        raise HTTPException(status_code=404, detail="Not found")
+
+    payload = {
+        "url": request.headers.get("X-Original-URI", "/"),
+        "method": request.headers.get("X-Original-Method", "GET"),
+        "body": "",
+    }
+    try:
+        async with httpx.AsyncClient() as client:
+            upstream = await client.post(
+                f"{ML_SERVICE_URL}/predict-fast",
+                json=payload,
+                headers=_ml_headers(),
+                timeout=ML_FAST_TIMEOUT,
+            )
+        if upstream.status_code != 200:
+            return Response(
+                status_code=204,
+                headers={"X-WAF-ML-Decision": "unavailable"},
+            )
+        result = upstream.json()
+        decision = "anomaly" if result.get("is_anomaly") else "pass"
+        return Response(
+            status_code=204,
+            headers={
+                "X-WAF-ML-Decision": decision,
+                "X-WAF-ML-Score": str(result.get("attack_probability", "")),
+            },
+        )
+    except Exception as exc:
+        logger.warning("ML shadow relay failed open: %s", exc)
+        return Response(
+            status_code=204,
+            headers={"X-WAF-ML-Decision": "error"},
+        )
+
+
+@router.post("/capture", include_in_schema=False)
+async def capture_telemetry_relay(request: Request):
+    """Docker-to-loopback relay for privacy-scoped lab telemetry."""
+    if not _is_internal_relay_request(request):
+        raise HTTPException(status_code=404, detail="Not found")
+    if not ML_CAPTURE_URL:
+        return Response(status_code=204)
+    body = await request.body()
+    headers = _ml_headers({
+        "X-Original-Host": request.headers.get("X-Original-Host", ""),
+        "X-Original-URI": request.headers.get("X-Original-URI", "/"),
+        "X-Original-Method": request.headers.get("X-Original-Method", "GET"),
+        "X-Original-Request-ID": request.headers.get("X-Original-Request-ID", ""),
+        "Content-Type": request.headers.get("Content-Type", ""),
+    })
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                f"{ML_CAPTURE_URL}/capture",
+                content=body,
+                headers=headers,
+                timeout=ML_FAST_TIMEOUT,
+            )
+    except Exception as exc:
+        logger.warning("ML capture relay failed open: %s", exc)
+    return Response(status_code=204)
+
 @router.post("/predict")
 async def predict_anomaly(req: PredictRequest, current_user: dict = Depends(require_viewer_or_above)):
     try:
@@ -51,6 +153,7 @@ async def predict_anomaly(req: PredictRequest, current_user: dict = Depends(requ
             response = await client.post(
                 f"{ML_SERVICE_URL}/predict",
                 json=req.dict(),
+                headers=_ml_headers(),
                 timeout=10.0
             )
             response.raise_for_status()
@@ -68,6 +171,7 @@ async def predict_and_suggest(req: PredictRequest, current_user: dict = Depends(
             response = await client.post(
                 f"{ML_SERVICE_URL}/predict",
                 json=req.dict(),
+                headers=_ml_headers(),
                 timeout=10.0
             )
             response.raise_for_status()
@@ -85,6 +189,7 @@ async def predict_and_suggest(req: PredictRequest, current_user: dict = Depends(
                         "body": req.body,
                         "attack_type": "Anomaly Pattern"
                     },
+                    headers=_ml_headers(),
                     timeout=10.0
                 )
                 if rule_res.status_code == 200:

@@ -49,5 +49,9 @@ ml/telemetry/
 # Candidate model binaries (reproducible from code; reports/manifests are committed)
 ml/models/archive/**/*.joblib
 ml/models/gen3/*.joblib
+ml/models/gen3/*.onnx
+# built on the serving host by ml/onnx_export.py
+ml/models/random_forest_waf.onnx
+ml/models/onnx_manifest.json
 ml/models/archive/**/*.onnx
 ml/onnx_export.py.orig

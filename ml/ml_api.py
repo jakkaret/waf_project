@@ -1,5 +1,6 @@
 import os
 import sys
+import hmac
 import json
 import joblib
 import pandas as pd
@@ -43,7 +44,16 @@ RF_ONNX_MODEL_PATH = os.path.join(MODELS_DIR, "random_forest_waf.onnx")
 EVAL_RESULTS_PATH = os.path.join(MODELS_DIR, "eval_results.json")
 # Gen 3 model (ml/train_final_gen3.py). Optional and shadow-only: it is not
 # promoted (gate 3.1-G.0 not passed), so it scores requests but never decides.
+# The ONNX export is preferred (plain data, onnxruntime only); the joblib is the fallback.
+GEN3_ONNX_PATH = os.environ.get("WAF_GEN3_ONNX_PATH", os.path.join(MODELS_DIR, "gen3", "gen3_f_model.onnx"))
 GEN3_MODEL_PATH = os.environ.get("WAF_GEN3_MODEL_PATH", os.path.join(MODELS_DIR, "gen3", "gen3_f_model.joblib"))
+# Engine behind /predict-fast (the Nginx shadow hook): "rf" (13-feature RandomForest
+# ONNX, default) or "gen3" (Gen 3 model). Shadow only while ml_enforcement_enabled is off.
+FAST_ENGINE = os.environ.get("WAF_FAST_ENGINE", "rf").strip().lower()
+# Shared secret for a remote ML host (deploy/azure-ml). Unset = no check, as on
+# the VPS where the API listens on 127.0.0.1 only.
+API_TOKEN = os.environ.get("WAF_ML_API_TOKEN", "")
+TOKEN_HEADER = "X-WAF-ML-Token"
 DASHBOARD_DIR = os.path.join(BASE_DIR, "dashboard")
 
 app = FastAPI(
@@ -51,6 +61,14 @@ app = FastAPI(
     description="High-Accuracy ML API & Auto WAF Rule Generation",
     version="2.1.0"
 )
+
+
+@app.middleware("http")
+async def require_token(request: Request, call_next):
+    """Every path (including /health and the docs) needs the token when WAF_ML_API_TOKEN is set."""
+    if API_TOKEN and not hmac.compare_digest(request.headers.get(TOKEN_HEADER, "").encode(), API_TOKEN.encode()):
+        return JSONResponse(status_code=401, content={"detail": "invalid or missing ML API token"})
+    return await call_next(request)
 
 rf_model = None
 iso_model = None
@@ -61,17 +79,25 @@ gen3_model = None
 gen3_error = None
 
 
-def load_gen3_model(path=GEN3_MODEL_PATH):
-    """(model, error). Never raises: a missing file or libinjection must not stop the API."""
-    if not os.path.exists(path):
-        return None, "Gen 3 model artifact is missing"
-    try:
-        import ml.gen3_model  # noqa: F401  (class definition for unpickling; needs libinjection)
-        # joblib.load executes a pickle: only load artifacts produced by
-        # ml/train_final_gen3.py from this repository.
-        return joblib.load(path), None
-    except Exception as exc:
-        return None, f"{type(exc).__name__}: {exc}"
+def load_gen3_model(path=GEN3_MODEL_PATH, onnx_path=GEN3_ONNX_PATH):
+    """(model, error). ONNX first, then joblib. Never raises: a missing file or
+    libinjection must not stop the API."""
+    errors = []
+    if os.path.exists(onnx_path):
+        try:
+            from ml.gen3_onnx import Gen3OnnxModel  # needs onnxruntime + libinjection
+            return Gen3OnnxModel(onnx_path), None
+        except Exception as exc:
+            errors.append(f"onnx: {type(exc).__name__}: {exc}")
+    if os.path.exists(path):
+        try:
+            import ml.gen3_model  # noqa: F401  (class definition for unpickling; needs libinjection)
+            # joblib.load executes a pickle: only load artifacts produced by
+            # ml/train_final_gen3.py from this repository.
+            return joblib.load(path), "; ".join(errors) or None
+        except Exception as exc:
+            errors.append(f"joblib: {type(exc).__name__}: {exc}")
+    return None, "; ".join(errors) or "Gen 3 model artifact is missing"
 
 
 @app.on_event("startup")
@@ -102,7 +128,9 @@ def startup_event():
 
     gen3_model, gen3_error = load_gen3_model()
     if gen3_model is not None:
-        print(f"[+] Loaded Gen 3 shadow model from {GEN3_MODEL_PATH}")
+        print(f"[+] Loaded Gen 3 shadow model ({gen3_model.runtime})")
+    if gen3_error:
+        print(f"[!] Gen 3 model: {gen3_error}")
 
 class PredictionRequest(BaseModel):
     url: str
@@ -129,9 +157,11 @@ def health_check():
         },
         "gen3_shadow": {
             "loaded": gen3_model is not None,
+            "runtime": getattr(gen3_model, "runtime", None),
             "error": gen3_error,
             "feature_set": getattr(gen3_model, "card", {}).get("feature_set") if gen3_model else None,
         },
+        "fast_engine": FAST_ENGINE,
         "accuracy_target_passed": accuracy_meets_target(eval_results),
         "eval_accuracy": eval_results.get("metrics", {}).get("accuracy")
     }
@@ -145,25 +175,45 @@ def get_eval_results():
         raise HTTPException(status_code=404, detail="Evaluation results not found.")
     return eval_results
 
+def fast_engine_ready() -> bool:
+    return (gen3_model if FAST_ENGINE == "gen3" else fast_engine) is not None
+
+
+def fast_predict(url: str, method: str = "GET", body: str = "") -> dict:
+    """/predict-fast result from the engine chosen by WAF_FAST_ENGINE (same response keys)."""
+    if FAST_ENGINE != "gen3":
+        return fast_engine.predict(url=url, method=method, body=body)
+    result = gen3_model.predict(method=method, url=url, body=body)
+    return {
+        "is_anomaly": bool(result["is_attack"]),
+        "attack_probability": result["attack_probability"],
+        "anomaly_score": None,
+        "detector": f"gen3_f_{gen3_model.runtime}",
+        "status": "ANOMALY_DETECTED" if result["is_attack"] else "PASS",
+        "threshold": result["threshold"],
+        "feature_set": result["feature_set"],
+    }
+
+
 @app.post("/predict-fast")
 def predict_fast(req: PredictionRequest):
-    """Low-latency RF/ONNX prediction without attribution or Isolation Forest."""
-    if fast_engine is None:
-        raise HTTPException(503, detail="ONNX inline engine is not available")
-    return fast_engine.predict(url=req.url, method=req.method, body=req.body)
+    """Low-latency ONNX prediction without attribution or Isolation Forest."""
+    if not fast_engine_ready():
+        raise HTTPException(503, detail=f"fast engine '{FAST_ENGINE}' is not available")
+    return fast_predict(url=req.url, method=req.method, body=req.body)
 
 @app.get("/predict-fast/decision", include_in_schema=False)
 def predict_fast_decision(request: Request):
     """Shadow-only Nginx hook; always fails open and never enforces policy."""
     uri = request.headers.get("x-original-uri", "/")
     method = request.headers.get("x-original-method", "GET")
-    if fast_engine is None:
+    if not fast_engine_ready():
         return Response(
             status_code=204,
             headers={"X-WAF-ML-Decision": "unavailable"},
         )
     try:
-        result = fast_engine.predict(url=uri, method=method, body="")
+        result = fast_predict(url=uri, method=method, body="")
         decision = "anomaly" if result.get("is_anomaly") else "pass"
         return Response(
             status_code=204,

@@ -41,6 +41,8 @@ def request_features(method="GET", url="/", body=""):
 class Gen3FModel:
     """A fitted LightGBM on FEATURE_SET_F plus its decision threshold and model card."""
 
+    runtime = "joblib"  # ml/gen3_onnx.Gen3OnnxModel is the onnxruntime counterpart
+
     def __init__(self, model, threshold, columns=None, card=None):
         self.model = model
         self.threshold = float(threshold)

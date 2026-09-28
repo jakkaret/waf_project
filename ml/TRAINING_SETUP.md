@@ -62,10 +62,20 @@ Dataset, build cache และโมเดล `.joblib` เก็บใน `MyDr
 
 ```bash
 PYTHONPATH=. .venv/bin/python ml/train_final_gen3.py        # หรือ Colab: RUN_FINAL_MODEL = True
-mkdir -p ml/models/gen3 && cp ml/models/archive/gen3-final-f-<เวลา>/gen3_f_model.joblib ml/models/gen3/
+mkdir -p ml/models/gen3 && cp ml/models/archive/gen3-final-f-<เวลา>/gen3_f_model.onnx ml/models/gen3/
 # ml_api.py: POST /predict-gen3 {"url": "...", "method": "GET", "body": ""}  → คะแนนแบบ shadow (ไม่บล็อก)
 ```
-ไฟล์ `.joblib` ไม่ขึ้น git (`.gitignore`); commit `model_card.json` แทน. ยังไม่ผ่าน promotion gate 3.1-G.0 → ห้าม enforce
+- ผลที่พิมพ์ออกมาและเก็บใน `model_card.json` มี 3 ส่วน:
+  1. Scenario ทั้ง 63 ข้อ (expected / predicted / score)
+  2. Precision / Recall / F1 ของ scenario
+  3. Precision / Recall / F1 แบบ out-of-fold ต่อ dataset (attack = positive)
+- ได้ทั้ง `gen3_f_model.joblib` และ `gen3_f_model.onnx` (`ml/gen3_onnx.py`)
+  - `.onnx` ถูกเขียนก็ต่อเมื่อผลตรงกับ LightGBM (ต่างกันน้อยกว่า 1e-5) ทั้งบนข้อมูลจริงและบนค่าที่อยู่ตรง split threshold
+  - `ml_api.py` ใช้ `.onnx` ก่อน ถ้าไม่มีจึงใช้ `.joblib`
+  - ถ้ามีแค่ `.joblib` จากรอบเก่า แปลงได้ด้วย `ml/export_gen3_onnx.py`
+- ไฟล์โมเดลไม่ขึ้น git (`.gitignore`) ให้ commit `model_card.json` แทน
+- ยังไม่ผ่าน promotion gate 3.1-G.0 จึงห้าม enforce
+- รัน ML บนเครื่องแยก (Azure, onnxruntime อย่างเดียว ใช้ `ml/requirements-serve.txt`): ดู `deploy/azure-ml/README.md`
 
 ## ความต้องการของเครื่อง
 

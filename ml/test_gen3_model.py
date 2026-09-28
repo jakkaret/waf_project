@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ml.gen3_model import FEATURE_SET_F, Gen3FModel, request_features
 from ml.test_comprehensive import TESTS
-from ml.train_final_gen3 import benign_threshold
+from ml.train_final_gen3 import benign_threshold, classification_metrics
 
 
 def _tiny_model():
@@ -35,6 +35,18 @@ class Gen3ModelTests(unittest.TestCase):
         self.assertGreaterEqual(float((p < t).mean()), 0.99)
         self.assertEqual(benign_threshold(np.array([0.3, 0.4]), np.ones(2), 0.0), 0.0)
 
+    def test_classification_metrics(self):
+        y = np.array([1, 1, 1, 1, 0, 0, 0, 0])
+        pred = np.array([1, 1, 1, 0, 1, 0, 0, 0])  # TP 3, FN 1, FP 1, TN 3
+        m = classification_metrics(y, pred)
+        self.assertEqual((m["tp"], m["fp"], m["fn"], m["tn"]), (3, 1, 1, 3))
+        self.assertEqual((m["precision"], m["recall"], m["f1"]), (0.75, 0.75, 0.75))
+        w = np.array([1, 1, 1, 1, 3, 1, 1, 1])  # the false positive weighs 3
+        self.assertEqual(classification_metrics(y, pred, w)["precision"], 0.5)
+        benign_only = classification_metrics(np.zeros(3), np.zeros(3))
+        self.assertEqual((benign_only["precision"], benign_only["recall"], benign_only["f1"]), (None, None, None))
+        self.assertEqual(classification_metrics(np.array([1, 0]), np.array([0, 0]))["f1"], 0.0)
+
     def test_wrapper_scores_and_predicts(self):
         wrapper = Gen3FModel(_tiny_model(), threshold=0.5, card={"feature_set": "x"})
         p = wrapper.score_request("GET", "/items?id=1'+UNION+SELECT+null--", "")
@@ -50,7 +62,8 @@ class Gen3ModelTests(unittest.TestCase):
 class Gen3ApiTests(unittest.TestCase):
     def test_missing_artifact_fails_open(self):
         import ml.ml_api as api
-        model, err = api.load_gen3_model(os.path.join(tempfile.gettempdir(), "no-such-gen3-model.joblib"))
+        model, err = api.load_gen3_model(os.path.join(tempfile.gettempdir(), "no-such-gen3-model.joblib"),
+                                         os.path.join(tempfile.gettempdir(), "no-such-gen3-model.onnx"))
         self.assertIsNone(model)
         self.assertIn("missing", err)
 

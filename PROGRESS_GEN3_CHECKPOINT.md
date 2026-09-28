@@ -84,8 +84,16 @@ F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen
 
 **ขั้นตอน:**
 1. Colab → เปิด notebook จากลิงก์ (แท็บใหม่) → **Connect (CPU)** → รอ RAM/Disk ขึ้น → **Runtime → Run all** (~30–60 นาที) — ไม่ต้องแก้ค่าใดๆ
-2. ผล: `MyDrive/waf_ml/models/gen3-final-f-<เวลา>/gen3_f_model.joblib` + `MyDrive/waf_ml/results/<เวลา>/gen3-final-f-<เวลา>/model_card.json`
-3. ดาวน์โหลด `gen3_f_model.joblib` ไปวางที่ `ml/models/gen3/` (ไม่ขึ้น git — `.gitignore`) → ให้ Claude ตรวจ model card, ทดสอบ `/predict-gen3` และ commit เฉพาะ `model_card.json`
+2. ผล: `MyDrive/waf_ml/models/gen3-final-f-<เวลา>/` (`gen3_f_model.onnx` + `.joblib`) + `MyDrive/waf_ml/results/<เวลา>/gen3-final-f-<เวลา>/model_card.json`
+   - cell โมเดลจริงแสดง Scenario 63 ข้อ แล้วตามด้วย Precision / Recall / F1 (ของ scenario และแบบ OOF ต่อ dataset)
+3. ดาวน์โหลด `gen3_f_model.onnx` ไปวางที่ `ml/models/gen3/` (ไม่ขึ้น git — `.gitignore`)
+   - ให้ Claude ตรวจ model card, ทดสอบ `/predict-gen3` และ commit เฉพาะ `model_card.json`
+4. (ถ้าจะแยกเครื่อง ML) ทำตาม `deploy/azure-ml/README.md` — ขั้นที่แตะ VPS ต้องได้รับอนุมัติก่อน
+
+⚠️ **พบจากการตรวจ VPS (อ่านอย่างเดียว, 29/09):**
+- venv `dashboard/backend/.venv` ถูกสร้างใหม่เมื่อ 27/09 11:58 หลังจาก `waf-ml` เริ่มทำงานไปแล้ว
+- numpy, sklearn, onnxruntime และ pandas ไม่อยู่บนดิสก์แล้ว process ที่รันอยู่ยังใช้ไฟล์ที่ถูกลบไปแล้ว
+- ถ้า restart หรือ reboot `waf-ml` จะโหลดโมเดลไม่ขึ้น (ไม่ได้แก้อะไรบน VPS)
 - สถานะ: **ไม่ผ่าน promotion gate (3/5)** → ใช้เดโม / shadow เท่านั้น ห้าม enforce
 
 ### งานถัดไป (เดิม — ทำแล้ว)

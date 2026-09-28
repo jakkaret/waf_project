@@ -10,6 +10,10 @@ from typing import Dict, Any
 BASE_ML_URL = os.environ.get("ML_API_URL", "http://127.0.0.1:5000").rstrip("/")
 PREDICT_URL = f"{BASE_ML_URL}/predict" if not BASE_ML_URL.endswith("/predict") else BASE_ML_URL
 RULE_GEN_URL = f"{BASE_ML_URL}/generate-rule"
+# Same token as the backend (dashboard/backend/api/ml.py) when the ML service is remote.
+ML_HEADERS = {"Content-Type": "application/json"}
+if os.environ.get("ML_SERVICE_TOKEN"):
+    ML_HEADERS["X-WAF-ML-Token"] = os.environ["ML_SERVICE_TOKEN"]
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
@@ -25,7 +29,7 @@ def send_prediction_request(url: str, method: str = "GET", body: str = "") -> Di
     """Synchronous HTTP call to FastAPI ML Microservice with fast timeout."""
     try:
         data = json.dumps({"url": url, "method": method, "body": body}).encode("utf-8")
-        req = urllib.request.Request(PREDICT_URL, data=data, headers={"Content-Type": "application/json"}, method="POST")
+        req = urllib.request.Request(PREDICT_URL, data=data, headers=ML_HEADERS, method="POST")
         with urllib.request.urlopen(req, timeout=1.5) as resp:
             if resp.status == 200:
                 return json.loads(resp.read().decode("utf-8"))
@@ -38,7 +42,7 @@ def send_rule_generation_request(url: str, method: str = "GET", body: str = "", 
     """Request auto-generation of ModSecurity SecRule."""
     try:
         data = json.dumps({"url": url, "method": method, "body": body, "attack_type": attack_type}).encode("utf-8")
-        req = urllib.request.Request(RULE_GEN_URL, data=data, headers={"Content-Type": "application/json"}, method="POST")
+        req = urllib.request.Request(RULE_GEN_URL, data=data, headers=ML_HEADERS, method="POST")
         with urllib.request.urlopen(req, timeout=1.5) as resp:
             if resp.status == 200:
                 return json.loads(resp.read().decode("utf-8"))
