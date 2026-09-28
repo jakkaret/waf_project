@@ -18,6 +18,7 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { EmptyState } from '../components/ui/EmptyState'
 import { DomainSetupWizard } from '../components/DomainSetupWizard'
 import { OriginWafRules } from '../components/OriginWafRules'
+import { ShieldActivity } from '../components/ShieldActivity'
 import { toast } from 'react-hot-toast'
 import { Domain, CaptchaShieldConfig, OtpShieldConfig } from '../types'
 import { parseListInput, formatListInput } from '../lib/captchaForm'
@@ -1210,6 +1211,8 @@ export const OriginDetail: React.FC = () => {
                 </div>
               </>
             )}
+
+            {id && <ShieldActivity originId={id} />}
           </div>
         )}
 
