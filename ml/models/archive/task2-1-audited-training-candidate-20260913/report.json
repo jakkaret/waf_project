@@ -1,0 +1,62 @@
+{
+  "experiment": "task-2.1-audited-training-candidate",
+  "random_state": 20260913,
+  "model": {
+    "type": "RandomForestClassifier",
+    "n_estimators": 200,
+    "max_depth": 20,
+    "min_samples_split": 6,
+    "min_samples_leaf": 3,
+    "class_weight": "balanced"
+  },
+  "safety_gate": {
+    "benign_recall_required": 0.985,
+    "attack_recall_required": 0.85
+  },
+  "data_integrity": {
+    "source": "CSIC_2010_checked_in_cleaned_only",
+    "rows_before_cleaning": 61065,
+    "rows_after_label_cleanup": 25094,
+    "rows_after_sha256_deduplication": 25094,
+    "synthetic_rows_included": 0,
+    "hash_algorithm": "sha256",
+    "development_rows": 20075,
+    "unseen_holdout_rows": 5019,
+    "development_holdout_hash_overlap": 0,
+    "fit_rows_before_review_exclusion": 16060,
+    "fit_rows_after_review_exclusion": 12360,
+    "review_attack_rows_excluded_from_fit": 3700,
+    "high_confidence_attack_rows_in_fit": 6202
+  },
+  "calibration": {
+    "threshold": 0.706,
+    "benign_recall": 0.987013,
+    "attack_recall": 0.541818,
+    "confusion_matrix": {
+      "tn": 1520,
+      "fp": 20,
+      "fn": 1134,
+      "tp": 1341
+    },
+    "calibration_status": "failed_attack_gate"
+  },
+  "unseen_holdout": {
+    "threshold": 0.706,
+    "accuracy": 0.705121,
+    "roc_auc": 0.83815,
+    "benign_recall": 0.985447,
+    "attack_recall": 0.530856,
+    "false_positive_rate": 0.014553,
+    "confusion_matrix": {
+      "tn": 1896,
+      "fp": 28,
+      "fn": 1452,
+      "tp": 1643
+    },
+    "benign_count": 1924,
+    "attack_count": 3095
+  },
+  "promotion_gate_passed": false,
+  "production_artifacts_written": false,
+  "interpretation": "Exploratory only. Review attack rows were excluded from fitting, but retained in calibration and holdout; no labels were changed and no production artifact was written."
+}

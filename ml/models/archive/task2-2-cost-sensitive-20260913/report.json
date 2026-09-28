@@ -1,0 +1,43 @@
+{
+  "experiment": "task-2.2-cost-sensitive-random-forest",
+  "feature_count": 22,
+  "rows": 60106,
+  "data_integrity": {
+    "hash_algorithm": "sha256",
+    "rows_before_deduplication": 60106,
+    "rows_after_deduplication": 60106,
+    "duplicate_rows_removed": 0,
+    "unique_hashes": 60106,
+    "train_test_hash_overlap": 0
+  },
+  "class_weight": {
+    "0": 1.25,
+    "1": 1.0
+  },
+  "holdout_only": true,
+  "baseline_threshold_0_5": {
+    "threshold": 0.5,
+    "accuracy": 0.9019764424036734,
+    "benign_recall": 0.9565334048832841,
+    "attack_recall": 0.8482767727452792,
+    "false_positives": 324,
+    "false_negatives": 1149,
+    "true_positives": 6424,
+    "true_negatives": 7130
+  },
+  "selected_threshold": {
+    "threshold": 0.6137798734811869,
+    "accuracy": 0.8955879417049312,
+    "benign_recall": 0.9851086664877918,
+    "attack_recall": 0.8074739205070646,
+    "false_positives": 111,
+    "false_negatives": 1458,
+    "true_positives": 6115,
+    "true_negatives": 7343
+  },
+  "promotion_gate": {
+    "benign_recall_required": 0.985,
+    "attack_recall_required": 0.85,
+    "passed": false
+  }
+}

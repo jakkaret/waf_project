@@ -1,0 +1,92 @@
+{
+  "threshold": 0.853,
+  "results": {
+    "CSIC_2010_Cleaned": {
+      "benign_rows": 9622,
+      "benign_shapes": 2986.0,
+      "benign_recall": 1.0,
+      "benign_recall_rows": 1.0,
+      "attack_rows": 15472,
+      "attack_shapes": 5683.7,
+      "attack_recall": 0.1336,
+      "attack_recall_rows": 0.1161,
+      "roc_auc": 0.6904
+    },
+    "ModSecurity_VPS_Audit_Payload_Rule": {
+      "benign_rows": 0,
+      "benign_shapes": 0.0,
+      "benign_recall": null,
+      "benign_recall_rows": null,
+      "attack_rows": 1147,
+      "attack_shapes": 1090.3,
+      "attack_recall": 0.0569,
+      "attack_recall_rows": 0.0567
+    },
+    "OpenAppSec_Legitimate": {
+      "benign_rows": 97370,
+      "benign_shapes": 85075.5,
+      "benign_recall": 0.4039,
+      "benign_recall_rows": 0.4419,
+      "attack_rows": 0,
+      "attack_shapes": 0.0,
+      "attack_recall": null,
+      "attack_recall_rows": null
+    },
+    "OpenAppSec_Malicious": {
+      "benign_rows": 0,
+      "benign_shapes": 0.0,
+      "benign_recall": null,
+      "benign_recall_rows": null,
+      "attack_rows": 66373,
+      "attack_shapes": 32355.0,
+      "attack_recall": 0.656,
+      "attack_recall_rows": 0.6451
+    },
+    "SRBH2020_Honeypot": {
+      "benign_rows": 65102,
+      "benign_shapes": 50394.0,
+      "benign_recall": 0.9699,
+      "benign_recall_rows": 0.9742,
+      "attack_rows": 69300,
+      "attack_shapes": 45782.0,
+      "attack_recall": 0.1219,
+      "attack_recall_rows": 0.1073,
+      "roc_auc": 0.7368
+    },
+    "VPS_Audit_RuleFree_2xx_Lab": {
+      "benign_rows": 77625,
+      "benign_shapes": 2948.6,
+      "benign_recall": 0.9688,
+      "benign_recall_rows": 0.9988,
+      "attack_rows": 0,
+      "attack_shapes": 0.0,
+      "attack_recall": null,
+      "attack_recall_rows": null
+    },
+    "VPS_Nginx_Real_200_Access": {
+      "benign_rows": 8555,
+      "benign_shapes": 215.7,
+      "benign_recall": 1.0,
+      "benign_recall_rows": 1.0,
+      "attack_rows": 0,
+      "attack_shapes": 0.0,
+      "attack_recall": null,
+      "attack_recall_rows": null
+    },
+    "VPS_Telemetry_Real": {
+      "benign_rows": 7406,
+      "benign_shapes": 11.2,
+      "benign_recall": 0.9821,
+      "benign_recall_rows": 0.9999,
+      "attack_rows": 0,
+      "attack_shapes": 0.0,
+      "attack_recall": null,
+      "attack_recall_rows": null
+    },
+    "_wrapper_shortcut_benign": {
+      "benign_shapes": 3613.0,
+      "flagged_share": 0.0001,
+      "note": "benign requests with one parameter at path depth <= 1, scored by the candidate (in-sample for dev rows)"
+    }
+  }
+}

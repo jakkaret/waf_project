@@ -1,0 +1,182 @@
+{
+  "dataset_version": "gen3-conservative-20260927-165254",
+  "input_files": {
+    "dataset/csic_final.csv": {
+      "sha256": "65c74cd6e09b0e49771aa6f48d19cc5e1ba740f5ed927e16ecd952b797386195",
+      "bytes": 27376223
+    },
+    "dataset/modsec_real_attacks.jsonl": {
+      "sha256": "93671bed544a3daab233696fbe0a4c03035ea03ef7f863ad5dec99376dcdcf49",
+      "bytes": 2257708
+    },
+    "dataset/nginx_real_benign.jsonl": {
+      "sha256": "746e8f9b493ef6a9c4addc058bc8f7b627ab2ba4d900ae2753e08fc2e92c2783",
+      "bytes": 1533675
+    },
+    "telemetry/request_capture-20260914.jsonl": {
+      "sha256": "59e05765c35ac1bfbc15b293aaacb33d1508ff5883f5cd6218cdcb0a63d24b57",
+      "bytes": 588705
+    },
+    "telemetry/request_capture-20260916.jsonl": {
+      "sha256": "54a904b854cc59f31073a0efeb53bae4d9a8956c8268bf5020a37d321e701773",
+      "bytes": 2019
+    },
+    "telemetry/request_capture-20260917.jsonl": {
+      "sha256": "bc176b8da0671e3c0e3030402b18a6a3d51f1cbb54d677010835b6c9c307abd8",
+      "bytes": 4037
+    },
+    "telemetry/request_capture-20260918.jsonl": {
+      "sha256": "bd083bea542b2b36e6e410110e844754c462ed934fdeb8fce76f9ef6f0547bf2",
+      "bytes": 165804
+    },
+    "telemetry/request_capture-20260919.jsonl": {
+      "sha256": "4eddd5f0dd97021e90dfe2711c6832772cf2267a37c4fb7d2c0755bbe9a5c479",
+      "bytes": 218772
+    },
+    "telemetry/request_capture-20260920.jsonl": {
+      "sha256": "0ba19c1f8d1f36511a6e0a7c07f91d6df7d3d580db173a496debe62ed27e0b43",
+      "bytes": 5023619
+    },
+    "telemetry/request_capture-20260921.jsonl": {
+      "sha256": "25f5a87732d33d8e697b792ac29911e37a29b873d2045b166101ff7a818fe002",
+      "bytes": 5242807
+    },
+    "telemetry/request_capture-20260922.jsonl": {
+      "sha256": "11aab8310942130b97414a55142875503c340075fbd437763a6f713c81f72dfb",
+      "bytes": 5242644
+    },
+    "telemetry/request_capture-20260923.jsonl": {
+      "sha256": "6adc9a0e2cf66a1511c2241687a4ecc76538d11fa159a1b1dee63f3d36130fda",
+      "bytes": 936508
+    },
+    "telemetry/request_capture-20260924.jsonl": {
+      "sha256": "88c1ac9201dd469b75d53e7bbfb22001504f80513a0e0f92d6ed595cbe04462e",
+      "bytes": 613721
+    }
+  },
+  "data_integrity": {
+    "dataset": "CSIC_2010 + VPS_Telemetry_Benign + VPS_ModSecurity_Payload_Rule_Attacks + VPS_Nginx_Benign",
+    "synthetic_rows": 0,
+    "raw_rows_by_source": {
+      "CSIC_2010_Cleaned": 58159,
+      "VPS_Telemetry_Real_benign": 17371,
+      "ModSecurity_VPS_Payload_Rule": 877,
+      "VPS_Nginx_Real_200_Access": 9381
+    },
+    "exclusions": {
+      "telemetry_feature_derived_attack_labels": 162,
+      "modsec_protocol_only_events": 6590,
+      "modsec_non_get_without_captured_body": 46,
+      "modsec_excluded_top_rule_ids": {
+        "949110": 6589,
+        "920420": 6350,
+        "920350": 186,
+        "920440": 176,
+        "913100": 42,
+        "920500": 10,
+        "920450": 5,
+        "920340": 4,
+        "911100": 1,
+        "200003": 1
+      },
+      "hand_written_representative_urls": "removed from training (synthetic)",
+      "conflicting_label_hashes": 0,
+      "exact_duplicates": 43652
+    },
+    "total_unique_samples": 42136,
+    "near_duplicate_groups": 9882,
+    "effective_distinct_shapes": 9894.0,
+    "benign_count": 25787,
+    "attack_count": 16349,
+    "unique_rows_by_source": {
+      "CSIC_2010_Cleaned": {
+        "benign": 9622,
+        "attack": 15472
+      },
+      "ModSecurity_VPS_Payload_Rule": {
+        "benign": 0,
+        "attack": 877
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign": 8759,
+        "attack": 0
+      },
+      "VPS_Telemetry_Real": {
+        "benign": 7406,
+        "attack": 0
+      }
+    },
+    "distinct_shapes_by_source_label": {
+      "CSIC_2010_Cleaned|benign": 2986.0,
+      "CSIC_2010_Cleaned|attack": 5683.8,
+      "ModSecurity_VPS_Payload_Rule|attack": 853.2,
+      "VPS_Nginx_Real_200_Access|benign": 358.0,
+      "VPS_Telemetry_Real|benign": 13.0
+    },
+    "attack_family_counts": {
+      "CSIC_unlabelled_family": 15472,
+      "LFI": 753,
+      "RFI": 63,
+      "RCE": 44,
+      "RCE+SQLi": 7,
+      "LFI+RCE": 6,
+      "SQLi": 3,
+      "PHP": 1
+    },
+    "feature_count": 36,
+    "feature_columns": [
+      "special_char_count",
+      "special_char_ratio",
+      "url_path_entropy",
+      "suspicious_path_marker_count",
+      "query_body_entropy",
+      "encoded_char_ratio",
+      "double_encoded_count",
+      "encoded_attack_token_count",
+      "delimiter_count",
+      "delimiter_ratio",
+      "comment_token_count",
+      "inline_function_count",
+      "json_operator_count",
+      "keyword_matches",
+      "html_tag_matches",
+      "path_traversal_depth",
+      "quote_unbalanced",
+      "has_sql_operator",
+      "has_ssrf_token",
+      "has_ssti_nosql",
+      "is_oversized_payload",
+      "is_clean_structure",
+      "has_excessive_params",
+      "method_is_post",
+      "is_static_asset",
+      "method_is_uncommon",
+      "path_depth",
+      "max_param_length",
+      "param_count",
+      "has_duplicate_param_keys",
+      "has_control_char_encoding",
+      "non_printable_char_count",
+      "param_key_has_capital",
+      "param_value_punctuation_count",
+      "avg_param_length",
+      "param_anomaly_score"
+    ]
+  },
+  "split_rule": {
+    "method": "group-level StratifiedKFold over near-duplicate groups (stratified on label x source), first fold as holdout (~20% of distinct shapes)",
+    "group_key": "path + sorted param names + value shape (digits -> 0, mixed alnum tokens >= 6 chars -> T); method excluded",
+    "weighting": "1 / size of (group, label): each distinct request shape counts once",
+    "random_state": 20260913,
+    "dev_rows": 36279,
+    "holdout_rows": 5857,
+    "sha256_overlap": 0,
+    "group_overlap": 0
+  },
+  "train_script_sha256": "004cef81621e509478dee444e66e463aca7aad7c4d0541f6f3b4aaa2ed748e4d",
+  "feature_engineering_sha256": "ae1b5dcc2c0029597c97d2fc438729adb3832dd9a181540b1f4d734e047506c4",
+  "environment": {
+    "python": "3.12.3",
+    "lightgbm": "4.7.0"
+  }
+}

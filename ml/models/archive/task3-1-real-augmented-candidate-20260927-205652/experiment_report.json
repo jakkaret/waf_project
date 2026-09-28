@@ -1,0 +1,722 @@
+{
+  "experiment": "Task 3.1 & 2.3 Real-World Training (conservative labels, near-duplicate weighted group split)",
+  "timestamp": "20260927-205652",
+  "data_integrity": {
+    "dataset": "CSIC_2010 + VPS_Telemetry_Benign + VPS_ModSecurity_Audit (payload-rule attacks, rule-free benign) + VPS_Nginx_Benign + OpenAppSec + SR-BH 2020",
+    "core_sources_for_gate": [
+      "CSIC_2010_Cleaned",
+      "ModSecurity_VPS_Audit_Payload_Rule",
+      "VPS_Audit_RuleFree_2xx_Lab",
+      "VPS_Nginx_Real_200_Access",
+      "VPS_Telemetry_Real"
+    ],
+    "synthetic_rows": 0,
+    "raw_rows_by_source": {
+      "CSIC_2010_Cleaned": 58159,
+      "VPS_Telemetry_Real_benign": 17371,
+      "VPS_ModSecurity_Audit_labelled": 78781,
+      "VPS_Nginx_Real_200_Access": 9381,
+      "OpenAppSec_Legitimate": 97378,
+      "OpenAppSec_Malicious": 66373,
+      "SRBH2020_Honeypot": 134412
+    },
+    "exclusions": {
+      "telemetry_feature_derived_attack_labels": 162,
+      "vps_audit_extraction": {
+        "records": 1083047,
+        "skip_unlabelled": 900633,
+        "skip_non_get_or_bad_uri": 90561,
+        "Anomalous": 1149,
+        "dup": 13072,
+        "Valid": 77632,
+        "script": "scripts/extract_vps_audit_dataset.py",
+        "audit_files": [
+          "audit.json.2.gz",
+          "audit.json.1.gz",
+          "audit.json"
+        ],
+        "extracted_at": "2026-09-27"
+      },
+      "external_preparation": {
+        "max_rows_per_group": 3,
+        "body_cap_chars": 16384,
+        "openappsec": {
+          "legitimate": {
+            "input_sha256": "58faee18c54229759287a574f6f8cb1e3b951fa135e403ea9a679d2b18efd778",
+            "kept_Valid": 488135,
+            "near_duplicate_capped": 276670,
+            "exact_duplicate": 275437,
+            "distinct_groups": 425745
+          },
+          "malicious": {
+            "input_sha256": "131314e5c13b07ec686e6b16b8010008063d977b5ff8eb552819c138c00b7b2b",
+            "kept_Anomalous": 66373,
+            "near_duplicate_capped": 7551,
+            "distinct_groups": 32355
+          }
+        },
+        "srbh2020": {
+          "input_sha256": "9c73c90ce6564ae48b14f7179cd864d037a6a130ef69c68c1626ec5d7ce4a910",
+          "label_columns": [
+            "000 - Normal",
+            "272 - Protocol Manipulation",
+            "242 - Code Injection",
+            "88 - OS Command Injection",
+            "126 - Path Traversal",
+            "66 - SQL Injection",
+            "16 - Dictionary-based Password Attack",
+            "310 - Scanning for Vulnerable Software",
+            "153 - Input Data Manipulation",
+            "248 - Command Injection",
+            "274 - HTTP Verb Tampering",
+            "194 - Fake the Source of Data",
+            "34 - HTTP Response Splitting",
+            "33 - HTTP Request Smuggling"
+          ],
+          "excluded_non_payload_label_sets": {
+            "194 - Fake the Source of Data": 55983,
+            "272 - Protocol Manipulation": 7019,
+            "274 - HTTP Verb Tampering": 4055,
+            "310 - Scanning for Vulnerable Software": 2413,
+            "153 - Input Data Manipulation": 1387,
+            "272 - Protocol Manipulation+274 - HTTP Verb Tampering": 1370,
+            "16 - Dictionary-based Password Attack": 836,
+            "272 - Protocol Manipulation+310 - Scanning for Vulnerable Software": 253,
+            "16 - Dictionary-based Password Attack+194 - Fake the Source of Data": 162,
+            "153 - Input Data Manipulation+16 - Dictionary-based Password Attack": 86,
+            "16 - Dictionary-based Password Attack+272 - Protocol Manipulation": 21,
+            "16 - Dictionary-based Password Attack+274 - HTTP Verb Tampering": 8,
+            "274 - HTTP Verb Tampering+310 - Scanning for Vulnerable Software": 1,
+            "16 - Dictionary-based Password Attack+272 - Protocol Manipulation+274 - HTTP Verb Tampering": 1
+          },
+          "excluded_total": 73595,
+          "kept_Valid": 65110,
+          "exact_duplicate": 511190,
+          "kept_Anomalous": 173614,
+          "near_duplicate_capped": 84306,
+          "distinct_groups": 164681
+        }
+      },
+      "hand_written_representative_urls": "removed from training (synthetic)",
+      "conflicting_label_hashes": 2,
+      "exact_duplicates": 43883,
+      "external_group_sample_rate": {
+        "OpenAppSec_Legitimate|Valid": 0.2,
+        "SRBH2020_Honeypot|Anomalous": 0.4
+      }
+    },
+    "total_unique_samples": 417972,
+    "near_duplicate_groups": 223913,
+    "effective_distinct_shapes": 226542.0,
+    "benign_count": 265680,
+    "attack_count": 152292,
+    "unique_rows_by_source": {
+      "CSIC_2010_Cleaned": {
+        "benign": 9622,
+        "attack": 15472
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign": 0,
+        "attack": 1147
+      },
+      "OpenAppSec_Legitimate": {
+        "benign": 97370,
+        "attack": 0
+      },
+      "OpenAppSec_Malicious": {
+        "benign": 0,
+        "attack": 66373
+      },
+      "SRBH2020_Honeypot": {
+        "benign": 65102,
+        "attack": 69300
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign": 77625,
+        "attack": 0
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign": 8555,
+        "attack": 0
+      },
+      "VPS_Telemetry_Real": {
+        "benign": 7406,
+        "attack": 0
+      }
+    },
+    "distinct_shapes_by_source_label": {
+      "CSIC_2010_Cleaned|benign": 2986.0,
+      "CSIC_2010_Cleaned|attack": 5683.7,
+      "ModSecurity_VPS_Audit_Payload_Rule|attack": 1090.3,
+      "OpenAppSec_Legitimate|benign": 85075.5,
+      "OpenAppSec_Malicious|attack": 32355.0,
+      "SRBH2020_Honeypot|benign": 50394.0,
+      "SRBH2020_Honeypot|attack": 45782.0,
+      "VPS_Audit_RuleFree_2xx_Lab|benign": 2948.6,
+      "VPS_Nginx_Real_200_Access|benign": 215.7,
+      "VPS_Telemetry_Real|benign": 11.2
+    },
+    "attack_family_counts": {
+      "SQLi": 54394,
+      "XSS": 41878,
+      "LFI": 25532,
+      "CSIC_unlabelled_family": 15472,
+      "Response-Splitting": 5724,
+      "RCE": 3798,
+      "Code-Injection": 3170,
+      "LFI+RCE": 1043,
+      "Code-Injection+RCE": 447,
+      "Code-Injection+SQLi": 242,
+      "Log4Shell": 218,
+      "LFI+RCE+SQLi": 171,
+      "XXE": 70,
+      "RFI": 63,
+      "RCE-Shellshock": 48,
+      "RCE+SQLi": 13,
+      "PHP+RCE": 5,
+      "Java+PHP": 2,
+      "Java+PHP+RCE": 1,
+      "PHP": 1
+    },
+    "feature_count": 36,
+    "feature_columns": [
+      "special_char_count",
+      "special_char_ratio",
+      "url_path_entropy",
+      "suspicious_path_marker_count",
+      "query_body_entropy",
+      "encoded_char_ratio",
+      "double_encoded_count",
+      "encoded_attack_token_count",
+      "delimiter_count",
+      "delimiter_ratio",
+      "comment_token_count",
+      "inline_function_count",
+      "json_operator_count",
+      "keyword_matches",
+      "html_tag_matches",
+      "path_traversal_depth",
+      "quote_unbalanced",
+      "has_sql_operator",
+      "has_ssrf_token",
+      "has_ssti_nosql",
+      "is_oversized_payload",
+      "is_clean_structure",
+      "has_excessive_params",
+      "method_is_post",
+      "is_static_asset",
+      "method_is_uncommon",
+      "path_depth",
+      "max_param_length",
+      "param_count",
+      "has_duplicate_param_keys",
+      "has_control_char_encoding",
+      "non_printable_char_count",
+      "param_key_has_capital",
+      "param_value_punctuation_count",
+      "avg_param_length",
+      "param_anomaly_score"
+    ]
+  },
+  "metric_definition": "near-duplicate weighted recall: each distinct request shape counts once; *_rows fields are raw per-row recall",
+  "hyperparameter_search": {
+    "method": "grid on dev pooled OOF, objective = weighted attack recall at weighted benign recall >= 98.5%",
+    "results": [
+      {
+        "params": {
+          "num_leaves": 31,
+          "min_child_samples": 20,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.7865,
+        "oof_attack_recall": 0.6197,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.9252
+      },
+      {
+        "params": {
+          "num_leaves": 31,
+          "min_child_samples": 100,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.783,
+        "oof_attack_recall": 0.6239,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.9264
+      },
+      {
+        "params": {
+          "num_leaves": 80,
+          "min_child_samples": 20,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.7775,
+        "oof_attack_recall": 0.6481,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.9273
+      },
+      {
+        "params": {
+          "num_leaves": 80,
+          "min_child_samples": 100,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.781,
+        "oof_attack_recall": 0.646,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.9285
+      },
+      {
+        "params": {
+          "num_leaves": 255,
+          "min_child_samples": 20,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.885,
+        "oof_attack_recall": 0.6472,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.9276
+      },
+      {
+        "params": {
+          "num_leaves": 255,
+          "min_child_samples": 100,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.89,
+        "oof_attack_recall": 0.644,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.928
+      }
+    ],
+    "selected_index": 2
+  },
+  "cv": {
+    "method": "5-fold group-level StratifiedKFold (label x source) on dev set; threshold from pooled out-of-fold probabilities of CORE sources",
+    "threshold": 0.853,
+    "calibration_status": "passed_both_gates",
+    "oof_benign_recall": 0.9854,
+    "oof_attack_recall": 0.8877,
+    "oof_all_sources_at_threshold": {
+      "benign_rows": 224421,
+      "benign_shapes": 113464.0,
+      "benign_recall": 0.9988,
+      "benign_recall_rows": 0.9873,
+      "attack_rows": 122019,
+      "attack_shapes": 68017.0,
+      "attack_recall": 0.9797,
+      "attack_recall_rows": 0.9763
+    },
+    "folds_at_oof_threshold": [
+      {
+        "fold": 1,
+        "benign_rows": 1594,
+        "benign_shapes": 985.5,
+        "benign_recall": 0.9888,
+        "benign_recall_rows": 0.9881,
+        "attack_rows": 2578,
+        "attack_shapes": 1083.0,
+        "attack_recall": 0.8717,
+        "attack_recall_rows": 0.8565
+      },
+      {
+        "fold": 2,
+        "benign_rows": 1607,
+        "benign_shapes": 985.6,
+        "benign_recall": 0.9883,
+        "benign_recall_rows": 0.9888,
+        "attack_rows": 2476,
+        "attack_shapes": 1083.0,
+        "attack_recall": 0.8899,
+        "attack_recall_rows": 0.8441
+      },
+      {
+        "fold": 3,
+        "benign_rows": 4906,
+        "benign_shapes": 987.0,
+        "benign_recall": 0.9863,
+        "benign_recall_rows": 0.572,
+        "attack_rows": 3419,
+        "attack_shapes": 1086.0,
+        "attack_recall": 0.8769,
+        "attack_recall_rows": 0.9003
+      },
+      {
+        "fold": 4,
+        "benign_rows": 84555,
+        "benign_shapes": 986.3,
+        "benign_recall": 0.9848,
+        "benign_recall_rows": 0.9929,
+        "attack_rows": 2432,
+        "attack_shapes": 1083.0,
+        "attack_recall": 0.8884,
+        "attack_recall_rows": 0.8951
+      },
+      {
+        "fold": 5,
+        "benign_rows": 1623,
+        "benign_shapes": 985.3,
+        "benign_recall": 0.9785,
+        "benign_recall_rows": 0.9741,
+        "attack_rows": 2290,
+        "attack_shapes": 1082.0,
+        "attack_recall": 0.9119,
+        "attack_recall_rows": 0.9188
+      }
+    ],
+    "std_attack_recall_across_folds": 0.0139,
+    "std_benign_recall_across_folds": 0.0037
+  },
+  "holdout_evaluation": {
+    "threshold": 0.853,
+    "threshold_source": "pooled out-of-fold calibration on CORE dev sources; holdout never used for tuning",
+    "headline_population": [
+      "CSIC_2010_Cleaned",
+      "ModSecurity_VPS_Audit_Payload_Rule",
+      "VPS_Audit_RuleFree_2xx_Lab",
+      "VPS_Nginx_Real_200_Access",
+      "VPS_Telemetry_Real"
+    ],
+    "all_sources_at_threshold": {
+      "benign_rows": 41259,
+      "benign_shapes": 28167.0,
+      "benign_recall": 0.999,
+      "benign_recall_rows": 0.976,
+      "attack_rows": 30273,
+      "attack_shapes": 16894.0,
+      "attack_recall": 0.9888,
+      "attack_recall_rows": 0.9899
+    },
+    "roc_auc_all_sources": 0.9999,
+    "accuracy": 0.9463,
+    "roc_auc": 0.9919,
+    "benign_recall": 0.9858,
+    "attack_recall": 0.9104,
+    "benign_recall_rows": 0.8907,
+    "attack_recall_rows": 0.934,
+    "confusion_matrix_rows": {
+      "tn": 7948,
+      "fp": 975,
+      "fn": 226,
+      "tp": 3198
+    },
+    "enforcement_bands": {
+      "challenge_0.70": {
+        "benign_recall": 0.9752,
+        "attack_recall": 0.9414
+      },
+      "block_0.95": {
+        "benign_recall": 0.9955,
+        "attack_recall": 0.878
+      }
+    },
+    "per_source": {
+      "CSIC_2010_Cleaned": {
+        "benign_rows": 2165,
+        "benign_shapes": 597.0,
+        "benign_recall": 0.9707,
+        "benign_recall_rows": 0.5497,
+        "attack_rows": 3195,
+        "attack_shapes": 1138.0,
+        "attack_recall": 0.909,
+        "attack_recall_rows": 0.9349
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 229,
+        "attack_shapes": 219.0,
+        "attack_recall": 0.9178,
+        "attack_recall_rows": 0.9214
+      },
+      "OpenAppSec_Legitimate": {
+        "benign_rows": 19271,
+        "benign_shapes": 16856.5,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 0.9999,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "OpenAppSec_Malicious": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 13084,
+        "attack_shapes": 6376.0,
+        "attack_recall": 1.0,
+        "attack_recall_rows": 1.0
+      },
+      "SRBH2020_Honeypot": {
+        "benign_rows": 13065,
+        "benign_shapes": 10078.7,
+        "benign_recall": 0.9989,
+        "benign_recall_rows": 0.9989,
+        "attack_rows": 13765,
+        "attack_shapes": 9161.0,
+        "attack_recall": 0.9926,
+        "attack_recall_rows": 0.9941
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign_rows": 6681,
+        "benign_shapes": 589.7,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign_rows": 66,
+        "benign_shapes": 42.8,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Telemetry_Real": {
+        "benign_rows": 11,
+        "benign_shapes": 2.3,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      }
+    },
+    "per_attack_family": {
+      "CSIC_unlabelled_family": {
+        "rows": 3195,
+        "attack_recall_rows": 0.9349
+      },
+      "Code-Injection": {
+        "rows": 663,
+        "attack_recall_rows": 0.9985
+      },
+      "Code-Injection+RCE": {
+        "rows": 82,
+        "attack_recall_rows": 1.0
+      },
+      "Code-Injection+SQLi": {
+        "rows": 53,
+        "attack_recall_rows": 1.0
+      },
+      "LFI": {
+        "rows": 4958,
+        "attack_recall_rows": 0.9954
+      },
+      "LFI+RCE": {
+        "rows": 218,
+        "attack_recall_rows": 0.9817
+      },
+      "LFI+RCE+SQLi": {
+        "rows": 34,
+        "attack_recall_rows": 1.0
+      },
+      "Log4Shell": {
+        "rows": 31,
+        "attack_recall_rows": 1.0
+      },
+      "RCE": {
+        "rows": 797,
+        "attack_recall_rows": 0.9937
+      },
+      "RCE-Shellshock": {
+        "rows": 6,
+        "attack_recall_rows": 1.0
+      },
+      "RFI": {
+        "rows": 7,
+        "attack_recall_rows": 1.0
+      },
+      "Response-Splitting": {
+        "rows": 1162,
+        "attack_recall_rows": 1.0
+      },
+      "SQLi": {
+        "rows": 10743,
+        "attack_recall_rows": 0.9939
+      },
+      "XSS": {
+        "rows": 8308,
+        "attack_recall_rows": 1.0
+      },
+      "XXE": {
+        "rows": 16,
+        "attack_recall_rows": 1.0
+      }
+    },
+    "latency": {
+      "single_request": {
+        "p50_us": 2542.7,
+        "p95_us": 3293.2,
+        "n": 500
+      },
+      "batch_amortised_us": 4.39
+    },
+    "fit_time_s": 3.0,
+    "passed_safety_gate": true,
+    "verdict": "PASSED ALL SAFETY & ACCURACY GATES"
+  },
+  "model_type": "Gen3HybridModel (ml/hybrid_model.py): token model stacked under LightGBM",
+  "token_model": {
+    "alpha": 1e-07,
+    "search": [
+      {
+        "alpha": 1e-07,
+        "oof_attack_recall": 0.8676,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.9799
+      },
+      {
+        "alpha": 3e-07,
+        "oof_attack_recall": 0.8524,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.978
+      },
+      {
+        "alpha": 1e-06,
+        "oof_attack_recall": 0.8191,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.9716
+      },
+      {
+        "alpha": 3e-06,
+        "oof_attack_recall": 0.74,
+        "oof_benign_recall": 0.9854,
+        "oof_weighted_auc": 0.9573
+      }
+    ],
+    "token_pattern": "see ml/hybrid_model.py TOKEN_PATTERN",
+    "ngram_range": [
+      1,
+      2
+    ],
+    "hash_features": 1048576
+  },
+  "reference_lightgbm_36": {
+    "note": "same LightGBM params on the 36 structural features only, own CORE OOF threshold",
+    "oof_core": {
+      "threshold": 0.7775,
+      "attack_recall": 0.6481,
+      "benign_recall": 0.985
+    },
+    "holdout_core": {
+      "benign_rows": 8923,
+      "benign_shapes": 1231.8,
+      "benign_recall": 0.985,
+      "benign_recall_rows": 0.9954,
+      "attack_rows": 3424,
+      "attack_shapes": 1357.0,
+      "attack_recall": 0.6528,
+      "attack_recall_rows": 0.611
+    },
+    "holdout_core_auc": 0.9318
+  },
+  "feature_columns": [
+    "special_char_count",
+    "special_char_ratio",
+    "url_path_entropy",
+    "suspicious_path_marker_count",
+    "query_body_entropy",
+    "encoded_char_ratio",
+    "double_encoded_count",
+    "encoded_attack_token_count",
+    "delimiter_count",
+    "delimiter_ratio",
+    "comment_token_count",
+    "inline_function_count",
+    "json_operator_count",
+    "keyword_matches",
+    "html_tag_matches",
+    "path_traversal_depth",
+    "quote_unbalanced",
+    "has_sql_operator",
+    "has_ssrf_token",
+    "has_ssti_nosql",
+    "is_oversized_payload",
+    "is_clean_structure",
+    "has_excessive_params",
+    "method_is_post",
+    "is_static_asset",
+    "method_is_uncommon",
+    "path_depth",
+    "max_param_length",
+    "param_count",
+    "has_duplicate_param_keys",
+    "has_control_char_encoding",
+    "non_printable_char_count",
+    "param_key_has_capital",
+    "param_value_punctuation_count",
+    "avg_param_length",
+    "param_anomaly_score",
+    "token_score"
+  ],
+  "feature_importances": {
+    "query_body_entropy": 4067,
+    "token_score": 3431,
+    "url_path_entropy": 3283,
+    "encoded_char_ratio": 3282,
+    "avg_param_length": 3164,
+    "max_param_length": 2789,
+    "path_depth": 1517,
+    "encoded_attack_token_count": 1437,
+    "special_char_ratio": 1249,
+    "keyword_matches": 954,
+    "delimiter_ratio": 949,
+    "special_char_count": 875,
+    "param_count": 731,
+    "method_is_post": 591,
+    "double_encoded_count": 326,
+    "suspicious_path_marker_count": 301,
+    "delimiter_count": 246,
+    "has_control_char_encoding": 239,
+    "path_traversal_depth": 227,
+    "param_anomaly_score": 226,
+    "quote_unbalanced": 198,
+    "is_clean_structure": 184,
+    "is_static_asset": 152,
+    "comment_token_count": 139,
+    "has_ssti_nosql": 130,
+    "param_value_punctuation_count": 127,
+    "param_key_has_capital": 117,
+    "inline_function_count": 89,
+    "has_sql_operator": 78,
+    "non_printable_char_count": 32,
+    "html_tag_matches": 31,
+    "method_is_uncommon": 30,
+    "has_duplicate_param_keys": 9,
+    "json_operator_count": 3,
+    "is_oversized_payload": 2,
+    "has_ssrf_token": 1,
+    "has_excessive_params": 1
+  },
+  "hyperparameters": {
+    "n_estimators": 400,
+    "max_depth": 10,
+    "num_leaves": 80,
+    "min_child_samples": 20,
+    "learning_rate": 0.05,
+    "reg_alpha": 0.2,
+    "reg_lambda": 0.3,
+    "colsample_bytree": 0.8,
+    "subsample": 0.85,
+    "random_state": 42,
+    "n_jobs": 6,
+    "verbose": -1,
+    "class_weight": {
+      "0": 1.0,
+      "1": 1.0
+    }
+  },
+  "candidate_model_path": "models/archive/task3-1-real-augmented-candidate-20260927-205652/hybrid_waf_model.joblib",
+  "dataset_manifest": "models/archive/task3-1-real-augmented-candidate-20260927-205652/dataset_manifest.json"
+}

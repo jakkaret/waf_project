@@ -1,0 +1,99 @@
+{
+  "experiment": "Task 2.3 Model Architecture Exploration",
+  "timestamp": "20260924-142211",
+  "data_integrity": {
+    "rows_before_deduplication": 60106,
+    "rows_after_deduplication": 60106,
+    "total_unique_hashes": 60106,
+    "feature_count": 24
+  },
+  "models_evaluated": [
+    {
+      "model_name": "Random Forest (Roadmap Baseline, 24 Features)",
+      "fit_time_seconds": 0.77,
+      "infer_time_per_sample_us": 5.44,
+      "roc_auc": 0.9832,
+      "default_threshold_05": {
+        "accuracy": 0.9184,
+        "benign_recall": 0.9509,
+        "attack_recall": 0.8864,
+        "confusion_matrix": {
+          "tn": 7088,
+          "fp": 366,
+          "fn": 860,
+          "tp": 6713
+        }
+      },
+      "calibrated_benign_safety_gate": {
+        "calibrated_threshold": 0.629,
+        "benign_recall": 0.9854,
+        "attack_recall": 0.8404,
+        "confusion_matrix": {
+          "tn": 7345,
+          "fp": 109,
+          "fn": 1209,
+          "tp": 6364
+        },
+        "status": "FAILED_ATTACK_GATE"
+      }
+    },
+    {
+      "model_name": "HistGradientBoosting (scikit-learn Native GBDT)",
+      "fit_time_seconds": 2.07,
+      "infer_time_per_sample_us": 1.83,
+      "roc_auc": 0.9849,
+      "default_threshold_05": {
+        "accuracy": 0.9231,
+        "benign_recall": 0.9607,
+        "attack_recall": 0.8862,
+        "confusion_matrix": {
+          "tn": 7161,
+          "fp": 293,
+          "fn": 862,
+          "tp": 6711
+        }
+      },
+      "calibrated_benign_safety_gate": {
+        "calibrated_threshold": 0.5986,
+        "benign_recall": 0.9855,
+        "attack_recall": 0.8561,
+        "confusion_matrix": {
+          "tn": 7346,
+          "fp": 108,
+          "fn": 1090,
+          "tp": 6483
+        },
+        "status": "PASSED_BOTH_GATES"
+      }
+    },
+    {
+      "model_name": "LightGBM (Roadmap 2.3 Architecture Exploration)",
+      "fit_time_seconds": 0.38,
+      "infer_time_per_sample_us": 1.62,
+      "roc_auc": 0.9866,
+      "default_threshold_05": {
+        "accuracy": 0.9298,
+        "benign_recall": 0.9607,
+        "attack_recall": 0.8994,
+        "confusion_matrix": {
+          "tn": 7161,
+          "fp": 293,
+          "fn": 762,
+          "tp": 6811
+        }
+      },
+      "calibrated_benign_safety_gate": {
+        "calibrated_threshold": 0.5976,
+        "benign_recall": 0.9854,
+        "attack_recall": 0.8612,
+        "confusion_matrix": {
+          "tn": 7345,
+          "fp": 109,
+          "fn": 1051,
+          "tp": 6522
+        },
+        "status": "PASSED_BOTH_GATES"
+      }
+    }
+  ]
+}

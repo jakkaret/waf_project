@@ -1,0 +1,185 @@
+{
+  "experiment": "task-2.2-real-cost-sensitive-threshold-calibration",
+  "random_state": 20260913,
+  "safety_gate": {
+    "benign_recall_required": 0.985,
+    "attack_recall_required": 0.85
+  },
+  "data_integrity": {
+    "source": "CSIC_2010_checked_in_cleaned_only",
+    "rows_before_cleaning": 61065,
+    "rows_after_label_cleanup": 25094,
+    "rows_after_sha256_deduplication": 25094,
+    "synthetic_rows_included": 0,
+    "hash_algorithm": "sha256",
+    "development_rows": 20075,
+    "unseen_holdout_rows": 5019,
+    "development_holdout_hash_overlap": 0
+  },
+  "feature_columns": [
+    "special_char_count",
+    "special_char_ratio",
+    "url_path_entropy",
+    "suspicious_path_marker_count",
+    "query_body_entropy",
+    "encoded_char_ratio",
+    "double_encoded_count",
+    "encoded_attack_token_count",
+    "delimiter_count",
+    "delimiter_ratio",
+    "comment_token_count",
+    "inline_function_count",
+    "json_operator_count",
+    "keyword_matches",
+    "html_tag_matches",
+    "path_traversal_depth",
+    "quote_unbalanced",
+    "has_sql_operator",
+    "has_ssrf_token",
+    "has_ssti_nosql",
+    "is_oversized_payload",
+    "is_clean_structure",
+    "has_excessive_params",
+    "method_is_post"
+  ],
+  "results": [
+    {
+      "class_weight": {
+        "0": 1.0,
+        "1": 1.0
+      },
+      "calibration": {
+        "threshold": 0.7545,
+        "benign_recall": 0.985065,
+        "attack_recall": 0.660606,
+        "confusion_matrix": {
+          "tn": 1517,
+          "fp": 23,
+          "fn": 840,
+          "tp": 1635
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "holdout": {
+        "threshold": 0.7545,
+        "accuracy": 0.776449,
+        "roc_auc": 0.891606,
+        "benign_recall": 0.986486,
+        "attack_recall": 0.64588,
+        "false_positive_rate": 0.013514,
+        "confusion_matrix": {
+          "tn": 1898,
+          "fp": 26,
+          "fn": 1096,
+          "tp": 1999
+        },
+        "benign_count": 1924,
+        "attack_count": 3095
+      }
+    },
+    {
+      "class_weight": {
+        "0": 1.25,
+        "1": 1.0
+      },
+      "calibration": {
+        "threshold": 0.723,
+        "benign_recall": 0.985065,
+        "attack_recall": 0.659798,
+        "confusion_matrix": {
+          "tn": 1517,
+          "fp": 23,
+          "fn": 842,
+          "tp": 1633
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "holdout": {
+        "threshold": 0.723,
+        "accuracy": 0.775254,
+        "roc_auc": 0.890607,
+        "benign_recall": 0.987526,
+        "attack_recall": 0.643296,
+        "false_positive_rate": 0.012474,
+        "confusion_matrix": {
+          "tn": 1900,
+          "fp": 24,
+          "fn": 1104,
+          "tp": 1991
+        },
+        "benign_count": 1924,
+        "attack_count": 3095
+      }
+    },
+    {
+      "class_weight": {
+        "0": 1.5,
+        "1": 1.0
+      },
+      "calibration": {
+        "threshold": 0.676,
+        "benign_recall": 0.985065,
+        "attack_recall": 0.665051,
+        "confusion_matrix": {
+          "tn": 1517,
+          "fp": 23,
+          "fn": 829,
+          "tp": 1646
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "holdout": {
+        "threshold": 0.676,
+        "accuracy": 0.779438,
+        "roc_auc": 0.89159,
+        "benign_recall": 0.984407,
+        "attack_recall": 0.652019,
+        "false_positive_rate": 0.015593,
+        "confusion_matrix": {
+          "tn": 1894,
+          "fp": 30,
+          "fn": 1077,
+          "tp": 2018
+        },
+        "benign_count": 1924,
+        "attack_count": 3095
+      }
+    },
+    {
+      "class_weight": {
+        "0": 1.0,
+        "1": 1.25
+      },
+      "calibration": {
+        "threshold": 0.8005,
+        "benign_recall": 0.986364,
+        "attack_recall": 0.654545,
+        "confusion_matrix": {
+          "tn": 1519,
+          "fp": 21,
+          "fn": 855,
+          "tp": 1620
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "holdout": {
+        "threshold": 0.8005,
+        "accuracy": 0.772465,
+        "roc_auc": 0.889873,
+        "benign_recall": 0.988565,
+        "attack_recall": 0.638126,
+        "false_positive_rate": 0.011435,
+        "confusion_matrix": {
+          "tn": 1902,
+          "fp": 22,
+          "fn": 1120,
+          "tp": 1975
+        },
+        "benign_count": 1924,
+        "attack_count": 3095
+      }
+    }
+  ],
+  "promotion_gate_passed": false,
+  "production_artifacts_written": false
+}

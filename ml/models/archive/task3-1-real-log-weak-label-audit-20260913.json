@@ -1,0 +1,413 @@
+{
+  "experiment": "task-3.1-real-log-weak-label-audit",
+  "source_files": [
+    "logs/modsecurity/audit.json",
+    "logs/modsecurity/audit.json.1.gz",
+    "logs/modsecurity/audit.json.2.gz"
+  ],
+  "label_policy": {
+    "strong_attack_evidence": "At least one OWASP CRS payload rule family 930/931/932/941/942/944 in ModSecurity messages.",
+    "protocol_or_generic": "920xxx or 949110 alone is not an attack label.",
+    "benign_candidate": "2xx/204/304 with no messages is only a benign candidate, not ground truth."
+  },
+  "counts": {
+    "transactions": 1076129,
+    "clean_success_no_messages": 681392,
+    "protocol_or_generic_only_transaction": 136933,
+    "http_403": 134981,
+    "interrupted": 134818,
+    "high_confidence_rule_transaction": 5103
+  },
+  "high_confidence_rule_categories": {
+    "rce": 2196,
+    "path_traversal": 4023,
+    "rfi": 708,
+    "java_injection": 77,
+    "sqli": 210,
+    "xss": 6
+  },
+  "high_confidence_rule_top": [
+    [
+      "930130",
+      3452
+    ],
+    [
+      "931100",
+      708
+    ],
+    [
+      "932105",
+      573
+    ],
+    [
+      "932115",
+      573
+    ],
+    [
+      "932160",
+      499
+    ],
+    [
+      "932130",
+      444
+    ],
+    [
+      "930110",
+      307
+    ],
+    [
+      "930100",
+      193
+    ],
+    [
+      "942100",
+      191
+    ],
+    [
+      "930120",
+      71
+    ],
+    [
+      "932100",
+      55
+    ],
+    [
+      "932110",
+      49
+    ],
+    [
+      "944130",
+      25
+    ],
+    [
+      "944100",
+      23
+    ],
+    [
+      "944110",
+      23
+    ],
+    [
+      "942190",
+      9
+    ],
+    [
+      "942360",
+      9
+    ],
+    [
+      "944120",
+      6
+    ],
+    [
+      "932150",
+      3
+    ],
+    [
+      "941100",
+      2
+    ]
+  ],
+  "protocol_or_generic_rules": [
+    [
+      "949110",
+      129881
+    ],
+    [
+      "920420",
+      76103
+    ],
+    [
+      "920450",
+      31533
+    ],
+    [
+      "920440",
+      22115
+    ],
+    [
+      "920350",
+      7719
+    ],
+    [
+      "920500",
+      188
+    ],
+    [
+      "920170",
+      145
+    ],
+    [
+      "920280",
+      64
+    ],
+    [
+      "920120",
+      40
+    ],
+    [
+      "920340",
+      35
+    ]
+  ],
+  "high_confidence_hosts": [
+    [
+      "178.104.53.123",
+      4778
+    ],
+    [
+      "juice.waf-it-kku.online",
+      172
+    ],
+    [
+      "static.123.53.104.178.clients.your-server.de",
+      78
+    ],
+    [
+      "dvwa.waf-it-kku.online",
+      22
+    ],
+    [
+      "www.waf-it-kku.online",
+      18
+    ],
+    [
+      "127.0.0.1",
+      17
+    ],
+    [
+      "_",
+      6
+    ],
+    [
+      "waf-edge-th.duckdns.org",
+      5
+    ],
+    [
+      "waf-nginx",
+      2
+    ],
+    [
+      "vampi.waf-it-kku.online",
+      2
+    ],
+    [
+      "bwapp.waf-it-kku.online",
+      1
+    ],
+    [
+      "www.edge.waf-it-kku.online",
+      1
+    ],
+    [
+      "www.m.waf-it-kku.online",
+      1
+    ]
+  ],
+  "clean_success_hosts": [
+    [
+      "juice.waf-it-kku.online",
+      81400
+    ],
+    [
+      "localhost",
+      26646
+    ],
+    [
+      "bsberbank.8721sbermegamarket.ld48stp821tyfk3q.waf-it-kku.online",
+      2826
+    ],
+    [
+      "bwapp.waf-it-kku.online",
+      1686
+    ],
+    [
+      "dvwa.waf-it-kku.online",
+      1567
+    ],
+    [
+      "app.waf-it-kku.online",
+      1107
+    ],
+    [
+      "dashboard.waf-it-kku.online",
+      902
+    ],
+    [
+      "dash.waf-it-kku.online",
+      838
+    ],
+    [
+      "edge.waf-it-kku.online",
+      691
+    ],
+    [
+      "m.waf-it-kku.online",
+      689
+    ],
+    [
+      "0www.blablacar.ld48stp821tyfk3q.waf-it-kku.online",
+      657
+    ],
+    [
+      "ryu.waf-it-kku.online",
+      630
+    ],
+    [
+      "qponmlnalozhka.pochtabank.76543210www.blablacar.ld48stp821tyfk3q.waf-it-kku.online",
+      583
+    ],
+    [
+      "9v.waf-it-kku.online",
+      569
+    ],
+    [
+      "87654321sbermegamarket.ld48stp821tyfk3q.waf-it-kku.online",
+      541
+    ],
+    [
+      "4pochtabank.yandex.ld48stp821tyfk3q.waf-it-kku.online",
+      529
+    ],
+    [
+      "srqponmblablacar.pochtabank.76543210www.blablacar.ld48stp821tyfk3q.waf-it-kku.online",
+      522
+    ],
+    [
+      "987www.21sbermegamarket.ld48stp821tyfk3q.waf-it-kku.online",
+      499
+    ],
+    [
+      "web.waf-it-kku.online",
+      476
+    ],
+    [
+      "43210www.blablacar.ld48stp821tyfk3q.waf-it-kku.online",
+      471
+    ]
+  ],
+  "samples": [
+    {
+      "method": "POST",
+      "uri": "/",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "932100",
+        "932105",
+        "932110",
+        "932115",
+        "932160"
+      ]
+    },
+    {
+      "method": "POST",
+      "uri": "/cgi-bin/ViewLog.asp",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "932100",
+        "932105",
+        "932115"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/static../.env",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/.aws/credentials",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/.env",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/.env.local",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/app/.env",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/@fs/../.env?raw??",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930100",
+        "930110",
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/static../.aws/credentials",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/@fs/home/ec2-user/.aws/credentials?raw??",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/@fs/root/.aws/credentials?raw??",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    },
+    {
+      "method": "GET",
+      "uri": "/media../.env",
+      "http_code": 403,
+      "interrupted": true,
+      "rule_ids": [
+        "930130"
+      ]
+    }
+  ],
+  "production_artifacts_written": false,
+  "limitations": [
+    "Observed ModSecurity audit JSON contains no captured request.body fields; URI/query/header context is available but POST payload coverage is incomplete.",
+    "2xx/204/304 transactions with no ModSecurity messages are benign candidates only, not verified benign labels.",
+    "920xxx protocol rules and 949110 generic anomaly score are excluded from strong attack labels."
+  ]
+}

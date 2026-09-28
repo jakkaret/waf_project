@@ -1,0 +1,477 @@
+{
+  "experiment": "Task 3.1 & 2.3 Real-World Training (conservative labels, near-duplicate weighted group split)",
+  "timestamp": "20260927-165254",
+  "data_integrity": {
+    "dataset": "CSIC_2010 + VPS_Telemetry_Benign + VPS_ModSecurity_Payload_Rule_Attacks + VPS_Nginx_Benign",
+    "synthetic_rows": 0,
+    "raw_rows_by_source": {
+      "CSIC_2010_Cleaned": 58159,
+      "VPS_Telemetry_Real_benign": 17371,
+      "ModSecurity_VPS_Payload_Rule": 877,
+      "VPS_Nginx_Real_200_Access": 9381
+    },
+    "exclusions": {
+      "telemetry_feature_derived_attack_labels": 162,
+      "modsec_protocol_only_events": 6590,
+      "modsec_non_get_without_captured_body": 46,
+      "modsec_excluded_top_rule_ids": {
+        "949110": 6589,
+        "920420": 6350,
+        "920350": 186,
+        "920440": 176,
+        "913100": 42,
+        "920500": 10,
+        "920450": 5,
+        "920340": 4,
+        "911100": 1,
+        "200003": 1
+      },
+      "hand_written_representative_urls": "removed from training (synthetic)",
+      "conflicting_label_hashes": 0,
+      "exact_duplicates": 43652
+    },
+    "total_unique_samples": 42136,
+    "near_duplicate_groups": 9882,
+    "effective_distinct_shapes": 9894.0,
+    "benign_count": 25787,
+    "attack_count": 16349,
+    "unique_rows_by_source": {
+      "CSIC_2010_Cleaned": {
+        "benign": 9622,
+        "attack": 15472
+      },
+      "ModSecurity_VPS_Payload_Rule": {
+        "benign": 0,
+        "attack": 877
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign": 8759,
+        "attack": 0
+      },
+      "VPS_Telemetry_Real": {
+        "benign": 7406,
+        "attack": 0
+      }
+    },
+    "distinct_shapes_by_source_label": {
+      "CSIC_2010_Cleaned|benign": 2986.0,
+      "CSIC_2010_Cleaned|attack": 5683.8,
+      "ModSecurity_VPS_Payload_Rule|attack": 853.2,
+      "VPS_Nginx_Real_200_Access|benign": 358.0,
+      "VPS_Telemetry_Real|benign": 13.0
+    },
+    "attack_family_counts": {
+      "CSIC_unlabelled_family": 15472,
+      "LFI": 753,
+      "RFI": 63,
+      "RCE": 44,
+      "RCE+SQLi": 7,
+      "LFI+RCE": 6,
+      "SQLi": 3,
+      "PHP": 1
+    },
+    "feature_count": 36,
+    "feature_columns": [
+      "special_char_count",
+      "special_char_ratio",
+      "url_path_entropy",
+      "suspicious_path_marker_count",
+      "query_body_entropy",
+      "encoded_char_ratio",
+      "double_encoded_count",
+      "encoded_attack_token_count",
+      "delimiter_count",
+      "delimiter_ratio",
+      "comment_token_count",
+      "inline_function_count",
+      "json_operator_count",
+      "keyword_matches",
+      "html_tag_matches",
+      "path_traversal_depth",
+      "quote_unbalanced",
+      "has_sql_operator",
+      "has_ssrf_token",
+      "has_ssti_nosql",
+      "is_oversized_payload",
+      "is_clean_structure",
+      "has_excessive_params",
+      "method_is_post",
+      "is_static_asset",
+      "method_is_uncommon",
+      "path_depth",
+      "max_param_length",
+      "param_count",
+      "has_duplicate_param_keys",
+      "has_control_char_encoding",
+      "non_printable_char_count",
+      "param_key_has_capital",
+      "param_value_punctuation_count",
+      "avg_param_length",
+      "param_anomaly_score"
+    ]
+  },
+  "metric_definition": "near-duplicate weighted recall: each distinct request shape counts once; *_rows fields are raw per-row recall",
+  "hyperparameter_search": {
+    "method": "grid on dev pooled OOF, objective = weighted attack recall at weighted benign recall >= 98.5%",
+    "results": [
+      {
+        "params": {
+          "num_leaves": 15,
+          "min_child_samples": 20,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.8445,
+        "oof_attack_recall": 0.6566,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.8804
+      },
+      {
+        "params": {
+          "num_leaves": 15,
+          "min_child_samples": 20,
+          "attack_weight": 1.5
+        },
+        "oof_threshold": 0.8895,
+        "oof_attack_recall": 0.6534,
+        "oof_benign_recall": 0.9856,
+        "oof_weighted_auc": 0.8791
+      },
+      {
+        "params": {
+          "num_leaves": 15,
+          "min_child_samples": 100,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.8575,
+        "oof_attack_recall": 0.653,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.8794
+      },
+      {
+        "params": {
+          "num_leaves": 15,
+          "min_child_samples": 100,
+          "attack_weight": 1.5
+        },
+        "oof_threshold": 0.895,
+        "oof_attack_recall": 0.653,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.8796
+      },
+      {
+        "params": {
+          "num_leaves": 31,
+          "min_child_samples": 20,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.8975,
+        "oof_attack_recall": 0.6539,
+        "oof_benign_recall": 0.9852,
+        "oof_weighted_auc": 0.8781
+      },
+      {
+        "params": {
+          "num_leaves": 31,
+          "min_child_samples": 20,
+          "attack_weight": 1.5
+        },
+        "oof_threshold": 0.9235,
+        "oof_attack_recall": 0.6525,
+        "oof_benign_recall": 0.9856,
+        "oof_weighted_auc": 0.8781
+      },
+      {
+        "params": {
+          "num_leaves": 31,
+          "min_child_samples": 100,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.9045,
+        "oof_attack_recall": 0.6515,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.8782
+      },
+      {
+        "params": {
+          "num_leaves": 31,
+          "min_child_samples": 100,
+          "attack_weight": 1.5
+        },
+        "oof_threshold": 0.924,
+        "oof_attack_recall": 0.6489,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.8782
+      },
+      {
+        "params": {
+          "num_leaves": 80,
+          "min_child_samples": 20,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.937,
+        "oof_attack_recall": 0.6514,
+        "oof_benign_recall": 0.9852,
+        "oof_weighted_auc": 0.8777
+      },
+      {
+        "params": {
+          "num_leaves": 80,
+          "min_child_samples": 20,
+          "attack_weight": 1.5
+        },
+        "oof_threshold": 0.952,
+        "oof_attack_recall": 0.6503,
+        "oof_benign_recall": 0.9854,
+        "oof_weighted_auc": 0.8765
+      },
+      {
+        "params": {
+          "num_leaves": 80,
+          "min_child_samples": 100,
+          "attack_weight": 1.0
+        },
+        "oof_threshold": 0.9105,
+        "oof_attack_recall": 0.6477,
+        "oof_benign_recall": 0.9851,
+        "oof_weighted_auc": 0.8788
+      },
+      {
+        "params": {
+          "num_leaves": 80,
+          "min_child_samples": 100,
+          "attack_weight": 1.5
+        },
+        "oof_threshold": 0.934,
+        "oof_attack_recall": 0.6478,
+        "oof_benign_recall": 0.985,
+        "oof_weighted_auc": 0.8776
+      }
+    ],
+    "selected_index": 0
+  },
+  "cv": {
+    "method": "5-fold group-level StratifiedKFold (label x source) on dev set; threshold from pooled out-of-fold probabilities",
+    "threshold": 0.8445,
+    "calibration_status": "failed_attack_gate",
+    "oof_benign_recall": 0.985,
+    "oof_attack_recall": 0.6566,
+    "folds_at_oof_threshold": [
+      {
+        "fold": 1,
+        "benign_rows": 1014,
+        "benign_shapes": 536.0,
+        "benign_recall": 0.9795,
+        "benign_recall_rows": 0.9793,
+        "attack_rows": 2802,
+        "attack_shapes": 1045.0,
+        "attack_recall": 0.6476,
+        "attack_recall_rows": 0.5592
+      },
+      {
+        "fold": 2,
+        "benign_rows": 5067,
+        "benign_shapes": 538.0,
+        "benign_recall": 0.9883,
+        "benign_recall_rows": 0.9461,
+        "attack_rows": 2452,
+        "attack_shapes": 1046.0,
+        "attack_recall": 0.6563,
+        "attack_recall_rows": 0.6325
+      },
+      {
+        "fold": 3,
+        "benign_rows": 10006,
+        "benign_shapes": 537.0,
+        "benign_recall": 0.987,
+        "benign_recall_rows": 0.9986,
+        "attack_rows": 3145,
+        "attack_shapes": 1045.0,
+        "attack_recall": 0.6581,
+        "attack_recall_rows": 0.7383
+      },
+      {
+        "fold": 4,
+        "benign_rows": 1411,
+        "benign_shapes": 538.0,
+        "benign_recall": 0.9926,
+        "benign_recall_rows": 0.9943,
+        "attack_rows": 2589,
+        "attack_shapes": 1045.0,
+        "attack_recall": 0.6692,
+        "attack_recall_rows": 0.5651
+      },
+      {
+        "fold": 5,
+        "benign_rows": 5388,
+        "benign_shapes": 537.0,
+        "benign_recall": 0.9777,
+        "benign_recall_rows": 0.7981,
+        "attack_rows": 2405,
+        "attack_shapes": 1046.0,
+        "attack_recall": 0.6519,
+        "attack_recall_rows": 0.5821
+      }
+    ],
+    "std_attack_recall_across_folds": 0.0073,
+    "std_benign_recall_across_folds": 0.0056
+  },
+  "holdout_evaluation": {
+    "threshold": 0.8445,
+    "threshold_source": "pooled out-of-fold calibration on dev set; holdout never used for tuning",
+    "accuracy": 0.7645,
+    "roc_auc": 0.8762,
+    "benign_recall": 0.9801,
+    "attack_recall": 0.6541,
+    "benign_recall_rows": 0.6908,
+    "attack_recall_rows": 0.6536,
+    "confusion_matrix_rows": {
+      "tn": 2004,
+      "fp": 897,
+      "fn": 1024,
+      "tp": 1932
+    },
+    "enforcement_bands": {
+      "challenge_0.70": {
+        "benign_recall": 0.9382,
+        "attack_recall": 0.7034
+      },
+      "block_0.95": {
+        "benign_recall": 0.997,
+        "attack_recall": 0.6167
+      }
+    },
+    "per_source": {
+      "CSIC_2010_Cleaned": {
+        "benign_rows": 2805,
+        "benign_shapes": 597.0,
+        "benign_recall": 0.9776,
+        "benign_recall_rows": 0.6802,
+        "attack_rows": 2780,
+        "attack_shapes": 1139.0,
+        "attack_recall": 0.6109,
+        "attack_recall_rows": 0.6353
+      },
+      "ModSecurity_VPS_Payload_Rule": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 176,
+        "attack_shapes": 171.0,
+        "attack_recall": 0.9415,
+        "attack_recall_rows": 0.9432
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign_rows": 85,
+        "benign_shapes": 71.3,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Telemetry_Real": {
+        "benign_rows": 11,
+        "benign_shapes": 2.7,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      }
+    },
+    "per_attack_family": {
+      "CSIC_unlabelled_family": {
+        "rows": 2780,
+        "attack_recall_rows": 0.6353
+      },
+      "LFI": {
+        "rows": 156,
+        "attack_recall_rows": 0.9359
+      },
+      "LFI+RCE": {
+        "rows": 1,
+        "attack_recall_rows": 1.0
+      },
+      "RCE": {
+        "rows": 5,
+        "attack_recall_rows": 1.0
+      },
+      "RFI": {
+        "rows": 14,
+        "attack_recall_rows": 1.0
+      }
+    },
+    "latency": {
+      "single_request": {
+        "p50_us": 1804.4,
+        "p95_us": 2001.6,
+        "n": 500
+      },
+      "batch_amortised_us": 1.95
+    },
+    "fit_time_s": 0.24,
+    "passed_safety_gate": false,
+    "verdict": "BELOW GATE (experiment only, do not promote)"
+  },
+  "feature_importances": {
+    "query_body_entropy": 1304,
+    "avg_param_length": 942,
+    "max_param_length": 818,
+    "encoded_char_ratio": 734,
+    "url_path_entropy": 446,
+    "encoded_attack_token_count": 227,
+    "special_char_ratio": 213,
+    "method_is_uncommon": 125,
+    "suspicious_path_marker_count": 123,
+    "double_encoded_count": 117,
+    "keyword_matches": 117,
+    "param_count": 72,
+    "path_depth": 69,
+    "delimiter_ratio": 59,
+    "special_char_count": 57,
+    "quote_unbalanced": 51,
+    "param_anomaly_score": 39,
+    "is_static_asset": 33,
+    "is_clean_structure": 22,
+    "comment_token_count": 19,
+    "delimiter_count": 8,
+    "param_key_has_capital": 4,
+    "inline_function_count": 0,
+    "json_operator_count": 0,
+    "html_tag_matches": 0,
+    "path_traversal_depth": 0,
+    "has_sql_operator": 0,
+    "has_ssrf_token": 0,
+    "has_ssti_nosql": 0,
+    "is_oversized_payload": 0,
+    "has_excessive_params": 0,
+    "method_is_post": 0,
+    "has_duplicate_param_keys": 0,
+    "has_control_char_encoding": 0,
+    "non_printable_char_count": 0,
+    "param_value_punctuation_count": 0
+  },
+  "hyperparameters": {
+    "n_estimators": 400,
+    "max_depth": 10,
+    "num_leaves": 15,
+    "min_child_samples": 20,
+    "learning_rate": 0.05,
+    "reg_alpha": 0.2,
+    "reg_lambda": 0.3,
+    "colsample_bytree": 0.8,
+    "subsample": 0.85,
+    "random_state": 42,
+    "n_jobs": -1,
+    "verbose": -1,
+    "class_weight": {
+      "0": 1.0,
+      "1": 1.0
+    }
+  },
+  "candidate_model_path": "models/archive/task3-1-real-augmented-candidate-20260927-165254/lightgbm_waf_model.joblib",
+  "dataset_manifest": "models/archive/task3-1-real-augmented-candidate-20260927-165254/dataset_manifest.json"
+}

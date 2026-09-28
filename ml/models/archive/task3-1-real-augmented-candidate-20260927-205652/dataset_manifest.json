@@ -1,0 +1,302 @@
+{
+  "dataset_version": "gen3-conservative-20260927-205652",
+  "input_files": {
+    "dataset/csic_final.csv": {
+      "sha256": "65c74cd6e09b0e49771aa6f48d19cc5e1ba740f5ed927e16ecd952b797386195",
+      "bytes": 27376223
+    },
+    "dataset/vps_audit_labelled.jsonl": {
+      "sha256": "5b1f520da5cdee2eb08a4ff2dd92c94ed5da83cae65bd24bccc7188662e5a812",
+      "bytes": 22140706
+    },
+    "dataset/nginx_real_benign.jsonl": {
+      "sha256": "746e8f9b493ef6a9c4addc058bc8f7b627ab2ba4d900ae2753e08fc2e92c2783",
+      "bytes": 1533675
+    },
+    "dataset/external/openappsec_legitimate.jsonl": {
+      "sha256": "448d710683df9d0694246190fcd08080d0186f1b20dcfafd49b988d4caefb1d4",
+      "bytes": 942612710
+    },
+    "dataset/external/openappsec_malicious.jsonl": {
+      "sha256": "619abb70c8058e260c3a04648dd9cf7af356612fee8f6bedad617cd4d820b5ae",
+      "bytes": 16303567
+    },
+    "dataset/external/srbh2020_labelled.jsonl": {
+      "sha256": "b7189a779fa47a29e4b0244abd34b8d9c5aa4b397bb8497ec553f58d5c4f14dc",
+      "bytes": 63545866
+    },
+    "telemetry/request_capture-20260914.jsonl": {
+      "sha256": "59e05765c35ac1bfbc15b293aaacb33d1508ff5883f5cd6218cdcb0a63d24b57",
+      "bytes": 588705
+    },
+    "telemetry/request_capture-20260916.jsonl": {
+      "sha256": "54a904b854cc59f31073a0efeb53bae4d9a8956c8268bf5020a37d321e701773",
+      "bytes": 2019
+    },
+    "telemetry/request_capture-20260917.jsonl": {
+      "sha256": "bc176b8da0671e3c0e3030402b18a6a3d51f1cbb54d677010835b6c9c307abd8",
+      "bytes": 4037
+    },
+    "telemetry/request_capture-20260918.jsonl": {
+      "sha256": "bd083bea542b2b36e6e410110e844754c462ed934fdeb8fce76f9ef6f0547bf2",
+      "bytes": 165804
+    },
+    "telemetry/request_capture-20260919.jsonl": {
+      "sha256": "4eddd5f0dd97021e90dfe2711c6832772cf2267a37c4fb7d2c0755bbe9a5c479",
+      "bytes": 218772
+    },
+    "telemetry/request_capture-20260920.jsonl": {
+      "sha256": "0ba19c1f8d1f36511a6e0a7c07f91d6df7d3d580db173a496debe62ed27e0b43",
+      "bytes": 5023619
+    },
+    "telemetry/request_capture-20260921.jsonl": {
+      "sha256": "25f5a87732d33d8e697b792ac29911e37a29b873d2045b166101ff7a818fe002",
+      "bytes": 5242807
+    },
+    "telemetry/request_capture-20260922.jsonl": {
+      "sha256": "11aab8310942130b97414a55142875503c340075fbd437763a6f713c81f72dfb",
+      "bytes": 5242644
+    },
+    "telemetry/request_capture-20260923.jsonl": {
+      "sha256": "6adc9a0e2cf66a1511c2241687a4ecc76538d11fa159a1b1dee63f3d36130fda",
+      "bytes": 936508
+    },
+    "telemetry/request_capture-20260924.jsonl": {
+      "sha256": "88c1ac9201dd469b75d53e7bbfb22001504f80513a0e0f92d6ed595cbe04462e",
+      "bytes": 613721
+    }
+  },
+  "data_integrity": {
+    "dataset": "CSIC_2010 + VPS_Telemetry_Benign + VPS_ModSecurity_Audit (payload-rule attacks, rule-free benign) + VPS_Nginx_Benign + OpenAppSec + SR-BH 2020",
+    "core_sources_for_gate": [
+      "CSIC_2010_Cleaned",
+      "ModSecurity_VPS_Audit_Payload_Rule",
+      "VPS_Audit_RuleFree_2xx_Lab",
+      "VPS_Nginx_Real_200_Access",
+      "VPS_Telemetry_Real"
+    ],
+    "synthetic_rows": 0,
+    "raw_rows_by_source": {
+      "CSIC_2010_Cleaned": 58159,
+      "VPS_Telemetry_Real_benign": 17371,
+      "VPS_ModSecurity_Audit_labelled": 78781,
+      "VPS_Nginx_Real_200_Access": 9381,
+      "OpenAppSec_Legitimate": 97378,
+      "OpenAppSec_Malicious": 66373,
+      "SRBH2020_Honeypot": 134412
+    },
+    "exclusions": {
+      "telemetry_feature_derived_attack_labels": 162,
+      "vps_audit_extraction": {
+        "records": 1083047,
+        "skip_unlabelled": 900633,
+        "skip_non_get_or_bad_uri": 90561,
+        "Anomalous": 1149,
+        "dup": 13072,
+        "Valid": 77632,
+        "script": "scripts/extract_vps_audit_dataset.py",
+        "audit_files": [
+          "audit.json.2.gz",
+          "audit.json.1.gz",
+          "audit.json"
+        ],
+        "extracted_at": "2026-09-27"
+      },
+      "external_preparation": {
+        "max_rows_per_group": 3,
+        "body_cap_chars": 16384,
+        "openappsec": {
+          "legitimate": {
+            "input_sha256": "58faee18c54229759287a574f6f8cb1e3b951fa135e403ea9a679d2b18efd778",
+            "kept_Valid": 488135,
+            "near_duplicate_capped": 276670,
+            "exact_duplicate": 275437,
+            "distinct_groups": 425745
+          },
+          "malicious": {
+            "input_sha256": "131314e5c13b07ec686e6b16b8010008063d977b5ff8eb552819c138c00b7b2b",
+            "kept_Anomalous": 66373,
+            "near_duplicate_capped": 7551,
+            "distinct_groups": 32355
+          }
+        },
+        "srbh2020": {
+          "input_sha256": "9c73c90ce6564ae48b14f7179cd864d037a6a130ef69c68c1626ec5d7ce4a910",
+          "label_columns": [
+            "000 - Normal",
+            "272 - Protocol Manipulation",
+            "242 - Code Injection",
+            "88 - OS Command Injection",
+            "126 - Path Traversal",
+            "66 - SQL Injection",
+            "16 - Dictionary-based Password Attack",
+            "310 - Scanning for Vulnerable Software",
+            "153 - Input Data Manipulation",
+            "248 - Command Injection",
+            "274 - HTTP Verb Tampering",
+            "194 - Fake the Source of Data",
+            "34 - HTTP Response Splitting",
+            "33 - HTTP Request Smuggling"
+          ],
+          "excluded_non_payload_label_sets": {
+            "194 - Fake the Source of Data": 55983,
+            "272 - Protocol Manipulation": 7019,
+            "274 - HTTP Verb Tampering": 4055,
+            "310 - Scanning for Vulnerable Software": 2413,
+            "153 - Input Data Manipulation": 1387,
+            "272 - Protocol Manipulation+274 - HTTP Verb Tampering": 1370,
+            "16 - Dictionary-based Password Attack": 836,
+            "272 - Protocol Manipulation+310 - Scanning for Vulnerable Software": 253,
+            "16 - Dictionary-based Password Attack+194 - Fake the Source of Data": 162,
+            "153 - Input Data Manipulation+16 - Dictionary-based Password Attack": 86,
+            "16 - Dictionary-based Password Attack+272 - Protocol Manipulation": 21,
+            "16 - Dictionary-based Password Attack+274 - HTTP Verb Tampering": 8,
+            "274 - HTTP Verb Tampering+310 - Scanning for Vulnerable Software": 1,
+            "16 - Dictionary-based Password Attack+272 - Protocol Manipulation+274 - HTTP Verb Tampering": 1
+          },
+          "excluded_total": 73595,
+          "kept_Valid": 65110,
+          "exact_duplicate": 511190,
+          "kept_Anomalous": 173614,
+          "near_duplicate_capped": 84306,
+          "distinct_groups": 164681
+        }
+      },
+      "hand_written_representative_urls": "removed from training (synthetic)",
+      "conflicting_label_hashes": 2,
+      "exact_duplicates": 43883,
+      "external_group_sample_rate": {
+        "OpenAppSec_Legitimate|Valid": 0.2,
+        "SRBH2020_Honeypot|Anomalous": 0.4
+      }
+    },
+    "total_unique_samples": 417972,
+    "near_duplicate_groups": 223913,
+    "effective_distinct_shapes": 226542.0,
+    "benign_count": 265680,
+    "attack_count": 152292,
+    "unique_rows_by_source": {
+      "CSIC_2010_Cleaned": {
+        "benign": 9622,
+        "attack": 15472
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign": 0,
+        "attack": 1147
+      },
+      "OpenAppSec_Legitimate": {
+        "benign": 97370,
+        "attack": 0
+      },
+      "OpenAppSec_Malicious": {
+        "benign": 0,
+        "attack": 66373
+      },
+      "SRBH2020_Honeypot": {
+        "benign": 65102,
+        "attack": 69300
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign": 77625,
+        "attack": 0
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign": 8555,
+        "attack": 0
+      },
+      "VPS_Telemetry_Real": {
+        "benign": 7406,
+        "attack": 0
+      }
+    },
+    "distinct_shapes_by_source_label": {
+      "CSIC_2010_Cleaned|benign": 2986.0,
+      "CSIC_2010_Cleaned|attack": 5683.7,
+      "ModSecurity_VPS_Audit_Payload_Rule|attack": 1090.3,
+      "OpenAppSec_Legitimate|benign": 85075.5,
+      "OpenAppSec_Malicious|attack": 32355.0,
+      "SRBH2020_Honeypot|benign": 50394.0,
+      "SRBH2020_Honeypot|attack": 45782.0,
+      "VPS_Audit_RuleFree_2xx_Lab|benign": 2948.6,
+      "VPS_Nginx_Real_200_Access|benign": 215.7,
+      "VPS_Telemetry_Real|benign": 11.2
+    },
+    "attack_family_counts": {
+      "SQLi": 54394,
+      "XSS": 41878,
+      "LFI": 25532,
+      "CSIC_unlabelled_family": 15472,
+      "Response-Splitting": 5724,
+      "RCE": 3798,
+      "Code-Injection": 3170,
+      "LFI+RCE": 1043,
+      "Code-Injection+RCE": 447,
+      "Code-Injection+SQLi": 242,
+      "Log4Shell": 218,
+      "LFI+RCE+SQLi": 171,
+      "XXE": 70,
+      "RFI": 63,
+      "RCE-Shellshock": 48,
+      "RCE+SQLi": 13,
+      "PHP+RCE": 5,
+      "Java+PHP": 2,
+      "Java+PHP+RCE": 1,
+      "PHP": 1
+    },
+    "feature_count": 36,
+    "feature_columns": [
+      "special_char_count",
+      "special_char_ratio",
+      "url_path_entropy",
+      "suspicious_path_marker_count",
+      "query_body_entropy",
+      "encoded_char_ratio",
+      "double_encoded_count",
+      "encoded_attack_token_count",
+      "delimiter_count",
+      "delimiter_ratio",
+      "comment_token_count",
+      "inline_function_count",
+      "json_operator_count",
+      "keyword_matches",
+      "html_tag_matches",
+      "path_traversal_depth",
+      "quote_unbalanced",
+      "has_sql_operator",
+      "has_ssrf_token",
+      "has_ssti_nosql",
+      "is_oversized_payload",
+      "is_clean_structure",
+      "has_excessive_params",
+      "method_is_post",
+      "is_static_asset",
+      "method_is_uncommon",
+      "path_depth",
+      "max_param_length",
+      "param_count",
+      "has_duplicate_param_keys",
+      "has_control_char_encoding",
+      "non_printable_char_count",
+      "param_key_has_capital",
+      "param_value_punctuation_count",
+      "avg_param_length",
+      "param_anomaly_score"
+    ]
+  },
+  "split_rule": {
+    "method": "group-level StratifiedKFold over near-duplicate groups (stratified on label x source), first fold as holdout (~20% of distinct shapes)",
+    "group_key": "path + sorted param names + value shape (digits -> 0, mixed alnum tokens >= 6 chars -> T); method excluded",
+    "weighting": "1 / size of (group, label): each distinct request shape counts once",
+    "random_state": 20260913,
+    "dev_rows": 346440,
+    "holdout_rows": 71532,
+    "sha256_overlap": 0,
+    "group_overlap": 0
+  },
+  "train_script_sha256": "40fc358a308a3022d6141d80c0e43ba2d26689d98169c9efdee909ccc01ad3a3",
+  "feature_engineering_sha256": "ae1b5dcc2c0029597c97d2fc438729adb3832dd9a181540b1f4d734e047506c4",
+  "environment": {
+    "python": "3.12.3",
+    "lightgbm": "4.7.0"
+  }
+}

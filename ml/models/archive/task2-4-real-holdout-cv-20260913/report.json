@@ -1,0 +1,258 @@
+{
+  "experiment": "task-2.4-real-holdout-and-5-fold-stratified-cv",
+  "random_state": 20260913,
+  "model": {
+    "type": "RandomForestClassifier",
+    "n_estimators": 200,
+    "max_depth": 20,
+    "min_samples_split": 6,
+    "min_samples_leaf": 3,
+    "class_weight": "balanced"
+  },
+  "safety_gate": {
+    "benign_recall_required": 0.985,
+    "attack_recall_required": 0.85
+  },
+  "data_integrity": {
+    "source": "CSIC_2010_checked_in_cleaned_only",
+    "rows_before_cleaning": 61065,
+    "rows_after_label_cleanup": 25094,
+    "rows_after_sha256_deduplication": 25094,
+    "synthetic_rows_included": 0,
+    "hash_algorithm": "sha256",
+    "development_rows": 20075,
+    "unseen_holdout_rows": 5019,
+    "development_holdout_hash_overlap": 0,
+    "cv_folds": 5
+  },
+  "feature_columns": [
+    "special_char_count",
+    "special_char_ratio",
+    "url_path_entropy",
+    "suspicious_path_marker_count",
+    "query_body_entropy",
+    "encoded_char_ratio",
+    "double_encoded_count",
+    "encoded_attack_token_count",
+    "delimiter_count",
+    "delimiter_ratio",
+    "comment_token_count",
+    "inline_function_count",
+    "json_operator_count",
+    "keyword_matches",
+    "html_tag_matches",
+    "path_traversal_depth",
+    "quote_unbalanced",
+    "has_sql_operator",
+    "has_ssrf_token",
+    "has_ssti_nosql",
+    "is_oversized_payload",
+    "is_clean_structure",
+    "has_excessive_params",
+    "method_is_post"
+  ],
+  "cross_validation": [
+    {
+      "fold": 1,
+      "fit_size": 12848,
+      "calibration_size": 3212,
+      "test_size": 4015,
+      "calibration": {
+        "threshold": 0.626,
+        "benign_recall": 0.986201,
+        "attack_recall": 0.664646,
+        "confusion_matrix": {
+          "tn": 1215,
+          "fp": 17,
+          "fn": 664,
+          "tp": 1316
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "test": {
+        "threshold": 0.626,
+        "accuracy": 0.793524,
+        "roc_auc": 0.900579,
+        "benign_recall": 0.979857,
+        "attack_recall": 0.677706,
+        "false_positive_rate": 0.020143,
+        "confusion_matrix": {
+          "tn": 1508,
+          "fp": 31,
+          "fn": 798,
+          "tp": 1678
+        },
+        "benign_count": 1539,
+        "attack_count": 2476
+      }
+    },
+    {
+      "fold": 2,
+      "fit_size": 12848,
+      "calibration_size": 3212,
+      "test_size": 4015,
+      "calibration": {
+        "threshold": 0.661,
+        "benign_recall": 0.98539,
+        "attack_recall": 0.666162,
+        "confusion_matrix": {
+          "tn": 1214,
+          "fp": 18,
+          "fn": 661,
+          "tp": 1319
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "test": {
+        "threshold": 0.661,
+        "accuracy": 0.774346,
+        "roc_auc": 0.889444,
+        "benign_recall": 0.990253,
+        "attack_recall": 0.640145,
+        "false_positive_rate": 0.009747,
+        "confusion_matrix": {
+          "tn": 1524,
+          "fp": 15,
+          "fn": 891,
+          "tp": 1585
+        },
+        "benign_count": 1539,
+        "attack_count": 2476
+      }
+    },
+    {
+      "fold": 3,
+      "fit_size": 12848,
+      "calibration_size": 3212,
+      "test_size": 4015,
+      "calibration": {
+        "threshold": 0.6405,
+        "benign_recall": 0.98539,
+        "attack_recall": 0.663636,
+        "confusion_matrix": {
+          "tn": 1214,
+          "fp": 18,
+          "fn": 666,
+          "tp": 1314
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "test": {
+        "threshold": 0.6405,
+        "accuracy": 0.77858,
+        "roc_auc": 0.887455,
+        "benign_recall": 0.976623,
+        "attack_recall": 0.655354,
+        "false_positive_rate": 0.023377,
+        "confusion_matrix": {
+          "tn": 1504,
+          "fp": 36,
+          "fn": 853,
+          "tp": 1622
+        },
+        "benign_count": 1540,
+        "attack_count": 2475
+      }
+    },
+    {
+      "fold": 4,
+      "fit_size": 12848,
+      "calibration_size": 3212,
+      "test_size": 4015,
+      "calibration": {
+        "threshold": 0.6815,
+        "benign_recall": 0.98539,
+        "attack_recall": 0.672222,
+        "confusion_matrix": {
+          "tn": 1214,
+          "fp": 18,
+          "fn": 649,
+          "tp": 1331
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "test": {
+        "threshold": 0.6815,
+        "accuracy": 0.783811,
+        "roc_auc": 0.895699,
+        "benign_recall": 0.983766,
+        "attack_recall": 0.659394,
+        "false_positive_rate": 0.016234,
+        "confusion_matrix": {
+          "tn": 1515,
+          "fp": 25,
+          "fn": 843,
+          "tp": 1632
+        },
+        "benign_count": 1540,
+        "attack_count": 2475
+      }
+    },
+    {
+      "fold": 5,
+      "fit_size": 12848,
+      "calibration_size": 3212,
+      "test_size": 4015,
+      "calibration": {
+        "threshold": 0.7285,
+        "benign_recall": 0.98539,
+        "attack_recall": 0.635354,
+        "confusion_matrix": {
+          "tn": 1214,
+          "fp": 18,
+          "fn": 722,
+          "tp": 1258
+        },
+        "calibration_status": "failed_attack_gate"
+      },
+      "test": {
+        "threshold": 0.7285,
+        "accuracy": 0.779826,
+        "roc_auc": 0.889646,
+        "benign_recall": 0.984416,
+        "attack_recall": 0.652525,
+        "false_positive_rate": 0.015584,
+        "confusion_matrix": {
+          "tn": 1516,
+          "fp": 24,
+          "fn": 860,
+          "tp": 1615
+        },
+        "benign_count": 1540,
+        "attack_count": 2475
+      }
+    }
+  ],
+  "final_calibration_on_development_data": {
+    "threshold": 0.668,
+    "benign_recall": 0.985065,
+    "attack_recall": 0.661414,
+    "confusion_matrix": {
+      "tn": 1517,
+      "fp": 23,
+      "fn": 838,
+      "tp": 1637
+    },
+    "calibration_status": "failed_attack_gate"
+  },
+  "unseen_holdout": {
+    "metrics": {
+      "threshold": 0.668,
+      "accuracy": 0.777047,
+      "roc_auc": 0.890755,
+      "benign_recall": 0.985447,
+      "attack_recall": 0.647496,
+      "false_positive_rate": 0.014553,
+      "confusion_matrix": {
+        "tn": 1896,
+        "fp": 28,
+        "fn": 1091,
+        "tp": 2004
+      },
+      "benign_count": 1924,
+      "attack_count": 3095
+    },
+    "promotion_gate_passed": false
+  },
+  "production_artifacts_written": false
+}

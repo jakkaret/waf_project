@@ -1,0 +1,10 @@
+{
+  "threshold": 0.661989,
+  "benign_recall": 0.9852428226455594,
+  "attack_recall": 0.8058893437211145,
+  "false_positives": 110,
+  "false_negatives": 1470,
+  "true_positives": 6103,
+  "true_negatives": 7344,
+  "promotion_gate": "failed_attack_recall_below_0.85"
+}

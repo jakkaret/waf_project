@@ -1,0 +1,81 @@
+{
+  "experiment": "Task 3.1 & 2.3 Real-World Augmented Training",
+  "timestamp": "20260924-145933",
+  "data_integrity": {
+    "dataset_name": "CSIC_2010_Cleaned + VPS_Real_Telemetry_Augmented",
+    "synthetic_rows_included": 0,
+    "rows_total": 32510,
+    "benign_total": 17028,
+    "attack_total": 15482,
+    "feature_count": 31,
+    "hash_algorithm": "sha256"
+  },
+  "results": [
+    {
+      "model": "Random Forest (Baseline)",
+      "fit_time_seconds": 1.18,
+      "infer_latency_us": 12.25,
+      "cv_5fold": {
+        "mean_calibrated_threshold": 0.6935,
+        "avg_benign_recall": 0.9854,
+        "avg_attack_recall": 0.69
+      },
+      "unseen_holdout": {
+        "roc_auc": 0.9466,
+        "benign_recall": 0.9859,
+        "attack_recall": 0.6909,
+        "confusion_matrix": {
+          "tn": 3358,
+          "fp": 48,
+          "fn": 957,
+          "tp": 2139
+        },
+        "passed_safety_gate": false
+      }
+    },
+    {
+      "model": "HistGradientBoosting",
+      "fit_time_seconds": 1.89,
+      "infer_latency_us": 2.01,
+      "cv_5fold": {
+        "mean_calibrated_threshold": 0.7207,
+        "avg_benign_recall": 0.9855,
+        "avg_attack_recall": 0.7066
+      },
+      "unseen_holdout": {
+        "roc_auc": 0.9596,
+        "benign_recall": 0.99,
+        "attack_recall": 0.7132,
+        "confusion_matrix": {
+          "tn": 3372,
+          "fp": 34,
+          "fn": 888,
+          "tp": 2208
+        },
+        "passed_safety_gate": false
+      }
+    },
+    {
+      "model": "LightGBM",
+      "fit_time_seconds": 0.28,
+      "infer_latency_us": 1.55,
+      "cv_5fold": {
+        "mean_calibrated_threshold": 0.7467,
+        "avg_benign_recall": 0.9855,
+        "avg_attack_recall": 0.7215
+      },
+      "unseen_holdout": {
+        "roc_auc": 0.9635,
+        "benign_recall": 0.993,
+        "attack_recall": 0.7171,
+        "confusion_matrix": {
+          "tn": 3382,
+          "fp": 24,
+          "fn": 876,
+          "tp": 2220
+        },
+        "passed_safety_gate": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,429 @@
+{
+  "reference_candidate": "task3-1-real-augmented-candidate-20260927-204037",
+  "token_pattern": "[a-z]+|\\d+|[^\\sa-z\\d]",
+  "hash_features": 1048576,
+  "B_token_model": {
+    "alpha": 1e-06,
+    "oof_core": {
+      "threshold": 0.6,
+      "attack_recall": 0.8191,
+      "benign_recall": 0.985,
+      "auc": 0.9716
+    },
+    "holdout_core": {
+      "benign_rows": 8923,
+      "benign_shapes": 1231.8,
+      "benign_recall": 0.9858,
+      "benign_recall_rows": 0.8915,
+      "attack_rows": 3424,
+      "attack_shapes": 1357.0,
+      "attack_recall": 0.8323,
+      "attack_recall_rows": 0.875,
+      "auc": 0.9761
+    },
+    "holdout_all": {
+      "benign_rows": 41259,
+      "benign_shapes": 28167.0,
+      "benign_recall": 0.9961,
+      "benign_recall_rows": 0.9738,
+      "attack_rows": 30273,
+      "attack_shapes": 16894.0,
+      "attack_recall": 0.9646,
+      "attack_recall_rows": 0.9678,
+      "auc": 0.9987
+    },
+    "holdout_per_source": {
+      "CSIC_2010_Cleaned": {
+        "benign_rows": 2165,
+        "benign_shapes": 597.0,
+        "benign_recall": 0.9774,
+        "benign_recall_rows": 0.5547,
+        "attack_rows": 3195,
+        "attack_shapes": 1138.0,
+        "attack_recall": 0.8193,
+        "attack_recall_rows": 0.8729
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 229,
+        "attack_shapes": 219.0,
+        "attack_recall": 0.8995,
+        "attack_recall_rows": 0.9039
+      },
+      "OpenAppSec_Legitimate": {
+        "benign_rows": 19271,
+        "benign_shapes": 16856.5,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 0.9999,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "OpenAppSec_Malicious": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 13084,
+        "attack_shapes": 6376.0,
+        "attack_recall": 0.9987,
+        "attack_recall_rows": 0.9988
+      },
+      "SRBH2020_Honeypot": {
+        "benign_rows": 13065,
+        "benign_shapes": 10078.7,
+        "benign_recall": 0.991,
+        "benign_recall_rows": 0.9914,
+        "attack_rows": 13765,
+        "attack_shapes": 9161.0,
+        "attack_recall": 0.9605,
+        "attack_recall_rows": 0.9615
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign_rows": 6681,
+        "benign_shapes": 589.7,
+        "benign_recall": 0.9932,
+        "benign_recall_rows": 0.9994,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign_rows": 66,
+        "benign_shapes": 42.8,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Telemetry_Real": {
+        "benign_rows": 11,
+        "benign_shapes": 2.3,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      }
+    },
+    "seconds": 17.9,
+    "loso": {
+      "CSIC_2010_Cleaned": {
+        "benign_rows": 9622,
+        "benign_shapes": 2986.0,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 15472,
+        "attack_shapes": 5683.7,
+        "attack_recall": 0.065,
+        "attack_recall_rows": 0.0577,
+        "auc": 0.5831
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 1147,
+        "attack_shapes": 1090.3,
+        "attack_recall": 0.0394,
+        "attack_recall_rows": 0.0384
+      },
+      "OpenAppSec_Legitimate": {
+        "benign_rows": 97370,
+        "benign_shapes": 85075.5,
+        "benign_recall": 0.4781,
+        "benign_recall_rows": 0.5176,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "OpenAppSec_Malicious": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 66373,
+        "attack_shapes": 32355.0,
+        "attack_recall": 0.1351,
+        "attack_recall_rows": 0.1333
+      },
+      "SRBH2020_Honeypot": {
+        "benign_rows": 65102,
+        "benign_shapes": 50394.0,
+        "benign_recall": 0.9593,
+        "benign_recall_rows": 0.9659,
+        "attack_rows": 69300,
+        "attack_shapes": 45782.0,
+        "attack_recall": 0.1163,
+        "attack_recall_rows": 0.1065,
+        "auc": 0.7024
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign_rows": 77625,
+        "benign_shapes": 2948.6,
+        "benign_recall": 0.9663,
+        "benign_recall_rows": 0.9987,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign_rows": 8555,
+        "benign_shapes": 215.7,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Telemetry_Real": {
+        "benign_rows": 7406,
+        "benign_shapes": 11.2,
+        "benign_recall": 0.9821,
+        "benign_recall_rows": 0.9999,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      }
+    }
+  },
+  "A_lightgbm_36": {
+    "oof_core": {
+      "threshold": 0.776,
+      "attack_recall": 0.648,
+      "benign_recall": 0.985,
+      "auc": 0.9282
+    },
+    "holdout_core": {
+      "benign_rows": 8923,
+      "benign_shapes": 1231.8,
+      "benign_recall": 0.9832,
+      "benign_recall_rows": 0.9946,
+      "attack_rows": 3424,
+      "attack_shapes": 1357.0,
+      "attack_recall": 0.6523,
+      "attack_recall_rows": 0.6703,
+      "auc": 0.931
+    },
+    "holdout_all": {
+      "benign_rows": 41259,
+      "benign_shapes": 28167.0,
+      "benign_recall": 0.9982,
+      "benign_recall_rows": 0.998,
+      "attack_rows": 30273,
+      "attack_shapes": 16894.0,
+      "attack_recall": 0.9364,
+      "attack_recall_rows": 0.9389,
+      "auc": 0.9986
+    },
+    "holdout_per_source": {
+      "CSIC_2010_Cleaned": {
+        "benign_rows": 2165,
+        "benign_shapes": 597.0,
+        "benign_recall": 0.9732,
+        "benign_recall_rows": 0.9852,
+        "attack_rows": 3195,
+        "attack_shapes": 1138.0,
+        "attack_recall": 0.6079,
+        "attack_recall_rows": 0.6554
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 229,
+        "attack_shapes": 219.0,
+        "attack_recall": 0.8828,
+        "attack_recall_rows": 0.8777
+      },
+      "OpenAppSec_Legitimate": {
+        "benign_rows": 19271,
+        "benign_shapes": 16856.5,
+        "benign_recall": 0.9997,
+        "benign_recall_rows": 0.9996,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "OpenAppSec_Malicious": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 13084,
+        "attack_shapes": 6376.0,
+        "attack_recall": 0.9997,
+        "attack_recall_rows": 0.9997
+      },
+      "SRBH2020_Honeypot": {
+        "benign_rows": 13065,
+        "benign_shapes": 10078.7,
+        "benign_recall": 0.9976,
+        "benign_recall_rows": 0.9979,
+        "attack_rows": 13765,
+        "attack_shapes": 9161.0,
+        "attack_recall": 0.9344,
+        "attack_recall_rows": 0.9479
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign_rows": 6681,
+        "benign_shapes": 589.7,
+        "benign_recall": 0.9919,
+        "benign_recall_rows": 0.9976,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign_rows": 66,
+        "benign_shapes": 42.8,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Telemetry_Real": {
+        "benign_rows": 11,
+        "benign_shapes": 2.3,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      }
+    },
+    "seconds": 18.3
+  },
+  "C_stacked": {
+    "oof_core": {
+      "threshold": 0.848,
+      "attack_recall": 0.8645,
+      "benign_recall": 0.9852,
+      "auc": 0.9861
+    },
+    "holdout_core": {
+      "benign_rows": 8923,
+      "benign_shapes": 1231.8,
+      "benign_recall": 0.9882,
+      "benign_recall_rows": 0.8915,
+      "attack_rows": 3424,
+      "attack_shapes": 1357.0,
+      "attack_recall": 0.8812,
+      "attack_recall_rows": 0.9103,
+      "auc": 0.9888
+    },
+    "holdout_all": {
+      "benign_rows": 41259,
+      "benign_shapes": 28167.0,
+      "benign_recall": 0.9992,
+      "benign_recall_rows": 0.9762,
+      "attack_rows": 30273,
+      "attack_shapes": 16894.0,
+      "attack_recall": 0.9857,
+      "attack_recall_rows": 0.9868,
+      "auc": 0.9999
+    },
+    "holdout_per_source": {
+      "CSIC_2010_Cleaned": {
+        "benign_rows": 2165,
+        "benign_shapes": 597.0,
+        "benign_recall": 0.9774,
+        "benign_recall_rows": 0.5533,
+        "attack_rows": 3195,
+        "attack_shapes": 1138.0,
+        "attack_recall": 0.8786,
+        "attack_recall_rows": 0.9111
+      },
+      "ModSecurity_VPS_Audit_Payload_Rule": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 229,
+        "attack_shapes": 219.0,
+        "attack_recall": 0.895,
+        "attack_recall_rows": 0.8996
+      },
+      "OpenAppSec_Legitimate": {
+        "benign_rows": 19271,
+        "benign_shapes": 16856.5,
+        "benign_recall": 0.9999,
+        "benign_recall_rows": 0.9998,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "OpenAppSec_Malicious": {
+        "benign_rows": 0,
+        "benign_shapes": 0.0,
+        "benign_recall": null,
+        "benign_recall_rows": null,
+        "attack_rows": 13084,
+        "attack_shapes": 6376.0,
+        "attack_recall": 0.9999,
+        "attack_recall_rows": 0.9999
+      },
+      "SRBH2020_Honeypot": {
+        "benign_rows": 13065,
+        "benign_shapes": 10078.7,
+        "benign_recall": 0.9994,
+        "benign_recall_rows": 0.9994,
+        "attack_rows": 13765,
+        "attack_shapes": 9161.0,
+        "attack_recall": 0.9912,
+        "attack_recall_rows": 0.9932
+      },
+      "VPS_Audit_RuleFree_2xx_Lab": {
+        "benign_rows": 6681,
+        "benign_shapes": 589.7,
+        "benign_recall": 0.9983,
+        "benign_recall_rows": 0.9999,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Nginx_Real_200_Access": {
+        "benign_rows": 66,
+        "benign_shapes": 42.8,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      },
+      "VPS_Telemetry_Real": {
+        "benign_rows": 11,
+        "benign_shapes": 2.3,
+        "benign_recall": 1.0,
+        "benign_recall_rows": 1.0,
+        "attack_rows": 0,
+        "attack_shapes": 0.0,
+        "attack_recall": null,
+        "attack_recall_rows": null
+      }
+    },
+    "seconds": 18.8
+  }
+}

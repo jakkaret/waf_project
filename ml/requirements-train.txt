@@ -1,0 +1,12 @@
+# Gen 3 training / evaluation environment (local machine only, never the production VPS).
+# Versions are the ones the 27/09/2026 candidates were trained with (Python 3.12.3).
+numpy==2.5.2
+pandas==3.0.5
+scipy==1.18.0
+scikit-learn==1.9.0
+lightgbm==4.7.0
+joblib==1.5.3
+# API/tests (ml/ml_api.py, ml/tests)
+fastapi
+httpx
+pytest

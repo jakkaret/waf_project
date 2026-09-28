@@ -1,0 +1,26 @@
+{
+  "accuracy": 0.9024,
+  "roc_auc": 0.9765,
+  "benign": {
+    "precision": 0.8736,
+    "recall": 0.9392,
+    "f1_score": 0.9052,
+    "count": 7454
+  },
+  "attack": {
+    "precision": 0.9354,
+    "recall": 0.8662,
+    "f1_score": 0.8995,
+    "count": 7573
+  },
+  "macro_avg": {
+    "precision": 0.9045,
+    "recall": 0.9027,
+    "f1_score": 0.9024
+  },
+  "weighted_avg": {
+    "precision": 0.9047,
+    "recall": 0.9024,
+    "f1_score": 0.9023
+  }
+}

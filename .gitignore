@@ -38,3 +38,15 @@ old/
 .claude/
 .codex/
 .github/
+# Public datasets downloaded by ml/prepare_external_datasets.py and the trainer feature cache
+ml/dataset/external/
+ml/dataset/.build_cache/
+
+# Real VPS traffic and telemetry (production data) - never commit; transfer privately
+ml/dataset/*.jsonl
+ml/dataset/*.stats.json
+ml/telemetry/
+# Candidate model binaries (reproducible from code; reports/manifests are committed)
+ml/models/archive/**/*.joblib
+ml/models/archive/**/*.onnx
+ml/onnx_export.py.orig

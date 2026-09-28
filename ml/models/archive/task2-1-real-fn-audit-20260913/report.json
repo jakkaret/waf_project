@@ -1,0 +1,52 @@
+{
+  "experiment": "task-2.1-real-label-coverage-audit",
+  "data_integrity": {
+    "source": "CSIC_2010_checked_in_cleaned_only",
+    "rows_before_cleaning": 61065,
+    "rows_after_label_cleanup": 25094,
+    "rows_after_sha256_deduplication": 25094,
+    "synthetic_rows_included": 0,
+    "hash_algorithm": "sha256"
+  },
+  "class_counts": {
+    "benign": 9622,
+    "attack": 15472
+  },
+  "bucket_rules": {
+    "high_confidence_signal": "Any semantic signature, suspicious path marker, dangerous encoded token, or double-encoded token is non-zero.",
+    "review_structural_or_encoding_only": "No high-confidence signal, but delimiter/entropy/ordinary URL-encoding signal is present.",
+    "unresolved": "No high-confidence, structural, entropy, or encoding signal is present."
+  },
+  "buckets": {
+    "high_confidence_signal": {
+      "benign": 1398,
+      "attack": 9665,
+      "total": 11063
+    },
+    "review_structural_or_encoding_only": {
+      "benign": 8224,
+      "attack": 5805,
+      "total": 14029
+    },
+    "unresolved": {
+      "benign": 0,
+      "attack": 2,
+      "total": 2
+    }
+  },
+  "attack_coverage": {
+    "high_confidence_signal_rows": 9665,
+    "high_confidence_signal_rate": 0.624677,
+    "review_rows": 5805,
+    "review_rate": 0.375194,
+    "unresolved_rows": 2,
+    "unresolved_rate": 0.000129,
+    "dangerous_encoded_token_rows": 8436,
+    "ordinary_encoded_rows": 12639,
+    "suspicious_path_marker_rows": 1122
+  },
+  "interpretation": "High-confidence signals are eligible for model training review. Structural/encoding-only rows remain review candidates because ordinary URL encoding overlaps benign traffic. Unresolved rows must not be auto-relabelled or used for promotion without manual evidence.",
+  "production_artifacts_written": false,
+  "review_manifest": "ml/models/archive/task2-1-real-fn-audit-20260913/review_candidates.csv",
+  "review_manifest_rows": 5807
+}
