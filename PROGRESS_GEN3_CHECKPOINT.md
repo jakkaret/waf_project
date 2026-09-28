@@ -41,6 +41,8 @@ Archive `experiment-value-features-20260928-101316`: E (ไม่มีบริ
 >
 > แก้ `experiment_value_features.py`: leave-one-**dataset**-out (open-appsec legit + malicious เป็นรอบเดียว) รายงาน AUC + attack recall ที่ benign 98.5% (ไม่ขึ้นกับ threshold) และ benign/attack ที่ threshold จาก dataset ที่ใช้เทรนเท่านั้น; ทำซ้ำ 3 holdout fold (mean ± std); เพิ่ม `D_plus_query_body_entropy`
 
+**Audit แถว SR-BH ที่ตัดออก (28/09 17:50):** จาก request "000 - Normal" ที่ไม่ซ้ำ 90,951 รายการ detector จับได้ 31,944 (35.1%); สุ่ม 200 รายการ (seed 28) ตรวจด้วยตา → **200/200 เป็นการโจมตีจริง** (scanner ฉีด `;cat /etc/passwd`, `/ sleep(15) /`, `'"<script>alert(1);</script>`, shellshock `() { :;}; /bin/sleep 15`, `%';SELECT SLEEP(5)#` เข้าไปใน path segment ของ WordPress) — ขอบบนของสัดส่วน benign ที่ถูกตัดผิด ≈ 1.5% (rule of three) → การตัดตามข้อ 1 สมเหตุสมผล ความกังวลเรื่อง circularity (Major 4) ลดลงเหลือระดับเล็กน้อย
+
 ### งานถัดไป
 1. **รัน Colab รอบถัดไป** (ค่า default ใหม่): A, B, D, E, E + qbe, D + qbe × 3 fold + leave-one-dataset-out — เลือกชุดฟีเจอร์จาก AUC / attack@benign98.5 บน dataset ที่ไม่เคยเห็น และ stress test
 2. จากนั้นรวม config ที่ดีที่สุดกับ unit (MIL) model (`RUN_TRAINER` + `RUN_UNIT_EXPERIMENT`)
