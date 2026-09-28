@@ -43,8 +43,21 @@ Archive `experiment-value-features-20260928-101316`: E (ไม่มีบริ
 
 **Audit แถว SR-BH ที่ตัดออก (28/09 17:50):** จาก request "000 - Normal" ที่ไม่ซ้ำ 90,951 รายการ detector จับได้ 31,944 (35.1%); สุ่ม 200 รายการ (seed 28) ตรวจด้วยตา → **200/200 เป็นการโจมตีจริง** (scanner ฉีด `;cat /etc/passwd`, `/ sleep(15) /`, `'"<script>alert(1);</script>`, shellshock `() { :;}; /bin/sleep 15`, `%';SELECT SLEEP(5)#` เข้าไปใน path segment ของ WordPress) — ขอบบนของสัดส่วน benign ที่ถูกตัดผิด ≈ 1.5% (rule of three) → การตัดตามข้อ 1 สมเหตุสมผล ความกังวลเรื่อง circularity (Major 4) ลดลงเหลือระดับเล็กน้อย
 
+### รอบที่ 3 (18:39): 3 fold + leave-one-dataset-out (archive `experiment-value-features-20260928-113913`)
+| Config | CSIC benign / attack (mean ± sd) | Stress (control FP) | Scenario attack | AUC ที่ไม่เคยเห็น: CSIC / OpenAppSec / SR-BH |
+| :--- | :---: | :---: | :---: | :---: |
+| A 36 เดิม | 98.6 / 58.5 ± 1.0 | 27.0 ± 0.7 (0.05%) | 19.7 | 0.700 / 0.777 / 0.727 |
+| B + value | 98.5 / **60.3 ± 0.5** | 42.4 ± 1.4 (0%) | **23** | **0.714** / 0.937 / 0.907 |
+| D no-context + monotone | 98.4 / 51.6 ± 1.0 | **67.6 ± 1.8** (0.36%) | 20.7 | 0.705 / 0.938 / 0.863 |
+| E no-context | 98.4 / 57.0 ± 0.7 | 58.0 ± 2.1 (0.18%) | 21.3 | 0.685 / 0.944 / 0.885 |
+| **F = E + query_body_entropy** | **98.7** / 56.6 ± 0.5 | 60.1 ± 1.0 (**0.09%**) | **23** | 0.705 / **0.951** / **0.925** |
+| D + qbe | 98.4 / 53.2 ± 0.8 | 61.1 ± 2.8 (0.18%) | 21.7 | 0.709 / 0.941 / – |
+
+→ **ชุดฟีเจอร์ที่เลือก: F (48 ฟีเจอร์)** — ดีกว่า B ด้าน stress (+18pp, เกิน 10 sd) และ AUC บน dataset ที่ไม่เคยเห็น แลกกับ CSIC attack −3.7pp; เมื่อมี qbe แล้ว monotone ไม่ช่วย. "attack@benign98.5" ของรอบนี้โดนบั๊ก grid (OpenAppSec = 0 ทุก config) → แก้เป็น exact quantile (`18d8a6b`) และรัน `--only-lofo` ใหม่ (ผลแรก: OpenAppSec A 9.5% → B 80.8%). ⚠️ ที่ threshold จาก dataset อื่น เว็บจริงที่ไม่เคยเห็น (open-appsec legit) ผ่านแค่ 37–66% ทุก config → ต้อง Silent → Tuning ราย tenant ก่อน enforce
+
 ### งานถัดไป
-1. **รัน Colab รอบถัดไป** (ค่า default ใหม่): A, B, D, E, E + qbe, D + qbe × 3 fold + leave-one-dataset-out — เลือกชุดฟีเจอร์จาก AUC / attack@benign98.5 บน dataset ที่ไม่เคยเห็น และ stress test
+1. **อ่านผล `--only-lofo`** แล้วเทียบกับ Promotion Gate ฉบับใหม่ (`WAF_GEN3_ROADMAP.md` 3.1-G.0, อนุมัติ 28/09)
+2. ใช้ชุด F เป็นชุดฟีเจอร์หลักของตัวเทรน + รายงานตาม gate ใหม่ แล้วรวมกับ unit (MIL) model
 2. จากนั้นรวม config ที่ดีที่สุดกับ unit (MIL) model (`RUN_TRAINER` + `RUN_UNIT_EXPERIMENT`)
 3. รอการตัดสินใจ: นิยาม gate สำหรับ CSIC structural-only; จะใช้ข้อมูล VPS บน Drive หรือไม่ (CORE gate จริงต้องใช้)
 
