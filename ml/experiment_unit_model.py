@@ -95,6 +95,9 @@ def build_stress_set(holdout_groups):
     """Real payloads from holdout attack rows injected into real holdout benign contexts."""
     rng = random.Random(20260927)
     payloads = []
+    if not os.path.exists(EXTERNAL_SOURCES["OpenAppSec_Malicious"]):
+        print("[!] Stress set skipped: open-appsec payloads not prepared (ml/prepare_external_datasets.py --download)")
+        return [], [], [], []
     with open(EXTERNAL_SOURCES["OpenAppSec_Malicious"], encoding="utf-8") as fp:
         for line in fp:
             r = json.loads(line)
@@ -104,6 +107,8 @@ def build_stress_set(holdout_groups):
                     payloads.append((v, r["Family"]))
     contexts = []
     for path in (EXTERNAL_SOURCES["OpenAppSec_Legitimate"], VPS_AUDIT_PATH, NGINX_BENIGN_PATH):
+        if not os.path.exists(path):  # private VPS files are absent on a public-data-only run
+            continue
         with open(path, encoding="utf-8") as fp:
             for line in fp:
                 r = json.loads(line)
@@ -134,6 +139,8 @@ def score_requests(scorer, requests):
 
 
 def stress_report(name, scorer, thr, injected, control, families):
+    if not injected:
+        return {"skipped": "no stress set"}
     pi, pc = score_requests(scorer, injected), score_requests(scorer, control)
     det = pi >= thr
     by_fam = pd.Series(det).groupby(pd.Series(families)).mean().round(4).to_dict()

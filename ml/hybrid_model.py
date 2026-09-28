@@ -75,7 +75,8 @@ def request_units(method, uri, query, body):
     """
     units = [seg for seg in (_decode(s) for s in str(uri).split("/")) if seg]
     if query:
-        pairs = parse_qsl(query, keep_blank_values=True, max_num_fields=MAX_UNITS)
+        # No max_num_fields: parse_qsl raises past it instead of truncating; units are capped below
+        pairs = parse_qsl(query, keep_blank_values=True)
         units += [x for kv in pairs for x in kv if x] if pairs else [_decode(query)]
     body = str(body or "")
     if body:
@@ -88,7 +89,7 @@ def request_units(method, uri, query, body):
             except ValueError:
                 units.append(body)
         elif "=" in body:
-            pairs = parse_qsl(body, keep_blank_values=True, max_num_fields=MAX_UNITS)
+            pairs = parse_qsl(body, keep_blank_values=True)
             units += [x for kv in pairs for x in kv if x] if pairs else [body]
         else:
             units.append(body)

@@ -333,7 +333,12 @@ def _build_full_real_dataset_uncached():
 
     # 3. VPS ModSecurity, all audit logs incl. rotated .gz (scripts/extract_vps_audit_dataset.py):
     #    payload-rule GET attacks + rule-free 2xx/3xx GET benign on lab hosts
-    df_audit = load_jsonl_source(VPS_AUDIT_PATH)
+    #    Private (never in git): absent on a public-data-only run such as a fresh Colab runtime.
+    if os.path.exists(VPS_AUDIT_PATH):
+        df_audit = load_jsonl_source(VPS_AUDIT_PATH)
+    else:
+        print(f"[!] VPS audit dataset not found at {VPS_AUDIT_PATH}; training without VPS audit rows")
+        df_audit = pd.DataFrame()
     modsec_stats = _read_json(VPS_AUDIT_STATS_PATH)
 
     # 4. VPS Live Nginx Real Clean Requests (Real 200/304 verified traffic from VPS)
@@ -411,6 +416,7 @@ def _build_full_real_dataset_uncached():
     meta = pd.DataFrame({
         "Source": df_clean["Source"],
         "Family": df_clean["Family"],
+        "URI": df_clean["URI"],
         "Group": groups,
         "Weight": weights,
         # Folds are stratified on label x source so every fold (and the
@@ -757,7 +763,7 @@ def main():
     shutil.copy2(os.path.abspath(__file__), os.path.join(candidate_dir, "train_script_snapshot.py"))
 
     input_files = [CSIC_PATH, VPS_AUDIT_PATH, NGINX_BENIGN_PATH, *EXTERNAL_SOURCES.values()] + sorted(
-        os.path.join(TELEMETRY_DIR, f) for f in os.listdir(TELEMETRY_DIR) if f.endswith(".jsonl")
+        glob.glob(os.path.join(TELEMETRY_DIR, "*.jsonl"))
     )
     manifest = {
         "dataset_version": f"gen3-conservative-{timestamp}",

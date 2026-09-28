@@ -51,6 +51,13 @@ tar -czf ~/waf_ml_private_data_$(date +%Y%m%d).tar.gz \
 ssh root@178.104.53.123 python3 - < scripts/extract_vps_audit_dataset.py > ml/dataset/vps_audit_labelled.jsonl
 ```
 
+## เทรนบน Google Colab
+
+เปิด `ml/waf_gen3_colab.ipynb` ใน Colab (File → Open notebook → GitHub → branch `trainmodelgen3`) แล้วรันตามลำดับ cell:
+repo private ให้เพิ่ม Colab Secret `GITHUB_TOKEN` (fine-grained, Contents: read); ข้อมูล VPS (กลุ่ม 3) ใส่เป็น tar.gz ใน
+`MyDrive/waf_ml/private/` เฉพาะเมื่อได้รับอนุญาตให้เก็บบน Google Drive — ถ้าไม่มี notebook จะรันด้วย public data อย่างเดียว.
+Dataset, build cache และโมเดล `.joblib` เก็บใน `MyDrive/waf_ml/`; ผล (JSON + log) ดาวน์โหลดเป็น zip แล้วแตกที่ root ของ repo
+
 ## ความต้องการของเครื่อง
 
 - Python 3.12, RAM ≥ 8 GB (peak ~3 GB ตอนสร้าง dataset), ดิสก์ว่าง ≥ 6 GB

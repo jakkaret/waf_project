@@ -87,7 +87,8 @@ def load_real_telemetry():
                     "Source": "VPS_Telemetry_Real"
                 })
 
-    df_telem = pd.DataFrame(rows)
+    # Explicit columns so a run without telemetry files (public data only) still has a "Class" column
+    df_telem = pd.DataFrame(rows, columns=["URI", "GET-Query", "POST-Data", "Method", "Class", "Source"])
     print(f"[+] Real Telemetry Loaded: {len(df_telem)} rows (Benign: {sum(df_telem['Class'] == 'Valid')}, Attack: {sum(df_telem['Class'] == 'Anomalous')})")
     return df_telem
 
