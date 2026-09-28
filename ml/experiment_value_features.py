@@ -24,6 +24,8 @@ Configurations (LightGBM, hyperparameters of the latest archived candidate):
   C  B with +1 monotone constraints on every attack-signal feature, so a
      payload can never be "explained away" by benign-looking context
   D  C without the context-fingerprint features (CONTEXT_COLUMNS)
+  E  D without monotone constraints; E_plus_<feature> puts one context
+     feature back (ablation). Default run: A, B, E and the six ablations.
 
 Nothing here changes the training data: no synthetic rows, the stress set is
 never trained on.
@@ -72,13 +74,23 @@ SIGNAL_COLUMNS = [
 ]
 MONOTONE = set(SIGNAL_COLUMNS) | set(VALUE_MONOTONE_COLUMNS)
 
+NO_CONTEXT_COLUMNS = [c for c in EXTENDED_FEATURE_COLUMNS if c not in CONTEXT_COLUMNS] + VALUE_FEATURE_COLUMNS
+
 CONFIGS = {
     "A_base36": (EXTENDED_FEATURE_COLUMNS, False),
     "B_36_plus_value": (EXTENDED_FEATURE_COLUMNS + VALUE_FEATURE_COLUMNS, False),
     "C_value_monotone": (EXTENDED_FEATURE_COLUMNS + VALUE_FEATURE_COLUMNS, True),
-    "D_no_context_monotone": ([c for c in EXTENDED_FEATURE_COLUMNS if c not in CONTEXT_COLUMNS]
-                              + VALUE_FEATURE_COLUMNS, True),
+    "D_no_context_monotone": (NO_CONTEXT_COLUMNS, True),
+    # 28/09 run: C < B everywhere, so monotone constraints cost accuracy; D's
+    # robustness came from dropping the context features. E = D unconstrained.
+    "E_no_context": (NO_CONTEXT_COLUMNS, False),
+    # Ablation: E plus one context feature back, to separate features carrying
+    # real signal (D lost 8.7pp LFI and 7pp CSIC) from dataset fingerprints.
+    **{f"E_plus_{c}": (NO_CONTEXT_COLUMNS + [c], False) for c in CONTEXT_COLUMNS},
 }
+# A and B are the reference points; C and D were measured on 28/09 (archive
+# experiment-value-features-20260928-092136) and are not rerun by default.
+DEFAULT_CONFIGS = ["A_base36", "B_36_plus_value", "E_no_context"] + [f"E_plus_{c}" for c in CONTEXT_COLUMNS]
 
 
 def value_feature_frame(meta):
@@ -149,7 +161,7 @@ def request_matrix(method, url, body, columns):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--no-loso", action="store_true", help="skip leave-one-source-out (the slowest part)")
-    ap.add_argument("--configs", default=",".join(CONFIGS), help="comma-separated subset of " + ",".join(CONFIGS))
+    ap.add_argument("--configs", default=",".join(DEFAULT_CONFIGS), help="comma-separated subset of " + ",".join(CONFIGS))
     args = ap.parse_args()
     configs = {k: CONFIGS[k] for k in args.configs.split(",")}
 
@@ -235,7 +247,9 @@ def main():
         c, s = e["holdout"]["core"], e["stress_context_transfer"]
         stress = f"{s['detection_rate']*100:.1f}% / {s['control_false_positive_rate']*100:.1f}%" if "detection_rate" in s else "n/a"
         loso_att = [v["attack_recall"] for v in e.get("loso", {}).values() if v.get("attack_recall") is not None]
-        print(f" {name:24s} CORE benign {c['benign_recall']*100:6.2f}% attack {c['attack_recall']*100:6.2f}% | "
+        lfi = e["holdout_per_family"].get("LFI", {}).get("attack_recall")
+        print(f" {name:34s} CORE benign {c['benign_recall']*100:6.2f}% attack {c['attack_recall']*100:6.2f}% | "
+              + (f"LFI {lfi*100:6.2f}% | " if lfi is not None else "") +
               f"stress {stress} | scenarios {e['scenarios']['normal_allowed']} normal, {e['scenarios']['attack_blocked']} attack"
               + (f" | LOSO attack mean {np.mean(loso_att)*100:.1f}%" if loso_att else ""))
 

@@ -1,11 +1,46 @@
 # WAF Gen 3 Development Checkpoint & Progress Status
-**Date:** 2026-09-27 (21:11 ICT) — พักงานรอบที่ 2 (รอบแรก 16:56, เดิม 2026-09-25 13:10)  
-**Branch:** `Backend`  
-**Status:** ⏸️ **Hybrid candidate ผ่าน gate แบบ in-distribution แต่ยังไม่ควร promote — กำลังแก้ปัญหา payload ผูกกับบริบทของ dataset (context confounding)**
+**Date:** 2026-09-28 (16:45 ICT) — พักงานรอบที่ 3 (เดิม 2026-09-27 21:11)  
+**Branch:** `trainmodelgen3`  
+**Status:** ⏸️ **Value features (detector ระดับค่า) ช่วยได้จริง; ฟีเจอร์บริบทคือต้นเหตุที่โมเดลไม่ทนต่อ source ใหม่ — รอรันแบบ E + ablation บน Colab**
 
 ---
 
-## 📍 จุดที่พักงานล่าสุด (27/09/2026 21:11)
+## 📍 จุดที่พักงานล่าสุด (28/09/2026 16:45)
+
+### สิ่งที่ทำในรอบนี้
+- [x] **Colab (ฟรี)**: `ml/waf_gen3_colab.ipynb` — venv Python 3.12, dataset/cache/ผลเก็บใน `MyDrive/waf_ml/`, log ขึ้น Drive ทุก 2 นาที (`live_logs/`), ผลแบบไม่บีบอัดใน `results/<stamp>/`; เครื่อง local (WSL RAM 3 GB) สร้าง dataset เต็มไม่ได้
+- [x] **แก้บั๊ก `request_units()`** (`parse_qsl(max_num_fields)` raise) — ปลดล็อก `experiment_unit_model.py`
+- [x] **`ml/value_features.py`** — 17 ฟีเจอร์ระดับ unit (path segment / param / JSON leaf) รวมด้วย max/count: libinjection SQLi/XSS + command injection, traversal, sensitive file, SSTI/JNDI, NoSQL, SSRF, code exec, XXE, CRLF หลัง decode URL/HTML/`\x`/`%u` + overlong UTF-8
+  - ตรวจกับข้อมูลจริง: จับผิด traffic เว็บจริง (open-appsec legitimate 271k) **0.52%**; จับ payload open-appsec: cmdexe 97.5%, traversal 78.6%, XSS 89%, Log4Shell/XXE 100%
+  - บั๊กความปลอดภัยที่เจอและแก้: `%uD800` (lone surrogate) ทำให้ libinjection crash → request เดียวทำให้ scoring พังได้
+- [x] **`ml/experiment_value_features.py`** — เทียบ config ด้วย 4 เกณฑ์: CORE gate, context-transfer stress test, 63 scenario, leave-one-source-out
+- [x] **SR-BH label noise**: คลาส "000 - Normal" มีการโจมตีจริง (shellshock, `;cat /etc/passwd`, `<script>alert(1)`) — ตัดสินใจโดยเจ้าของโปรเจกต์ (ทางเลือกที่ 1): แถว Normal ที่ detector จับได้ → **ตัดออก (unknown) ไม่ relabel** ทั้ง train และ eval → ตัด 25,526 จาก 65,110 แถว (39% ของรูปแบบที่ไม่ซ้ำ; ในไฟล์ดิบ ~8%) — บันทึกใน `data_integrity.exclusions.srbh_benign_contradicted_by_detectors`
+- [x] `prepare_external_datasets.py`: Harvard Dataverse ตอบ 403 กับ User-Agent ของ urllib → ใส่ User-Agent
+
+### ผล (Colab, public data เท่านั้น: CSIC + open-appsec + SR-BH, ไม่มีข้อมูล VPS → CORE = CSIC อย่างเดียว เทียบกับ candidate 91.04% ไม่ได้)
+ผลเต็ม: `MyDrive/waf_ml/results/`, archive `experiment-value-features-20260928-092136` (โมเดลอยู่ใน Drive `models/`)
+
+| Config | CSIC benign / attack | Holdout ทุก source attack | Stress (payload ในบริบทใหม่) | 63 scenario attack | LOSO attack เฉลี่ย |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| A 36 ฟีเจอร์เดิม | 97.82 / 59.88 | 93.70 | 27.9% | 20/26 | 22.7% |
+| B + value features | **98.16 / 60.94** | **95.54** | 43.8% | **23/26** | 35.2% |
+| C B + monotone | 97.91 / 59.44 | 94.88 | 37.9% | 21/26 | 30.3% |
+| D C − ฟีเจอร์บริบท 6 ตัว | 97.82 / 53.02 | 92.55 | **66.1%** (FP 0.2%) | 21/26 | **57.2%** |
+
+- **B ดีกว่า A ทุกตัว** (SQLi holdout 91.3 → 95.6%, RCE 97.1 → 100%) — `v_detector_units` เป็นฟีเจอร์อันดับ 1 (gain ~15 เท่าของอันดับ 2)
+- **ฟีเจอร์บริบท** (`url_path_entropy`, `query_body_entropy`, `avg/max_param_length`, `path_depth`, `param_count`) ทำให้โมเดล "อธิบาย payload ทิ้ง" เมื่อ request ดูเหมือน traffic ปกติ: ตัดออก (D) → stress 27.9 → 66.1%, SR-BH ที่ไม่เคยเห็น 1.3 → 66.7%; แลกกับ CSIC −7pp และ **LFI holdout 99.9 → 91.3%**
+- **Monotone แย่ลงทุกครั้ง** (C < B, และ C/D หลุด NoSQL + Log4Shell ใน scenario)
+- เพดานเดิม: CSIC ที่ไม่มีสัญญาณโจมตี 11–20% ทุก config (gate CSIC ≥ 85% ทำไม่ได้ด้วยฟีเจอร์); admin-path probe (`/wp-admin`, `/phpmyadmin`, `/actuator`) หลุดทุก config — เหมาะเป็นกฎราย tenant ไม่ใช่ detector; traffic เว็บจริงที่ไม่เคยเห็นยังผ่านแค่ 37–61%
+- ข้อควรระวัง: benign ของ SR-BH ใน LOSO สูงเกินจริงเล็กน้อย เพราะแถวที่ตัดคือแถวที่ detector จับได้
+
+### งานถัดไป
+1. **รัน Colab รอบถัดไป** (ค่า default ของ `experiment_value_features.py` แล้ว): A, B, **E = D ไม่ใช้ monotone**, และ **ablation `E_plus_<feature>`** ใส่ฟีเจอร์บริบทกลับทีละตัว — หาว่าตัวไหนมีสัญญาณ LFI/CSIC จริง ตัวไหนเป็นลายนิ้วมือ dataset
+2. จากนั้นรวม config ที่ดีที่สุดกับ unit (MIL) model (`RUN_TRAINER` + `RUN_UNIT_EXPERIMENT`)
+3. รอการตัดสินใจ: นิยาม gate สำหรับ CSIC structural-only; จะใช้ข้อมูล VPS บน Drive หรือไม่ (CORE gate จริงต้องใช้)
+
+---
+
+## 📍 จุดที่พักงานรอบก่อน (27/09/2026 21:11) — เก็บไว้เป็นประวัติ
 
 ### สถานะโดยย่อ
 | หัวข้อ | สถานะ |
