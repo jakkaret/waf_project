@@ -51,7 +51,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from ml.benchmark_real_holdout import load_real_csic_dataset, MIN_BENIGN_RECALL, MIN_ATTACK_RECALL, N_SPLITS, RANDOM_STATE
 from ml.benchmark_gen3_real_augmented import load_real_telemetry
-from ml.canonical import canonical_request
+from ml.canonical import canonical_features
 from ml.download_dataset import download_csic_dataset
 from ml.feature_engineering import EXTENDED_FEATURE_COLUMNS, extract_features_from_request
 from ml.hybrid_model import (
@@ -311,7 +311,7 @@ def _build_cache_key():
     h = hashlib.sha256()
     for fn in (_build_full_real_dataset_uncached, near_duplicate_group, _value_shape, load_jsonl_source, request_text,
                exclude_contradicted_benign,
-               request_units, canonical_request,
+               request_units, canonical_features,
                _group_sampled, load_real_nginx_benign):
         h.update(inspect.getsource(fn).encode())
     code = [os.path.join(ML_DIR, f) for f in ("feature_engineering.py", "benchmark_real_holdout.py", "benchmark_gen3_real_augmented.py",
@@ -444,10 +444,11 @@ def _build_full_real_dataset_uncached():
     t0 = time.time()
     # Features (structural and per-unit) come from the canonical request, exactly as
     # in serving (ml/gen3_model.request_features); dedup and grouping above use raw.
-    canon = [canonical_request(r["URI"], r["GET-Query"], r["POST-Data"]) for _, r in df_clean.iterrows()]
-    for (uri, query, body), method in zip(canon, df_clean["Method"]):
-        full_url = f"{uri}?{query}" if query else uri
-        features_list.append(extract_features_from_request(url=full_url, method=method or "GET", body=body))
+    canon = []
+    for _, r in df_clean.iterrows():
+        feats, c = canonical_features(r["Method"] or "GET", r["URI"], r["GET-Query"], r["POST-Data"])
+        features_list.append(feats)
+        canon.append(c)
 
     print(f"[+] Feature Extraction completed in {time.time() - t0:.2f}s")
     X = pd.DataFrame(features_list)[EXTENDED_FEATURE_COLUMNS]

@@ -6,7 +6,8 @@ from urllib.parse import parse_qsl
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ml.canonical import canonical_body, canonical_path, canonical_query, canonical_request, reveal_base64
+from ml.canonical import (canonical_body, canonical_features, canonical_path, canonical_query, canonical_request,
+                          raw_encoding_features, reveal_base64)
 from ml.gen3_model import FEATURE_SET_F, request_features
 
 SQLI = "1' UNION SELECT username,password FROM users--"
@@ -62,6 +63,15 @@ class CanonicalFormTests(unittest.TestCase):
         p = canonical_path(f"/files/{seg}/view")
         self.assertIn("..%2F..%2F", p)
         self.assertEqual(canonical_path("/static/app.js"), "/static/app.js")
+
+    def test_encoding_features_come_from_the_raw_request_without_space_encoding(self):
+        self.assertEqual(raw_encoding_features("/s?q=hello%20world", "")["encoded_char_ratio"], 0)
+        self.assertEqual(raw_encoding_features("/s?q=1%27%20or%201", "")["encoded_attack_token_count"], 1)
+        self.assertEqual(raw_encoding_features("/s?q=%2527", "")["double_encoded_count"], 1)
+        # canonical content, raw encoding: %53%45%4C%45%43%54 is visible as SELECT AND still counted as encoded
+        feats, (_, q, _) = canonical_features("GET", "/s", "q=%53%45%4C%45%43%54", "")
+        self.assertEqual(q, "q=SELECT")
+        self.assertGreater(feats["encoded_char_ratio"], 0)
 
     def test_idempotent(self):
         for path, query, body in [("/a", "q=hello%20world&x=%2527", '{"k": "v v"}'),

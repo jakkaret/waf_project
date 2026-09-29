@@ -134,9 +134,10 @@ F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen
   1. query/form: decode 1 ชั้น แล้ว escape เฉพาะตัวคั่น (`%2527` ยังอยู่, `%20` → `+`)
   2. JSON/multipart → form `k=v` (ไฟล์ binary ตัดทิ้ง เก็บชื่อฟิลด์)
   3. Base64 → decode เฉพาะเมื่อผลลัพธ์ทำให้ detector ทำงาน (JWT/token ไม่ถูกแตะ)
+- ฟีเจอร์ encode 3 ตัว (encoded_char_ratio, double_encoded_count, encoded_attack_token_count) คำนวณจาก **raw** ไม่นับ `%20` (hybrid): CSIC-only 5-fold raw 60.5% / canonical ล้วน 56.0% / **hybrid 60.5%**; FP ของ GoTestWAF (ทิศทาง) raw 18 / canonical 3 / hybrid 6
 - `FEATURE_SET_VERSION = gen3-F-2026-09-29-canon` → โมเดลเก่า (raw) ถูกปฏิเสธโดยโค้ดใหม่
 - promotion gate รวมเฉพาะรายงานที่ `feature_extraction` ตรงกัน (ไม่ปน raw กับ canonical)
-- ผลเบื้องต้น (โมเดลเก่า + ฟีเจอร์ใหม่ = ดูทิศทางเท่านั้น): JSON/multipart 0.993, Base64 0.982; FP 18 → 3
+- ผลเบื้องต้น (โมเดลเก่า + ฟีเจอร์ hybrid = ดูทิศทางเท่านั้น): JSON/multipart 0.993, Base64 0.982; FP 18 → 6
 - **ขั้นต่อไป:** Colab Run all (`EXPERIMENT_MODE="full"`, config F) → gate ของ F-canonical + โมเดลใหม่
   → รัน GoTestWAF/sqlmap/Nuclei ซ้ำ → เทียบก่อน/หลังในคู่มือ
 

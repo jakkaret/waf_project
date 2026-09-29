@@ -17,8 +17,8 @@ from urllib.parse import urlsplit
 
 import numpy as np
 
-from ml.canonical import canonical_request
-from ml.feature_engineering import EXTENDED_FEATURE_COLUMNS, extract_features_from_request
+from ml.canonical import canonical_features
+from ml.feature_engineering import EXTENDED_FEATURE_COLUMNS
 from ml.value_features import VALUE_FEATURE_COLUMNS, extract_value_features
 
 # Request-shape features dropped from F (dataset fingerprints; query_body_entropy
@@ -37,9 +37,7 @@ FEATURE_SET_VERSION = "gen3-F-2026-09-29-canon"
 def request_features(method="GET", url="/", body=""):
     """All F features of one request, as {name: value}, from its canonical form."""
     parts = urlsplit(url)
-    path, query, body = canonical_request(parts.path or "/", parts.query, body)
-    canon_url = f"{path}?{query}" if query else path
-    feats = extract_features_from_request(url=canon_url, method=method, body=body)
+    feats, (path, query, body) = canonical_features(method, parts.path or "/", parts.query, body)
     feats.update(extract_value_features(method, path, query, body))
     return feats
 

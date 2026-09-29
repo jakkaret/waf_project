@@ -29,6 +29,13 @@ pipeline, before any feature is computed:
 
 Everything else (method, other body types) passes through unchanged. The
 function must stay deterministic and cheap: it runs on every request.
+
+The three encoding features (encoded_char_ratio, double_encoded_count,
+encoded_attack_token_count) are the exception: they describe HOW the client
+encoded the request, so canonical_features() takes them from the raw request,
+with "%20" ignored. Encoding ordinary characters can hide a payload (and CSIC's
+parameter-tampering attacks lean on it: CSIC-only recall 60.5% with it, 56.0%
+without); encoding a space is what every client does.
 """
 
 import base64
@@ -37,9 +44,12 @@ import json
 import re
 from urllib.parse import parse_qsl, unquote_plus
 
+from ml.feature_engineering import ENCODED_ATTACK_TOKEN_PATTERN, ENCODED_BYTE_PATTERN, extract_features_from_request
 from ml.value_features import is_binary, normalize_unit, unit_hits
 
 MAX_PAIRS = 256
+_SPACE_ENCODING = re.compile(r"%20", re.I)
+_DOUBLE_ENCODED = re.compile(r"%25[0-9a-fA-F]{2}")
 MAX_VALUE = 8192
 _B64 = re.compile(r"[A-Za-z0-9+/_-]{12,}={0,2}")
 _MULTIPART_NAME = re.compile(r'name="([^"]*)"', re.I)
@@ -163,3 +173,26 @@ def canonical_path(path):
 def canonical_request(path, query, body):
     """(path, query, body) in canonical form; see the module docstring."""
     return canonical_path(path), canonical_query(query or ""), canonical_body(body)
+
+
+def raw_encoding_features(url, body):
+    """The encoding features of the raw request, space encoding ignored."""
+    src = _SPACE_ENCODING.sub("", f"{url} {body or ''}")
+    return {"encoded_char_ratio": round(len(ENCODED_BYTE_PATTERN.findall(src)) / max(len(src), 1), 4),
+            "double_encoded_count": len(_DOUBLE_ENCODED.findall(src)),
+            "encoded_attack_token_count": len(ENCODED_ATTACK_TOKEN_PATTERN.findall(src))}
+
+
+def canonical_features(method, path, query, body):
+    """(structural features, canonical (path, query, body)) for one request.
+
+    The single place both the trainer and serving compute the structural
+    features: content from the canonical request, encoding from the raw one.
+    """
+    path = str(path or "/")
+    query, body = str(query or ""), str(body or "")
+    cpath, cquery, cbody = canonical_request(path, query, body)
+    feats = extract_features_from_request(url=f"{cpath}?{cquery}" if cquery else cpath,
+                                          method=method or "GET", body=cbody)
+    feats.update(raw_encoding_features(f"{path}?{query}" if query else path, body))
+    return feats, (cpath, cquery, cbody)
