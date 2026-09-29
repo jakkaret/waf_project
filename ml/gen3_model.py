@@ -29,9 +29,13 @@ F_DROPPED_CONTEXT_COLUMNS = ["url_path_entropy", "avg_param_length", "max_param_
 FEATURE_SET_F = ([c for c in EXTENDED_FEATURE_COLUMNS if c not in F_DROPPED_CONTEXT_COLUMNS + ["query_body_entropy"]]
                  + VALUE_FEATURE_COLUMNS + ["query_body_entropy"])
 # "-canon": features are computed on the canonical request (ml/canonical.py).
-# A model trained on the raw form (gen3-F-2026-09-28) must not be served with
-# this code: Gen3FModel / Gen3OnnxModel refuse a different version.
-FEATURE_SET_VERSION = "gen3-F-2026-09-29-canon"
+# A model trained on another extraction must not be served with this code:
+# Gen3FModel / Gen3OnnxModel refuse a different version.
+#   gen3-F-2026-09-28        raw request
+#   gen3-F-2026-09-29-canon  canonical, JSON leaves keyed by leaf name (lost the
+#                            parent field: {"user":{"$ne":""}} -> "$ne=")
+#   gen3-F-2026-09-29-canon2 canonical, JSON leaves keyed by bracket path, null kept
+FEATURE_SET_VERSION = "gen3-F-2026-09-29-canon2"
 
 
 def request_features(method="GET", url="/", body=""):

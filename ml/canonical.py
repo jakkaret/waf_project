@@ -85,15 +85,21 @@ def reveal_base64(value):
 
 
 def _json_pairs(obj, key, out):
+    """Scalar leaves as (bracket path, value): {"user": {"$ne": ""}} -> ("user[$ne]", "").
+
+    The bracket path is how a form body carries nested fields (qs / PHP), so a JSON
+    NoSQL injection reads exactly like its form-encoded twin; keeping only the leaf
+    key would turn it into "$ne=" and hide the field it targets. null stays "null".
+    """
     if len(out) >= MAX_PAIRS:
         return
     if isinstance(obj, dict):
         for k, v in obj.items():
-            _json_pairs(v, str(k), out)
+            _json_pairs(v, f"{key}[{k}]" if key else str(k), out)
     elif isinstance(obj, list):
         for v in obj:
             _json_pairs(v, key, out)
-    elif obj is not None:
+    else:
         out.append((key, obj if isinstance(obj, str) else json.dumps(obj)))
 
 

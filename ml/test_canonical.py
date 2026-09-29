@@ -25,9 +25,16 @@ class CanonicalFormTests(unittest.TestCase):
         b = request_features("POST", "/api", '{"id": "' + SQLI + '"}')
         self.assertEqual({c: a[c] for c in FEATURE_SET_F}, {c: b[c] for c in FEATURE_SET_F})
 
-    def test_nested_json_keeps_leaf_keys_and_scalars(self):
+    def test_nested_json_uses_bracket_paths_and_keeps_null(self):
         body = canonical_body('{"user": {"name": "a b", "tags": ["x", "y"], "age": 3, "ok": true, "n": null}}')
-        self.assertEqual(parse_qsl(body), [("name", "a b"), ("tags", "x"), ("tags", "y"), ("age", "3"), ("ok", "true")])
+        self.assertEqual(parse_qsl(body, keep_blank_values=True),
+                         [("user[name]", "a b"), ("user[tags]", "x"), ("user[tags]", "y"), ("user[age]", "3"),
+                          ("user[ok]", "true"), ("user[n]", "null")])
+
+    def test_json_nosql_injection_reads_like_its_form_twin(self):
+        json_body = '{"username":{"$ne":""},"password":{"$ne":null}}'
+        self.assertEqual(canonical_body(json_body), "username[$ne]=&password[$ne]=null")
+        self.assertEqual(canonical_body("username[$ne]=&password[$ne]=null"), canonical_body(json_body))
 
     def test_base64_revealed_only_when_it_hides_an_attack(self):
         hidden = base64.b64encode(SQLI.encode()).decode()
