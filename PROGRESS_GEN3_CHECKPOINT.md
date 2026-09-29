@@ -159,6 +159,16 @@ F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen
   - CSIC-only 5-fold: ครบ 60.5% / ตัด `encoded_char_ratio` **59.4%** / ตัด encode ทั้ง 3 ตัว 54.6%
 - **Colab รอบถัดไป:** config F กับ F_noenc (gate) + โมเดลสุดท้าย `F` และ `F-noenc` → วัด GoTestWAF ทั้งสองตัวแล้วเลือก
 
+### ✅ ผลรอบ canon2 + F-noenc (Colab 29/09 19:40, ทดสอบเครื่องมือ 20:30)
+- Gate: F-canon2 G1 98.35 ❌ (ขอบ threshold) / G2 83.70 / G3 63.92 / G4 42.6 / G5 ✅
+- Gate: F-noenc G1 98.38 ❌ / G2 83.05 / G3 **67.52** / G4 43.0 / G5 ✅
+- โมเดลสุดท้าย (threshold / OOF F1 รวม / scenario): F 0.8286 / 96.55% / 23/26; F-noenc 0.7921 / 96.38% / 23/26
+- NoSQL (JSON) กลับมาบล็อกได้ทั้งสองรุ่น (0.973 / 0.982)
+- GoTestWAF attack/FP: F 53.0/21.3%, F-noenc 60.4/32.6%; ปกติแบบ browser จริง F 9.2%, F-noenc 10.6%
+- **เลือก F-canon2** (FP ต่ำกว่าชัดเจน, sqlmap 95.0 vs 94.3) — F-noenc ไม่ใช้; รายละเอียด `ml/security_test/RESULTS_20260929.md`
+- ไฟล์ในเครื่อง: `ml/models/gen3/gen3_f.onnx` (F-canon2), `gen3_f_noenc.onnx`
+  - `gen3_f_model.onnx` เดิมเป็นรุ่น canon ที่โค้ดปัจจุบันปฏิเสธแล้ว
+
 ### 📋 Plan ที่ตกลงไว้ — ยังไม่ทำ (ทำใน repo ก่อน, ขึ้น VPS ต้องได้รับอนุมัติ)
 1. **ModSecurity custom rule: รายชื่อ path สแกนเนอร์ แยกตาม origin**
    - path เช่น `/wp-admin`, `/wp-login.php`, `/xmlrpc.php`, `/phpmyadmin`, `/pma`, `/actuator`, `/server-status`, `/cgi-bin/`
