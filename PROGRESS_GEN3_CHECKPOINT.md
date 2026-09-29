@@ -122,6 +122,24 @@ F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen
   - ~60% ของ attack เป็น parameter tampering (`loginA=`, `cantidadA=`, `dni=75B1383B04H`) ที่ผิดเฉพาะกับ schema ของแอป `tienda1` ได้ recall ~37%
   - ต้องใช้ positive model ต่อ endpoint ไม่ใช่โมเดลแบบทั่วไป
 
+### 🔧 Canonical request form (29/09 บ่าย) — รอเทรนบน Colab
+ที่มา: ทดสอบด้วย GoTestWAF/sqlmap/Nuclei (`ml/security_test/RESULTS_20260929.md`)
+- SQLi เดียวกัน: form 0.993 / JSON 0.215 / multipart 0.339 / Base64 0.001
+  - JSON/multipart: libinjection จับได้ แต่อักขระโครงสร้าง `{"":""}` ทำให้ฟีเจอร์โครงสร้างดูเหมือน benign
+    (ใน training JSON ส่วนใหญ่เป็น benign = ลายนิ้วมือ dataset)
+  - Base64: detector มองไม่เห็นเลย
+- False positive 18/141 ของ GoTestWAF: ไม่มี detector จับเลย คะแนนมาจาก entropy + `%20` ที่นับเป็น encoded byte
+  (ข้อความภาษาธรรมชาติในฟอร์มแทบไม่มีใน benign training data)
+- แก้: `ml/canonical.py` ใช้ทั้งตอนเทรน (builder) และตอนใช้งาน (`request_features`)
+  1. query/form: decode 1 ชั้น แล้ว escape เฉพาะตัวคั่น (`%2527` ยังอยู่, `%20` → `+`)
+  2. JSON/multipart → form `k=v` (ไฟล์ binary ตัดทิ้ง เก็บชื่อฟิลด์)
+  3. Base64 → decode เฉพาะเมื่อผลลัพธ์ทำให้ detector ทำงาน (JWT/token ไม่ถูกแตะ)
+- `FEATURE_SET_VERSION = gen3-F-2026-09-29-canon` → โมเดลเก่า (raw) ถูกปฏิเสธโดยโค้ดใหม่
+- promotion gate รวมเฉพาะรายงานที่ `feature_extraction` ตรงกัน (ไม่ปน raw กับ canonical)
+- ผลเบื้องต้น (โมเดลเก่า + ฟีเจอร์ใหม่ = ดูทิศทางเท่านั้น): JSON/multipart 0.993, Base64 0.982; FP 18 → 3
+- **ขั้นต่อไป:** Colab Run all (`EXPERIMENT_MODE="full"`, config F) → gate ของ F-canonical + โมเดลใหม่
+  → รัน GoTestWAF/sqlmap/Nuclei ซ้ำ → เทียบก่อน/หลังในคู่มือ
+
 ### 📋 Plan ที่ตกลงไว้ — ยังไม่ทำ (ทำใน repo ก่อน, ขึ้น VPS ต้องได้รับอนุมัติ)
 1. **ModSecurity custom rule: รายชื่อ path สแกนเนอร์ แยกตาม origin**
    - path เช่น `/wp-admin`, `/wp-login.php`, `/xmlrpc.php`, `/phpmyadmin`, `/pma`, `/actuator`, `/server-status`, `/cgi-bin/`

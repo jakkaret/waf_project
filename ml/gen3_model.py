@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 
 import numpy as np
 
+from ml.canonical import canonical_request
 from ml.feature_engineering import EXTENDED_FEATURE_COLUMNS, extract_features_from_request
 from ml.value_features import VALUE_FEATURE_COLUMNS, extract_value_features
 
@@ -27,14 +28,19 @@ F_DROPPED_CONTEXT_COLUMNS = ["url_path_entropy", "avg_param_length", "max_param_
 # E_plus_query_body_entropy configuration.
 FEATURE_SET_F = ([c for c in EXTENDED_FEATURE_COLUMNS if c not in F_DROPPED_CONTEXT_COLUMNS + ["query_body_entropy"]]
                  + VALUE_FEATURE_COLUMNS + ["query_body_entropy"])
-FEATURE_SET_VERSION = "gen3-F-2026-09-28"
+# "-canon": features are computed on the canonical request (ml/canonical.py).
+# A model trained on the raw form (gen3-F-2026-09-28) must not be served with
+# this code: Gen3FModel / Gen3OnnxModel refuse a different version.
+FEATURE_SET_VERSION = "gen3-F-2026-09-29-canon"
 
 
 def request_features(method="GET", url="/", body=""):
-    """All F features of one request, as {name: value}."""
+    """All F features of one request, as {name: value}, from its canonical form."""
     parts = urlsplit(url)
-    feats = extract_features_from_request(url=url, method=method, body=body)
-    feats.update(extract_value_features(method, parts.path or "/", parts.query, body))
+    path, query, body = canonical_request(parts.path or "/", parts.query, body)
+    canon_url = f"{path}?{query}" if query else path
+    feats = extract_features_from_request(url=canon_url, method=method, body=body)
+    feats.update(extract_value_features(method, path, query, body))
     return feats
 
 

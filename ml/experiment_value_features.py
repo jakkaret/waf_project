@@ -61,6 +61,7 @@ from ml.train_gen3_full_real_benchmark import (  # noqa: E402
     ARCHIVE_DIR, BUILD_CACHE_DIR, CORE_SOURCES, LGBM_PARAMS, _build_cache_key, _sha256_file,
     build_full_real_dataset, choose_threshold_weighted, group_folds, weighted_recalls,
 )
+from ml.gen3_model import FEATURE_SET_VERSION  # noqa: E402
 from ml.promotion_gate import dataset_of, evaluate as evaluate_gate, format_gate  # noqa: E402
 from ml.value_features import (  # noqa: E402
     VALUE_FEATURE_COLUMNS, VALUE_MONOTONE_COLUMNS, extract_value_features, extract_value_features_from_units,
@@ -299,6 +300,7 @@ def main():
         stress_sets.append(build_stress_set(set(meta.iloc[hold]["Group"]))[:3])
 
     report = {"params_from": params_from, "sources": sorted(meta["Source"].unique()),
+              "feature_extraction": FEATURE_SET_VERSION,
               "core_sources_present": sorted(set(CORE_SOURCES) & set(meta["Source"])), "holdout_folds": len(splits),
               "integrity": {k: integrity[k] for k in ("total_unique_samples", "effective_distinct_shapes",
                                                       "unique_rows_by_source")},

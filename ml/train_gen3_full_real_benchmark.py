@@ -51,6 +51,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from ml.benchmark_real_holdout import load_real_csic_dataset, MIN_BENIGN_RECALL, MIN_ATTACK_RECALL, N_SPLITS, RANDOM_STATE
 from ml.benchmark_gen3_real_augmented import load_real_telemetry
+from ml.canonical import canonical_request
 from ml.download_dataset import download_csic_dataset
 from ml.feature_engineering import EXTENDED_FEATURE_COLUMNS, extract_features_from_request
 from ml.hybrid_model import (
@@ -310,11 +311,11 @@ def _build_cache_key():
     h = hashlib.sha256()
     for fn in (_build_full_real_dataset_uncached, near_duplicate_group, _value_shape, load_jsonl_source, request_text,
                exclude_contradicted_benign,
-               request_units,
+               request_units, canonical_request,
                _group_sampled, load_real_nginx_benign):
         h.update(inspect.getsource(fn).encode())
     code = [os.path.join(ML_DIR, f) for f in ("feature_engineering.py", "benchmark_real_holdout.py", "benchmark_gen3_real_augmented.py",
-                                              "value_features.py")]
+                                              "value_features.py", "canonical.py")]
     data = [CSIC_PATH, VPS_AUDIT_PATH, NGINX_BENIGN_PATH, *EXTERNAL_SOURCES.values()] + sorted(glob.glob(os.path.join(TELEMETRY_DIR, "*.jsonl")))
     for path in code + data:
         if os.path.exists(path):
@@ -441,10 +442,12 @@ def _build_full_real_dataset_uncached():
     print(f"\n[*] Extracting {len(EXTENDED_FEATURE_COLUMNS)} features for all {len(df_clean)} real samples...")
     features_list = []
     t0 = time.time()
-    for _, row in df_clean.iterrows():
-        uri, query, body, method = row["URI"], row["GET-Query"], row["POST-Data"], row["Method"] or "GET"
+    # Features (structural and per-unit) come from the canonical request, exactly as
+    # in serving (ml/gen3_model.request_features); dedup and grouping above use raw.
+    canon = [canonical_request(r["URI"], r["GET-Query"], r["POST-Data"]) for _, r in df_clean.iterrows()]
+    for (uri, query, body), method in zip(canon, df_clean["Method"]):
         full_url = f"{uri}?{query}" if query else uri
-        features_list.append(extract_features_from_request(url=full_url, method=method, body=body))
+        features_list.append(extract_features_from_request(url=full_url, method=method or "GET", body=body))
 
     print(f"[+] Feature Extraction completed in {time.time() - t0:.2f}s")
     X = pd.DataFrame(features_list)[EXTENDED_FEATURE_COLUMNS]
@@ -452,7 +455,7 @@ def _build_full_real_dataset_uncached():
     meta = pd.DataFrame({
         "Source": df_clean["Source"],
         "Family": df_clean["Family"],
-        "URI": df_clean["URI"],
+        "URI": [c[0] for c in canon],
         "Group": groups,
         "Weight": weights,
         # Folds are stratified on label x source so every fold (and the
@@ -461,7 +464,7 @@ def _build_full_real_dataset_uncached():
         # Normalised request text for content (token) models; not a model feature here.
         "Text": [request_text(r["Method"], r["URI"], r["GET-Query"], r["POST-Data"]) for _, r in df_clean.iterrows()],
         # Context-free units (path segments, param names/values, JSON leaves) for per-unit max-pooling models
-        "Units": [request_units(r["Method"], r["URI"], r["GET-Query"], r["POST-Data"]) for _, r in df_clean.iterrows()],
+        "Units": [request_units(m, u, q, b) for (u, q, b), m in zip(canon, df_clean["Method"])],
     })
 
     per_source = pd.crosstab(meta["Source"], y).rename(columns={0: "benign", 1: "attack"})

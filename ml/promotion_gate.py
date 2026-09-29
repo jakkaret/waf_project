@@ -146,15 +146,17 @@ def _load(path):
 def evaluate_reports(paths, configs=None):
     """Gate per configuration from one or more experiment_value_features reports.
 
-    Only reports over the same sources as the newest one are combined; for each
-    configuration the newest report with holdout folds supplies G1/G2/G5 and the
-    newest with exact leave-one-dataset-out results supplies G3/G4.
+    Only reports over the same sources and the same feature extraction as the
+    newest one are combined (a report without "feature_extraction" predates the
+    canonical request form); for each configuration the newest report with
+    holdout folds supplies G1/G2/G5 and the newest with exact
+    leave-one-dataset-out results supplies G3/G4.
     """
     reps = [(p, r) for p in sorted(paths, key=os.path.getmtime) if (r := _load(p)) is not None]
     if not reps:
         return {}
-    sources = reps[-1][1].get("sources")
-    reps = [(p, r) for p, r in reps if r.get("sources") == sources]
+    sources, extraction = reps[-1][1].get("sources"), reps[-1][1].get("feature_extraction")
+    reps = [(p, r) for p, r in reps if r.get("sources") == sources and r.get("feature_extraction") == extraction]
     names = configs or sorted({n for _, r in reps for n in r["configs"]})
     out = {}
     for name in names:
@@ -168,6 +170,7 @@ def evaluate_reports(paths, configs=None):
             continue
         gate = evaluate(folds_src[1], lofo_src[1])
         gate["sources"] = sources
+        gate["feature_extraction"] = extraction
         gate["from_reports"] = {"holdout_folds": folds_src[0], "leave_one_dataset_out": lofo_src[0]}
         out[name] = gate
     return out

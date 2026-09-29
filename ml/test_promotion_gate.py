@@ -99,6 +99,28 @@ class PromotionGateTests(unittest.TestCase):
             self.assertEqual(res["F"]["from_reports"], {"holdout_folds": None, "leave_one_dataset_out": newer})
             self.assertFalse(res["F"]["complete"])
 
+    def test_reports_from_another_feature_extraction_are_not_mixed(self):
+        with tempfile.TemporaryDirectory() as d:
+            srcs = ["CSIC_2010_Cleaned", "OpenAppSec_Legitimate", "OpenAppSec_Malicious", "SRBH2020_Honeypot"]
+
+            def write(name, report):
+                path = os.path.join(d, name)
+                with open(path, "w", encoding="utf-8") as f:
+                    json.dump(report, f)
+                time.sleep(0.02)
+                return path
+
+            # raw-era report (no feature_extraction key) with complete holdout folds ...
+            raw = write("raw.json", {"sources": srcs, "configs": {"F": {"folds": [_fold(GOOD_SOURCES)] * 3,
+                                                                          "leave_one_dataset_out": GOOD_LOFO}}})
+            # ... must not complete a newer canonical report that only has LOFO
+            canon = write("canon.json", {"sources": srcs, "feature_extraction": "gen3-F-2026-09-29-canon",
+                                         "configs": {"F": {"folds": [], "leave_one_dataset_out": GOOD_LOFO}}})
+            res = evaluate_reports([raw, canon])
+            self.assertEqual(res["F"]["from_reports"], {"holdout_folds": None, "leave_one_dataset_out": canon})
+            self.assertEqual(res["F"]["feature_extraction"], "gen3-F-2026-09-29-canon")
+            self.assertFalse(res["F"]["complete"])
+
 
 if __name__ == "__main__":
     unittest.main()
