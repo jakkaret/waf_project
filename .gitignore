@@ -55,6 +55,11 @@ reports/vuln-scan/
 # GeoIP database: an 8 MB monthly download (scripts/update_geoip.py), not source
 dashboard/backend/data/geoip/
 
+# docs site build (docs/site): generated outputs and the node_modules link
+docs/node_modules
+docs/diagrams/rendered/
+docs/site/.vitepress/cache/
+
 # Generated at runtime by dashboard/backend/services/managed_ruleset.py and
 # tenant_rules.py -- tenant rules are customer data (and this repo is public),
 # the catalog is the published-version ledger. Source of truth for managed
