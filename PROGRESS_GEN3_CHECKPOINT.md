@@ -96,6 +96,44 @@ F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen
 - ถ้า restart หรือ reboot `waf-ml` จะโหลดโมเดลไม่ขึ้น (ไม่ได้แก้อะไรบน VPS)
 - สถานะ: **ไม่ผ่าน promotion gate (3/5)** → ใช้เดโม / shadow เท่านั้น ห้าม enforce
 
+### ผลโมเดลจริง (Colab 29/09 03:53 UTC, archive `gen3-final-f-20260929-035343`, public data เท่านั้น)
+- threshold 0.8035 (กำหนดโดย benign 99% ของ CSIC)
+- ONNX parity 6.2e-7, latency p50 0.44 ms (ONNX)
+- Scenario: normal ผ่าน 37/37, attack บล็อก 23/26
+  - พลาด: WordPress admin, phpMyAdmin, Spring actuator probe (คะแนน 0.0772 เท่ากับ Homepage)
+  - Precision 100% / Recall 88.46% / F1 93.88%
+- Out-of-fold (attack = positive, group-weighted):
+
+| Dataset | Precision | Recall | F1 | Benign ผ่าน |
+|---|---|---|---|---|
+| รวม | 99.83% | 93.58% | 96.60% | – |
+| OpenAppSec | 99.87% | 96.52% | 98.17% | 99.95% |
+| SR-BH 2020 | 99.85% | 96.18% | 97.98% | 99.79% |
+| CSIC 2010 | 99.08% | 55.95% | 71.51% | 99.01% |
+
+- G2-style (ค่าเฉลี่ย known attack) = 82.88% ต่ำกว่าเกณฑ์ 85% → ยังไม่ promote
+
+### ทำไม CSIC recall ต่ำ (วิเคราะห์ 29/09, อ่านอย่างเดียว, เทรน CSIC อย่างเดียว 5-fold OOF)
+- **ไม่ใช่ threshold:** threshold มาจาก benign ของ CSIC เอง (binding)
+- **ไม่ใช่การเทรนรวม:** เทรน CSIC อย่างเดียวได้ 60.5% เทียบกับเทรนรวม 56.0%
+- **ไม่ใช่ฟีเจอร์ที่ตัดออก:** F + 5 context features ได้ 59.4%, ชุด A (36 ฟีเจอร์) ได้ 59.0%
+- **สาเหตุจริง:** attack ของ CSIC ที่มี detector hit มีแค่ 23.3% แต่กลุ่มนั้นจับได้ 99.8%
+  - ประเภทที่มี payload โจมตีจริงได้ recall 93.9% และ probe ไฟล์ได้ 100%
+  - ~60% ของ attack เป็น parameter tampering (`loginA=`, `cantidadA=`, `dni=75B1383B04H`) ที่ผิดเฉพาะกับ schema ของแอป `tienda1` ได้ recall ~37%
+  - ต้องใช้ positive model ต่อ endpoint ไม่ใช่โมเดลแบบทั่วไป
+
+### 📋 Plan ที่ตกลงไว้ — ยังไม่ทำ (ทำใน repo ก่อน, ขึ้น VPS ต้องได้รับอนุมัติ)
+1. **ModSecurity custom rule: รายชื่อ path สแกนเนอร์ แยกตาม origin**
+   - path เช่น `/wp-admin`, `/wp-login.php`, `/xmlrpc.php`, `/phpmyadmin`, `/pma`, `/actuator`, `/server-status`, `/cgi-bin/`
+   - บล็อกเฉพาะ origin ที่ไม่ได้ใช้เทคโนโลยีนั้น (ตัวเลือกต่อ origin, ต่อจากแท็บ WAF Rules)
+   - ไม่แก้โมเดล
+2. **Shield / rate limit: 404 ถี่ต่อ IP** (nginx `auth_request /internal-shield-check` + backend + Redis)
+   - เช่น 404 เกิน N ครั้งต่อนาที → challenge หรือ block IP ชั่วคราว
+   - ไม่ทำใน ModSecurity เพราะ collection ต่อ IP ใน v3 รองรับจำกัด
+3. **รายงานผล 2 ระดับ:** "ML อย่างเดียว" (scenario 23/26) และ "WAF ทั้งระบบ" (ยิงทดสอบผ่าน nginx จริง)
+4. (ภายหลัง) positive model ต่อ endpoint เพื่อจับ parameter tampering แบบ CSIC ต้องใช้ traffic จริงของแต่ละ origin
+5. (รอตัดสินใจ) รายงาน CSIC แยก "มีสัญญาณโจมตี" กับ "parameter tampering" — ถ้าจะเปลี่ยนเกณฑ์ G2 ต้องได้รับอนุมัติก่อน
+
 ### งานถัดไป (เดิม — ทำแล้ว)
 1. ~~**รัน Colab โหมด `EXPERIMENT_MODE = "full"`**~~ (รอบที่ 5) (ค่าตั้งต้น, ~1 ชม.) — ได้ G1–G5 ของทุก config จากรายงานเดียวที่ใช้โค้ดสุดท้ายทั้งหมด (threshold แบบ exact ทั้ง holdout และ LOFO). โหมด `"gate"` ใช้ไม่ได้ในรอบนี้เพราะ Drive มีแต่ LOFO แบบ grid (รายงานรอบที่ 4 ไม่ถูกคัดลอกลง Drive เพราะ cell สรุปเดิม error ก่อนถึง cell zip)
 2. ใช้ชุด F เป็นชุดฟีเจอร์หลักของตัวเทรน + รายงาน gate v2 แล้วรวมกับ unit (MIL) model เพื่อปิดช่องว่าง G3 (61 → 70%)
