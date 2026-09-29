@@ -55,3 +55,8 @@ ml/models/random_forest_waf.onnx
 ml/models/onnx_manifest.json
 ml/models/archive/**/*.onnx
 ml/onnx_export.py.orig
+
+# security test artifacts (local traffic, do not commit)
+ml/security_test/reports/
+ml/security_test/decisions.jsonl
+ml/security_test/results.json
