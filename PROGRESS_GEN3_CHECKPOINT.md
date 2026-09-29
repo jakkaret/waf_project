@@ -3,6 +3,13 @@
 **Branch:** `trainmodelgen3`  
 **Status:** ⏸️ **Value features (detector ระดับค่า) ช่วยได้จริง; ฟีเจอร์บริบทคือต้นเหตุที่โมเดลไม่ทนต่อ source ใหม่ — รอรันแบบ E + ablation บน Colab**
 
+### 📚 เอกสารสรุปผลและนำเสนอ (อัปเดต 29/09/2026, รุ่น F-canon2)
+| เอกสาร | ลิงก์ | การเข้าถึง |
+| :--- | :--- | :--- |
+| คู่มือ WAF Gen 3 (อ่านทำความเข้าใจ + คำถามกรรมการ) | https://claude.ai/artifact/326kranMWeArKGfG7Wanxt | public (ใครมีลิงก์เปิดได้) |
+| สไลด์นำเสนอ WAF Gen 3 ML Results (13 หน้า, ดาวน์โหลด .pptx/PDF ได้) | https://claude.ai/artifact/GgK8Ss99hX4ps3ZEkbGPRg | private (ต้องแชร์ก่อน) |
+| ผลทดสอบด้วยเครื่องมือ (GoTestWAF / sqlmap / Nuclei) | [`ml/security_test/RESULTS_20260929.md`](ml/security_test/RESULTS_20260929.md) | ใน repo |
+
 ---
 
 ## 📍 จุดที่พักงานล่าสุด (28/09/2026 16:45)
