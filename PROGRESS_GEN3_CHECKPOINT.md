@@ -141,6 +141,24 @@ F ราย dataset — known: CSIC 56.7 / open-appsec 98.0 / SR-BH 96.2; unseen
 - **ขั้นต่อไป:** Colab Run all (`EXPERIMENT_MODE="full"`, config F) → gate ของ F-canonical + โมเดลใหม่
   → รัน GoTestWAF/sqlmap/Nuclei ซ้ำ → เทียบก่อน/หลังในคู่มือ
 
+### 🧪 ผลโมเดล canon (Colab 29/09 14:35, `gen3-final-f-20260929-073524`) และขั้นต่อไป
+- Gate v2 ของ F-canonical:
+  - G1 98.77 ✅ / G2 83.54 ❌ / G4 42.6 ✅ / G5 ✅
+  - **G3 65.72 ❌ (+4.6 จาก 61.1; SR-BH unseen 64.3 → 76.0)**
+  - ผ่าน 3/5 เท่าเดิม
+- เครื่องมือ (ก่อน → หลัง):
+  - GoTestWAF: attack 31.3% → **53.3%**, FP 12.8% → **20.6%**
+  - sqlmap payload 99.5% → 98.9%
+  - Nuclei 3.8% → 3.7%
+- Scenario 22/26: NoSQL (JSON) หลุด เพราะ canonical ทิ้ง key แม่ (`$ne=`)
+  - แก้เป็น bracket path (`username[$ne]=`) = `canon2`
+- FP ของ GoTestWAF **ไม่ได้มาจากฟีเจอร์ keyword** (พิสูจน์ด้วย perturbation):
+  - ชุด benign ของ GoTestWAF ใช้ encoder URL (PathEscape) อย่างเดียว → query/form ถูก encode 2 ชั้น, multipart มี `%20` ค้าง
+  - 47 ประโยคเดียวกันส่งแบบ browser จริง: FP 22.0% → **9.9%** (multipart 21 → 0)
+  - ที่เหลือเป็นข้อความสั้นมีเครื่องหมาย (`D'or`, `h2<h1`); ตัวขับหลัก = `encoded_char_ratio`
+  - CSIC-only 5-fold: ครบ 60.5% / ตัด `encoded_char_ratio` **59.4%** / ตัด encode ทั้ง 3 ตัว 54.6%
+- **Colab รอบถัดไป:** config F กับ F_noenc (gate) + โมเดลสุดท้าย `F` และ `F-noenc` → วัด GoTestWAF ทั้งสองตัวแล้วเลือก
+
 ### 📋 Plan ที่ตกลงไว้ — ยังไม่ทำ (ทำใน repo ก่อน, ขึ้น VPS ต้องได้รับอนุมัติ)
 1. **ModSecurity custom rule: รายชื่อ path สแกนเนอร์ แยกตาม origin**
    - path เช่น `/wp-admin`, `/wp-login.php`, `/xmlrpc.php`, `/phpmyadmin`, `/pma`, `/actuator`, `/server-status`, `/cgi-bin/`

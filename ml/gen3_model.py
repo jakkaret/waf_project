@@ -35,7 +35,26 @@ FEATURE_SET_F = ([c for c in EXTENDED_FEATURE_COLUMNS if c not in F_DROPPED_CONT
 #   gen3-F-2026-09-29-canon  canonical, JSON leaves keyed by leaf name (lost the
 #                            parent field: {"user":{"$ne":""}} -> "$ne=")
 #   gen3-F-2026-09-29-canon2 canonical, JSON leaves keyed by bracket path, null kept
-FEATURE_SET_VERSION = "gen3-F-2026-09-29-canon2"
+EXTRACTION_VERSION = "2026-09-29-canon2"
+
+# Named column sets over the same extraction. The version string
+# ("gen3-<name>-<extraction>") travels with a model, which is served only with
+# exactly those columns.
+FEATURE_SETS = {
+    "F": FEATURE_SET_F,
+    # F without encoded_char_ratio: the top driver of GoTestWAF's benign false
+    # positives (clients percent-encode punctuation, e.g. D'or -> D%27or); CSIC-only
+    # 5-fold recall 59.4% without it vs 60.5% with it (29/09).
+    "F-noenc": [c for c in FEATURE_SET_F if c != "encoded_char_ratio"],
+}
+
+
+def feature_set_version(name="F"):
+    return f"gen3-{name}-{EXTRACTION_VERSION}"
+
+
+FEATURE_SET_VERSION = feature_set_version("F")
+VERSION_TO_SET = {feature_set_version(n): n for n in FEATURE_SETS}
 
 
 def request_features(method="GET", url="/", body=""):
@@ -47,17 +66,25 @@ def request_features(method="GET", url="/", body=""):
 
 
 class Gen3FModel:
-    """A fitted LightGBM on FEATURE_SET_F plus its decision threshold and model card."""
+    """A fitted LightGBM on one of FEATURE_SETS plus its decision threshold and model card."""
 
     runtime = "joblib"  # ml/gen3_onnx.Gen3OnnxModel is the onnxruntime counterpart
 
-    def __init__(self, model, threshold, columns=None, card=None):
+    def __init__(self, model, threshold, columns=None, card=None, feature_set="F"):
+        if feature_set not in FEATURE_SETS:
+            raise ValueError(f"unknown feature set {feature_set!r}; known: {sorted(FEATURE_SETS)}")
         self.model = model
         self.threshold = float(threshold)
-        self.columns = list(columns or FEATURE_SET_F)
+        self.feature_set = feature_set
+        self.columns = list(columns or FEATURE_SETS[feature_set])
         self.card = dict(card or {})
-        if self.columns != FEATURE_SET_F:
-            raise ValueError("model columns differ from FEATURE_SET_F; retrain or pin the matching code version")
+        if self.columns != FEATURE_SETS[feature_set]:
+            raise ValueError(f"model columns differ from feature set {feature_set}; retrain or pin the matching code version")
+
+    @property
+    def version(self):
+        # pickles from before feature sets had a name are F
+        return feature_set_version(getattr(self, "feature_set", "F"))
 
     def matrix(self, requests):
         """(method, url, body) tuples -> float32 matrix in model column order (features computed once per request)."""
@@ -78,4 +105,4 @@ class Gen3FModel:
     def predict(self, method="GET", url="/", body=""):
         p = self.score_request(method, url, body)
         return {"attack_probability": round(p, 4), "is_attack": p >= self.threshold,
-                "threshold": round(self.threshold, 4), "feature_set": FEATURE_SET_VERSION}
+                "threshold": round(self.threshold, 4), "feature_set": self.version}

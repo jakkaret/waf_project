@@ -22,7 +22,7 @@ import json
 
 import numpy as np
 
-from ml.gen3_model import FEATURE_SET_F, FEATURE_SET_VERSION, request_features
+from ml.gen3_model import FEATURE_SETS, VERSION_TO_SET, request_features
 
 ONNX_INPUT = "features"
 ONNX_OUTPUT = "probabilities"
@@ -151,7 +151,7 @@ def export_onnx(wrapper, parity_rows, card=None):
         "versions": {"onnx": onnx.__version__, "onnxmltools": onnxmltools.__version__,
                      "onnxruntime": onnxruntime.__version__},
     }
-    meta = {"feature_set": FEATURE_SET_VERSION, "feature_columns": json.dumps(list(wrapper.columns)),
+    meta = {"feature_set": wrapper.version, "feature_columns": json.dumps(list(wrapper.columns)),
             "threshold": repr(float(wrapper.threshold)), "parity_passed": str(report["parity_passed"]).lower(),
             "model_card": json.dumps({**(card if card is not None else wrapper.card), "onnx": report}, default=float)}
     for k, v in meta.items():
@@ -170,8 +170,11 @@ class Gen3OnnxModel:
         self.session = _session(path_or_bytes)
         meta = self.session.get_modelmeta().custom_metadata_map
         self.columns = json.loads(meta.get("feature_columns", "[]"))
-        if self.columns != FEATURE_SET_F or meta.get("feature_set") != FEATURE_SET_VERSION:
-            raise ValueError("ONNX model columns differ from FEATURE_SET_F; re-export with this code version")
+        self.version = meta.get("feature_set", "")
+        self.feature_set = VERSION_TO_SET.get(self.version)
+        if self.feature_set is None or self.columns != FEATURE_SETS[self.feature_set]:
+            raise ValueError(f"ONNX model feature set {self.version!r} does not match this code "
+                             f"(known: {sorted(VERSION_TO_SET)}); re-export with this code version")
         if meta.get("parity_passed") != "true":
             raise ValueError("ONNX model did not pass the LightGBM parity check at export")
         self.threshold = float(meta["threshold"])
@@ -191,4 +194,4 @@ class Gen3OnnxModel:
     def predict(self, method="GET", url="/", body=""):
         p = self.score_request(method, url, body)
         return {"attack_probability": round(p, 4), "is_attack": p >= self.threshold,
-                "threshold": round(self.threshold, 4), "feature_set": FEATURE_SET_VERSION}
+                "threshold": round(self.threshold, 4), "feature_set": self.version}

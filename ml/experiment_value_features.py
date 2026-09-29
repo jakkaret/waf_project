@@ -61,7 +61,7 @@ from ml.train_gen3_full_real_benchmark import (  # noqa: E402
     ARCHIVE_DIR, BUILD_CACHE_DIR, CORE_SOURCES, LGBM_PARAMS, _build_cache_key, _sha256_file,
     build_full_real_dataset, choose_threshold_weighted, group_folds, weighted_recalls,
 )
-from ml.gen3_model import FEATURE_SET_VERSION  # noqa: E402
+from ml.gen3_model import FEATURE_SET_VERSION, FEATURE_SETS  # noqa: E402
 from ml.promotion_gate import dataset_of, evaluate as evaluate_gate, format_gate  # noqa: E402
 from ml.value_features import (  # noqa: E402
     VALUE_FEATURE_COLUMNS, VALUE_MONOTONE_COLUMNS, extract_value_features, extract_value_features_from_units,
@@ -97,6 +97,8 @@ CONFIGS = {
     **{f"E_plus_{c}": (NO_CONTEXT_COLUMNS + [c], False) for c in CONTEXT_COLUMNS},
     # D (monotone, no context) was the most robust on 28/09; qbe itself stays unconstrained
     "D_plus_query_body_entropy": (NO_CONTEXT_COLUMNS + ["query_body_entropy"], True),
+    # 29/09: F without encoded_char_ratio, the top driver of GoTestWAF benign false positives
+    "F_noenc": (FEATURE_SETS["F-noenc"], False),
 }
 # 28/09 scrutiny: the single-split, fixed-threshold comparisons could not separate
 # B / D / E / E_plus_query_body_entropy; rerun them over several folds with

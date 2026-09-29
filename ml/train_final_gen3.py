@@ -15,7 +15,7 @@ model; this script builds the model to deploy once the feature set is chosen:
    estimates of G1 / G2 for this model), the 63 scenarios, single-request latency.
 4. Final fit on all rows; saves gen3_f_model.joblib (Gen3FModel) and
    model_card.json (inputs with sha256, code hashes, git commit, metrics) to
-   ml/models/archive/gen3-final-f-<timestamp>/.
+   ml/models/archive/gen3-final-<feature set>-<timestamp>/ (--feature-set, default F).
 5. gen3_f_model.onnx next to it (ml/gen3_onnx.py), written only if ONNX and
    LightGBM agree within 1e-5 on 50,000 training rows, the scenarios and
    threshold-boundary rows; the result is in the card under "onnx".
@@ -44,7 +44,7 @@ import pandas as pd
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from ml.experiment_value_features import latest_hyperparameters, value_feature_frame  # noqa: E402
-from ml.gen3_model import FEATURE_SET_F, FEATURE_SET_VERSION, Gen3FModel  # noqa: E402
+from ml.gen3_model import FEATURE_SETS, Gen3FModel, feature_set_version  # noqa: E402
 from ml.promotion_gate import GATE, dataset_of  # noqa: E402
 from ml.test_comprehensive import TESTS  # noqa: E402
 from ml.train_gen3_full_real_benchmark import (  # noqa: E402
@@ -141,15 +141,18 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--benign-target", type=float, default=0.99,
                     help="benign recall every dataset must keep at the threshold (gate G1 is 0.985)")
+    ap.add_argument("--feature-set", default="F", choices=sorted(FEATURE_SETS),
+                    help="named column set of ml/gen3_model.FEATURE_SETS to train")
     args = ap.parse_args()
+    cols, version = FEATURE_SETS[args.feature_set], feature_set_version(args.feature_set)
 
     X, y, _, integrity, meta = build_full_real_dataset()
     V = value_feature_frame(meta)
-    F = pd.concat([X.reset_index(drop=True).astype(np.float32), V], axis=1)[FEATURE_SET_F].to_numpy(dtype=np.float32)
+    F = pd.concat([X.reset_index(drop=True).astype(np.float32), V], axis=1)[cols].to_numpy(dtype=np.float32)
     yv, w = y.to_numpy(), meta["Weight"].to_numpy()
     datasets = meta["Source"].map(dataset_of).to_numpy()
     params, params_from = latest_hyperparameters()
-    print(f"[*] {len(yv)} rows, {len(FEATURE_SET_F)} features ({FEATURE_SET_VERSION}); params from {params_from}")
+    print(f"[*] {len(yv)} rows, {len(cols)} features ({version}); params from {params_from}")
 
     # 1. out-of-fold scores over all data
     t0 = time.time()
@@ -180,7 +183,7 @@ def main():
 
     # 3. final fit on all rows
     model = lgb.LGBMClassifier(**params).fit(F, yv, sample_weight=w)
-    wrapper = Gen3FModel(model, threshold)
+    wrapper = Gen3FModel(model, threshold, feature_set=args.feature_set)
 
     scenario_results = []
     for exp, m, u, b, desc in TESTS:
@@ -217,7 +220,7 @@ def main():
 
     # 4. save model + card
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    out_dir = os.path.join(ARCHIVE_DIR, f"gen3-final-f-{stamp}")
+    out_dir = os.path.join(ARCHIVE_DIR, f"gen3-final-{args.feature_set.lower()}-{stamp}")
     os.makedirs(out_dir, exist_ok=True)
     inputs = [CSIC_PATH, VPS_AUDIT_PATH, NGINX_BENIGN_PATH, *EXTERNAL_SOURCES.values()] + \
         sorted(glob.glob(os.path.join(TELEMETRY_DIR, "*.jsonl")))
@@ -225,7 +228,7 @@ def main():
         "model": "Gen3FModel: LightGBM on feature set F, trained on all data",
         "status": "NOT PROMOTED - promotion gate 3.1-G.0 passed 3/5 (see reference_experiment); demo / shadow use only",
         "created": stamp, "git_commit": git_commit(),
-        "feature_set": FEATURE_SET_VERSION, "feature_columns": FEATURE_SET_F,
+        "feature_set": version, "feature_columns": cols,
         "threshold": round(threshold, 6), "benign_target_per_dataset": args.benign_target,
         "threshold_per_dataset": {d: round(t, 6) for d, t in per_ds_thr.items()},
         "hyperparameters": {k: v for k, v in params.items() if k != "class_weight"}

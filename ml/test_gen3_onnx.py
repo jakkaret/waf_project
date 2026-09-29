@@ -15,17 +15,17 @@ try:
 except ImportError:  # the serving venv has onnxruntime only; export needs the training venv
     onnx = None
 
-from ml.gen3_model import FEATURE_SET_F, Gen3FModel, request_features
+from ml.gen3_model import FEATURE_SET_F, FEATURE_SETS, Gen3FModel, feature_set_version, request_features
 from ml.test_comprehensive import TESTS
 
 REQUESTS = [(m, u, b) for _, m, u, b, _ in TESTS]
 
 
-def _model():
+def _model(columns=FEATURE_SET_F):
     """LightGBM on the 63 scenarios plus jittered copies: enough splits to exercise the export."""
     import lightgbm as lgb
     rng = np.random.default_rng(1)
-    X0 = np.array([[request_features(m, u, b)[c] for c in FEATURE_SET_F] for m, u, b in REQUESTS], dtype=np.float32)
+    X0 = np.array([[request_features(m, u, b)[c] for c in columns] for m, u, b in REQUESTS], dtype=np.float32)
     y0 = np.array([exp == "BLOCK" for exp, *_ in TESTS], dtype=int)
     X = np.vstack([X0] + [X0 * rng.uniform(0.7, 1.3, X0.shape).astype(np.float32) for _ in range(30)])
     y = np.tile(y0, 31)
@@ -117,6 +117,30 @@ class Gen3OnnxTests(unittest.TestCase):
             self.assertEqual(client.post("/predict-fast", json={"url": "/"}).status_code, 503)
         finally:
             api.gen3_model, api.FAST_ENGINE = old
+
+
+@unittest.skipIf(onnx is None, "onnx / onnxmltools / onnxruntime not installed")
+class FeatureSetTests(unittest.TestCase):
+    def test_noenc_model_exports_loads_and_reports_its_version(self):
+        from ml.gen3_onnx import Gen3OnnxModel, export_onnx
+        cols = FEATURE_SETS["F-noenc"]
+        self.assertNotIn("encoded_char_ratio", cols)
+        self.assertEqual(len(cols), len(FEATURE_SET_F) - 1)
+        wrapper = Gen3FModel(_model(cols), threshold=0.5, feature_set="F-noenc")
+        data, report = export_onnx(wrapper, wrapper.matrix(REQUESTS))
+        self.assertTrue(report["parity_passed"], report)
+        served = Gen3OnnxModel(data)
+        self.assertEqual((served.feature_set, served.version), ("F-noenc", feature_set_version("F-noenc")))
+        for req in REQUESTS[:10]:
+            self.assertAlmostEqual(served.score_request(*req), wrapper.score_request(*req), delta=1e-5)
+        self.assertEqual(served.predict("GET", "/")["feature_set"], feature_set_version("F-noenc"))
+
+    def test_columns_must_match_the_named_set(self):
+        with self.assertRaises(ValueError):
+            Gen3FModel(object(), 0.5, columns=FEATURE_SET_F, feature_set="F-noenc")
+        with self.assertRaises(ValueError):
+            Gen3FModel(object(), 0.5, feature_set="G")
+        self.assertEqual(Gen3FModel(object(), 0.5).version, feature_set_version("F"))
 
 
 class ApiTokenTests(unittest.TestCase):
