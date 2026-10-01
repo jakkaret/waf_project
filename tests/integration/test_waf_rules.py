@@ -25,11 +25,9 @@ ATTACKS = {
     "path_traversal": "/?file=../../../../etc/passwd",
     "cmd_injection": "/?x=1;cat%20/etc/passwd",
 }
-# NB: a bare SQLi in a *path segment* (e.g. /products/1' OR 1=1--) is NOT
-# asserted here. At PARANOIA 1 with ANOMALY_INBOUND 10 it trips too few CRS
-# rules (~one 942 rule, score 5) to cross the threshold, whereas the query-arg
-# vectors above trip several and sum past it. That is expected CRS tuning, not
-# a WAF defect -- see docs/KNOWN_ISSUES.md #17.
+# A bare SQLi in a *path segment* scores below the CRS threshold at PL1; the
+# managed rule 3000006 (modsecurity/managed-rules/002-path-sqli.conf) blocks it.
+ATTACKS["sqli_in_path"] = "/products/1%27%20OR%201=1--"
 
 # Ordinary browsing that must sail through untouched.
 BENIGN = {
@@ -37,6 +35,7 @@ BENIGN = {
     "listing": "/products?category=shoes&sort=price_asc&page=2",
     "search_words": "/search?q=blue+running+shoes",
     "nested_resource": "/api/items/42",
+    "apostrophe_in_path": "/blog/don%27t-stop",
     "utf8_query": "/search?q=%E0%B8%A3%E0%B8%AD%E0%B8%87%E0%B9%80%E0%B8%97%E0%B9%89%E0%B8%B2",  # รองเท้า
 }
 
