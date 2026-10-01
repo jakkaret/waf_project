@@ -180,8 +180,7 @@ jobs:
       - name: bandit (HIGH severity, blocking)
         run: bandit -q -r dashboard/backend cdn/control-api -x '*/tests/*' -lll
 
-      - name: pip-audit (report only)
-        continue-on-error: true
+      - name: pip-audit (blocking)
         run: |
           pip-audit -r dashboard/backend/requirements.txt
           pip-audit -r cdn/control-api/requirements.txt
