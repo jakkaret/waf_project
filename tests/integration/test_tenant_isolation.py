@@ -18,15 +18,17 @@ BACKEND = Path(os.getenv("QA_BACKEND_DIR", "/root/waf_project/dashboard/backend"
 
 def origin_get_routes():
     sys.path.insert(0, str(BACKEND))
-    from dotenv import find_dotenv, load_dotenv
-    load_dotenv(find_dotenv(str(BACKEND / "main.py")))
+    from dotenv import load_dotenv
+    # The backend refuses to import without JWT_SECRET_KEY, which lives in the
+    # nearest .env above the backend directory (/root/waf_project/.env on Main).
+    env_file = next((d / ".env" for d in (BACKEND, *BACKEND.parents) if (d / ".env").is_file()), None)
+    assert env_file, f"no .env found above {BACKEND}"
+    load_dotenv(env_file)
     import main  # noqa: E402  (no server start; only the route table is read)
-    out = set()
-    for r in main.app.routes:
-        path, methods = getattr(r, "path", ""), getattr(r, "methods", set()) or set()
-        if path.startswith("/api/origins/{origin_id}") and "GET" in methods:
-            out.add(path)
-    return sorted(out)
+    # The OpenAPI schema, not app.routes: since FastAPI 0.142 app.routes holds
+    # each include_router() as one opaque _IncludedRouter entry.
+    paths = main.app.openapi()["paths"]
+    return sorted(p for p, ops in paths.items() if p.startswith("/api/origins/{origin_id}") and "get" in ops)
 
 
 ROUTES = origin_get_routes()
