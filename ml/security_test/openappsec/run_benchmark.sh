@@ -43,8 +43,12 @@ need_ml=0
 case ",$SYSTEMS," in *,B,*|*,C,*|*,D,*) need_ml=1 ;; esac
 if [ $need_ml = 1 ]; then
   [ -f "$REPO/$MODEL" ] || { echo "model not found: $REPO/$MODEL (see plan, step 3)" >&2; exit 1; }
-  echo "== building ML harness image"
-  docker build -q -t $HARNESS_IMG -f "$REPO/ml/security_test/openappsec/Dockerfile.harness" "$REPO" >/dev/null
+  if ! docker image inspect $HARNESS_IMG >/dev/null 2>&1; then
+    echo "== building ML harness image"
+    docker build -q -t $HARNESS_IMG -f "$REPO/ml/security_test/openappsec/Dockerfile.harness" "$REPO" >/dev/null
+  else
+    echo "== ML harness image $HARNESS_IMG already exists, reusing"
+  fi
 fi
 
 echo "== cleaning old containers"
@@ -99,7 +103,12 @@ docker run --rm --name oa-tool --network $NET -v "$RESULTS:/app/results" $TOOL \
 echo "ELAPSED_SEC $(( $(date +%s) - start ))"
 
 echo "== rates (status 0 = timeout, dropped from the rates by the tool; report the count)"
-docker run --rm -v "$RESULTS:/r" -v "$REPO/ml/security_test/openappsec:/s:ro" python:3.12-slim \
-  sh -c "pip install -q duckdb >/dev/null 2>&1 && python /s/summarize_db.py /r/db/waf_comparison.duckdb" \
-  | tee "$RESULTS/summary-$(date +%Y%m%d-%H%M%S).txt"
+if command -v python3 >/dev/null 2>&1 && python3 -c "import duckdb" >/dev/null 2>&1; then
+  python3 "$REPO/ml/security_test/openappsec/summarize_db.py" "$RESULTS/db/waf_comparison.duckdb" \
+    | tee "$RESULTS/summary-$(date +%Y%m%d-%H%M%S).txt"
+else
+  docker run --rm -v "$RESULTS:/r" -v "$REPO/ml/security_test/openappsec:/s:ro" python:3.12-slim \
+    sh -c "pip install -q duckdb >/dev/null 2>&1 && python /s/summarize_db.py /r/db/waf_comparison.duckdb" \
+    | tee "$RESULTS/summary-$(date +%Y%m%d-%H%M%S).txt"
+fi
 echo "== report: $RESULTS/waf-comparison-report.pdf"
