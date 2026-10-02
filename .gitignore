@@ -50,6 +50,8 @@ ml/telemetry/
 ml/models/archive/**/*.joblib
 ml/models/gen3/*.joblib
 ml/models/gen3/*.onnx
+# the chosen Gen 3 model (F-canon2, public data only) is tracked so others can test it
+!ml/models/gen3/gen3_f_model.onnx
 # built on the serving host by ml/onnx_export.py
 ml/models/random_forest_waf.onnx
 ml/models/onnx_manifest.json

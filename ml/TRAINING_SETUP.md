@@ -74,6 +74,8 @@ mkdir -p ml/models/gen3 && cp ml/models/archive/gen3-final-f-<เวลา>/gen3
   - `ml_api.py` ใช้ `.onnx` ก่อน ถ้าไม่มีจึงใช้ `.joblib`
   - ถ้ามีแค่ `.joblib` จากรอบเก่า แปลงได้ด้วย `ml/export_gen3_onnx.py`
 - ไฟล์โมเดลไม่ขึ้น git (`.gitignore`) ให้ commit `model_card.json` แทน
+  - ยกเว้นรุ่นที่เลือกใช้: `ml/models/gen3/gen3_f_model.onnx` (F-canon2, เทรนด้วย public data เท่านั้น) อยู่ใน repo
+  - ต้องใช้กับโค้ด extraction `canon2` ขึ้นไป (commit `a3b11de` ขึ้นไป) โค้ดเก่าจะปฏิเสธไฟล์นี้
 - ยังไม่ผ่าน promotion gate 3.1-G.0 จึงห้าม enforce
 - รัน ML บนเครื่องแยก (Azure, onnxruntime อย่างเดียว ใช้ `ml/requirements-serve.txt`): ดู `deploy/azure-ml/README.md`
 

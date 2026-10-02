@@ -9,6 +9,7 @@
 | คู่มือ WAF Gen 3 (อ่านทำความเข้าใจ + คำถามกรรมการ) | https://claude.ai/artifact/326kranMWeArKGfG7Wanxt | public (ใครมีลิงก์เปิดได้) |
 | สไลด์นำเสนอ WAF Gen 3 ML Results (13 หน้า, ดาวน์โหลด .pptx/PDF ได้) | https://claude.ai/artifact/GgK8Ss99hX4ps3ZEkbGPRg | private (ต้องแชร์ก่อน) |
 | ผลทดสอบด้วยเครื่องมือ (GoTestWAF / sqlmap / Nuclei) | [`ml/security_test/RESULTS_20260929.md`](ml/security_test/RESULTS_20260929.md) | ใน repo |
+| **โมเดลที่เลือกใช้ F-canon2 (ONNX)** | [`ml/models/gen3/gen3_f_model.onnx`](ml/models/gen3/gen3_f_model.onnx) · sha256 `26148143…0fbc6` · card: [`model_card.json`](ml/models/archive/gen3-final-f-20260929-124141/model_card.json) | ใน repo (เทรนด้วย public data เท่านั้น) |
 
 ---
 
