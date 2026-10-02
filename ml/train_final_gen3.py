@@ -143,11 +143,23 @@ def main():
                     help="benign recall every dataset must keep at the threshold (gate G1 is 0.985)")
     ap.add_argument("--feature-set", default="F", choices=sorted(FEATURE_SETS),
                     help="named column set of ml/gen3_model.FEATURE_SETS to train")
+    ap.add_argument("--exclude-dataset", action="append", default=[], metavar="NAME",
+                    help="drop a dataset (name as in promotion_gate.dataset_of, e.g. OpenAppSec) before training; "
+                         "for a model that is then evaluated on that dataset's public benchmark (repeatable)")
     args = ap.parse_args()
     cols, version = FEATURE_SETS[args.feature_set], feature_set_version(args.feature_set)
 
     X, y, _, integrity, meta = build_full_real_dataset()
     V = value_feature_frame(meta)
+    if args.exclude_dataset:
+        present = sorted(set(meta["Source"].map(dataset_of)))
+        unknown = sorted(set(args.exclude_dataset) - set(present))
+        if unknown:
+            raise SystemExit(f"--exclude-dataset {unknown}: not in the built data {present}")
+        keep = ~meta["Source"].map(dataset_of).isin(args.exclude_dataset).to_numpy()
+        X, y, V = X[keep].reset_index(drop=True), y[keep].reset_index(drop=True), V[keep].reset_index(drop=True)
+        meta = meta[keep].reset_index(drop=True)
+        print(f"[*] excluded {args.exclude_dataset}: {int((~keep).sum())} rows dropped, {int(keep.sum())} kept")
     F = pd.concat([X.reset_index(drop=True).astype(np.float32), V], axis=1)[cols].to_numpy(dtype=np.float32)
     yv, w = y.to_numpy(), meta["Weight"].to_numpy()
     datasets = meta["Source"].map(dataset_of).to_numpy()
@@ -220,12 +232,14 @@ def main():
 
     # 4. save model + card
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    out_dir = os.path.join(ARCHIVE_DIR, f"gen3-final-{args.feature_set.lower()}-{stamp}")
+    tag = args.feature_set.lower() + "".join(f"-no{d.lower()}" for d in sorted(args.exclude_dataset))
+    out_dir = os.path.join(ARCHIVE_DIR, f"gen3-final-{tag}-{stamp}")
     os.makedirs(out_dir, exist_ok=True)
     inputs = [CSIC_PATH, VPS_AUDIT_PATH, NGINX_BENIGN_PATH, *EXTERNAL_SOURCES.values()] + \
         sorted(glob.glob(os.path.join(TELEMETRY_DIR, "*.jsonl")))
     card = {
-        "model": "Gen3FModel: LightGBM on feature set F, trained on all data",
+        "model": "Gen3FModel: LightGBM on feature set F, trained on all data"
+                 + (f" except {sorted(args.exclude_dataset)}" if args.exclude_dataset else ""),
         "status": "NOT PROMOTED - promotion gate 3.1-G.0 passed 3/5 (see reference_experiment); demo / shadow use only",
         "created": stamp, "git_commit": git_commit(),
         "feature_set": version, "feature_columns": cols,
@@ -242,6 +256,7 @@ def main():
         "reference_experiment": {"report": REFERENCE_EXPERIMENT, "config": "E_plus_query_body_entropy",
                                  "gate_v2": "G1 98.69 PASS, G2 83.6 FAIL, G3 61.1 FAIL, G4 41.0 PASS, G5 PASS"},
         "data": {"sources": sorted(meta["Source"].unique()), "rows": int(len(yv)),
+                 "excluded_datasets": sorted(args.exclude_dataset),
                  "integrity": {k: integrity[k] for k in ("total_unique_samples", "effective_distinct_shapes", "unique_rows_by_source")},
                  "input_files": {os.path.relpath(p, ML_DIR): {"sha256": _sha256_file(p), "bytes": os.path.getsize(p)}
                                  for p in inputs if os.path.exists(p)}},
